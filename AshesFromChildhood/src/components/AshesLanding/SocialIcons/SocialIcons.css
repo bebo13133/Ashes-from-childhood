@@ -1,0 +1,519 @@
+.social-icons-container {
+  position: fixed;
+  bottom: 100px;  /* По-далеч от ъгъла */
+  right: 100px;   /* По-далеч от ъгъла */
+  z-index: 1000;
+  opacity: 0;
+  transform: translateX(150px) scale(0.8);
+  transition: all 1.2s cubic-bezier(0.23, 1, 0.320, 1);
+}
+
+.social-icons-container.visible {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+}
+
+/* Social Icons Wrapper */
+.social-icons-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 60px;  /* По-голямо разстояние между иконите */
+  position: relative;
+}
+
+/* Individual Social Icon */
+.social-icon-container {
+  position: relative;
+  width: 80px;  /* Стандартен размер */
+  height: 80px;
+  cursor: pointer;
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+  animation: iconEntrance 1.2s ease-out;
+}
+
+/* 3D Icon Structure */
+.social-icon-3d {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: all 0.4s ease;
+}
+
+.social-icon-container.hovered .social-icon-3d {
+  transform: translateZ(15px);
+}
+
+/* Icon Base */
+.icon-base {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;  /* Кръгли икони */
+  transform: translateZ(-12px);
+  background: rgba(0, 0, 0, 0.3);
+  filter: blur(4px);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+}
+
+.base-glow {
+  position: absolute;
+  width: 130%;
+  height: 130%;
+  top: -15%;
+  left: -15%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.3), transparent);
+  filter: blur(12px);
+  animation: baseGlowPulse 4s infinite ease-in-out;
+}
+
+@keyframes baseGlowPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
+}
+
+/* Icon Face */
+.icon-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;  /* Кръгли икони */
+  transform: translateZ(0px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 
+    0 15px 40px rgba(0, 0, 0, 0.5),
+    inset 0 0 30px rgba(255, 255, 255, 0.1),
+    0 0 50px rgba(212, 175, 55, 0.2);
+  border: 3px solid rgba(255, 255, 255, 0.15);
+  background: transparent; /* SVG иконите имат собствен фон */
+}
+
+.icon-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  position: relative;
+}
+
+.social-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+}
+
+/* Face Shine Effect */
+.face-shine {
+  position: absolute;
+  top: -50%;
+  left: -150%;
+  width: 300%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.2) 50%, transparent 70%);
+  animation: shineMove 6s infinite ease-in-out;
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+
+@keyframes shineMove {
+  0% {
+    transform: translateX(-100%) rotate(45deg);
+  }
+  50% {
+    transform: translateX(50%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(200%) rotate(45deg);
+  }
+}
+
+/* 3D Sides */
+.icon-side {
+  position: absolute;
+  opacity: 0.6;
+  border-radius: 50%;
+}
+
+.side-top {
+  width: 100%;
+  height: 12px;
+  top: -6px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.2));
+  transform: rotateX(90deg);
+  transform-origin: top;
+}
+
+.side-right {
+  width: 12px;
+  height: 100%;
+  right: -6px;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1));
+  transform: rotateY(90deg);
+  transform-origin: right;
+}
+
+/* Floating Ring */
+.floating-ring {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  top: -20px;
+  left: -20px;
+  border: 2px solid rgba(212, 175, 55, 0.4);
+  border-radius: 50%;
+  border-style: dashed;
+  animation: ringFloat 8s infinite ease-in-out;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.social-icon-container.hovered .floating-ring {
+  opacity: 1;
+}
+
+@keyframes ringFloat {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.1);
+  }
+}
+
+.ring-inner {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, var(--accent-gold), transparent);
+  border-radius: 50%;
+  animation: ringInnerPulse 3s infinite;
+}
+
+@keyframes ringInnerPulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.4);
+  }
+}
+
+/* Platform Label - под иконата */
+.platform-label {
+  position: absolute;
+  top: 100px;  /* Под иконата */
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(15, 52, 96, 0.8));
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transform: translateX(-50%) translateY(10px);
+  transition: all 0.3s ease;
+}
+
+.social-icon-container.hovered .platform-label {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.label-text {
+  color: var(--text-light);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  white-space: nowrap;
+}
+
+/* Hover Tooltip - отгоре */
+.social-tooltip {
+  position: absolute;
+  bottom: 100px;  /* Над иконата */
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(26, 26, 46, 0.9));
+  color: var(--text-light);
+  padding: 12px 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(212, 175, 55, 0.5);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(-50%) translateY(-10px);
+  transition: all 0.4s ease;
+  backdrop-filter: blur(15px);
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(212, 175, 55, 0.3);
+}
+
+.social-icon-container.hovered .social-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.tooltip-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.tooltip-arrow {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 16px;
+  background: inherit;
+  border: inherit;
+  border-bottom: none;
+  border-right: none;
+  transform: translateX(-50%) rotate(45deg);
+}
+
+/* Click Area */
+.social-link {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 100;
+}
+
+/* Connection Line */
+.connection-line {
+  position: absolute;
+  width: 4px;
+  height: 140px;  /* По-дълга заради повече разстояние */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(180deg, 
+    transparent, 
+    rgba(212, 175, 55, 0.6), 
+    rgba(64, 179, 255, 0.5),
+    rgba(212, 175, 55, 0.6), 
+    transparent
+  );
+  border-radius: 2px;
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+}
+
+.line-glow {
+  position: absolute;
+  width: 10px;
+  height: 100%;
+  left: -3px;
+  background: inherit;
+  filter: blur(6px);
+  opacity: 0.7;
+  animation: lineGlow 4s infinite ease-in-out;
+}
+
+@keyframes lineGlow {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scaleX(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scaleX(1.8);
+  }
+}
+
+/* Entrance Animation */
+@keyframes iconEntrance {
+  0% {
+    opacity: 0;
+    transform: translateX(150px) rotateY(90deg) scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) rotateY(0deg) scale(1);
+  }
+}
+
+/* Atmospheric Rings */
+.social-atmosphere {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  top: -120px;
+  left: -120px;
+  pointer-events: none;
+}
+
+.atmosphere-ring {
+  position: absolute;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 50%;
+  animation: atmosphereRotate 30s infinite linear;
+}
+
+.ring-1 {
+  width: 200px;
+  height: 200px;
+  top: 50px;
+  left: 50px;
+  border-style: dashed;
+}
+
+.ring-2 {
+  width: 160px;
+  height: 160px;
+  top: 70px;
+  left: 70px;
+  border-color: rgba(64, 179, 255, 0.3);
+  animation-direction: reverse;
+}
+
+@keyframes atmosphereRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .social-icons-container {
+    bottom: 80px;
+    right: 80px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .social-icons-container {
+    bottom: 60px;
+    right: 60px;
+  }
+  
+  .social-icon-container {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .social-icons-wrapper {
+    gap: 50px;
+  }
+  
+  .connection-line {
+    height: 120px;
+  }
+  
+  .platform-label {
+    top: 85px;
+  }
+  
+  .social-tooltip {
+    bottom: 85px;
+  }
+}
+
+@media (max-width: 768px) {
+  .social-icons-container {
+    bottom: 40px;
+    right: 40px;
+  }
+  
+  .social-icon-container {
+    width: 65px;
+    height: 65px;
+  }
+  
+  .social-icons-wrapper {
+    gap: 40px;
+  }
+  
+  .connection-line {
+    height: 100px;
+  }
+  
+  .platform-label {
+    top: 75px;
+  }
+  
+  .social-tooltip {
+    bottom: 75px;
+  }
+}
+
+@media (max-width: 640px) {
+  .social-icons-container {
+    bottom: 30px;
+    right: 30px;
+  }
+  
+  .social-icon-container {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .social-icons-wrapper {
+    gap: 35px;
+  }
+  
+  .connection-line {
+    height: 85px;
+  }
+}
+
+@media (max-width: 480px) {
+  .social-icons-container {
+    bottom: 25px;
+    right: 25px;
+  }
+  
+  .social-icon-container {
+    width: 55px;
+    height: 55px;
+  }
+  
+  .social-icons-wrapper {
+    gap: 30px;
+  }
+  
+  .connection-line {
+    height: 70px;
+    width: 3px;
+  }
+  
+  .social-tooltip {
+    display: none; /* Скрий tooltips на мобилни */
+  }
+  
+  .platform-label {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+}
+
+/* Performance optimizations */
+@media (prefers-reduced-motion: reduce) {
+  .atmosphere-ring,
+  .base-glow,
+  .ring-inner,
+  .line-glow,
+  .face-shine {
+    animation: none;
+  }
+}
