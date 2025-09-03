@@ -31,9 +31,6 @@
   },
    "peerDependencies": {
     "three": "0.169.0"
-  },
-  "overrides": {
-    "three": "0.169.0",
-    "three-mesh-bvh": "0.8.0"
   }
+
 }
