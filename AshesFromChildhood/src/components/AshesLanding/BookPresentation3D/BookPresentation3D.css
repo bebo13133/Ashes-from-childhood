@@ -523,10 +523,11 @@
   color: #666;
 }
 
-.rating-number {
+.rating-number-3d {
   color: #d4af37;
   font-weight: 600;
   font-size: 0.9rem;
+  
 }
 
 .viewers-section {
