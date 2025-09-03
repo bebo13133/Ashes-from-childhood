@@ -483,11 +483,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(15px);
+  /* background: rgba(0, 0, 0, 0.8); */
+  backdrop-filter: blur(35px);
   border-radius: 15px;
   padding: 12px 20px;
-  border: 1px solid rgba(212, 175, 55, 0.3);
+  /* border: 1px solid rgba(212, 175, 55, 0.3); */
   z-index: 100;
 }
 
@@ -560,11 +560,11 @@
   bottom: 15px;
   left: 20px;
   right: 20px;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(15px);
+  /* background: rgba(0, 0, 0, 0.8); */
+  backdrop-filter: blur(35px);
   border-radius: 15px;
   padding: 15px;
-  border: 1px solid rgba(212, 175, 55, 0.3);
+  /* border: 1px solid rgba(212, 175, 55, 0.3); */
   z-index: 100;
 }
 

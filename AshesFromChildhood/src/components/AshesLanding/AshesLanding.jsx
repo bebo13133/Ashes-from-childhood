@@ -10,6 +10,7 @@ import SocialIcons from './SocialIcons/SocialIcons';
 import BookPresentation3D from './BookPresentation3D/BookPresentation3D';
 import AuthorSection from './AuthorSection/AuthorSection';
 import ScrollToTop from '../ScrollToTop/ScrollToTop';
+import ReviewsSection from './ReviewsSection/ReviewsSection';
 
 const AshesLanding = () => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -57,7 +58,8 @@ const AshesLanding = () => {
 
             {/* Order Section - форма за поръчка */}
             <OrderSection />
-            {/* <SocialIcons /> */}
+            <ReviewsSection />
+            <SocialIcons />
             <ScrollToTop />
         </div>
     )
