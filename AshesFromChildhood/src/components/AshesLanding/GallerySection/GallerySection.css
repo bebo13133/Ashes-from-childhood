@@ -21,13 +21,16 @@
   margin-bottom: 70px;
 }
 
-.gallery-title {
+.gallery-title-gallery {
   font-size: clamp(2.2rem, 5vw, 3.8rem);
   color: #ffffff;
   margin-bottom: 20px;
   text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
 }
+ .dramatic-text{
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
 
+}
 .title-accent {
   background: linear-gradient(135deg, #c0c0c0, #e8e8e8); /* Сребърен градиент */
   background-clip: text;

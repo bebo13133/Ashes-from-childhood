@@ -121,7 +121,7 @@ const GallerySection = () => {
           
           {/* Gallery Header */}
           <div className="gallery-header">
-            <h2 className="gallery-title dramatic-text">
+            <h2 className=".gallery-title-gallery  dramatic-text">
               Разгледайте <span className="title-accent">Книгата</span>
             </h2>
             <p className="gallery-subtitle">
