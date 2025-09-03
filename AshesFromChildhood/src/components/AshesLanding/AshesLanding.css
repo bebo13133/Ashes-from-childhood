@@ -1,0 +1,105 @@
+.ashes-landing {
+  /* background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%); */
+  color: #e0e0e0;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  position: relative;
+  overflow-x: hidden;
+}
+.book-presentation-3d {
+  padding: 120px 0;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  z-index: 1; /* Добави това */
+}
+
+.global-video-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  object-fit: cover;
+  filter: 
+    contrast(0.9) 
+    brightness(0.7) 
+    saturate(0.9) 
+    sepia(0.2);
+}
+
+.global-video-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: -1;
+}
+
+.ashes-landing {
+  background: transparent; /* Премахни gradient background */
+  color: #e0e0e0;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  position: relative;
+  overflow-x: hidden;
+  min-height: 100vh;
+  z-index: 1;
+}
+/* Dark theme variables */
+:root {
+  --primary-dark: #0a0a0a;
+  --secondary-dark: #1a1a2e;
+  --accent-dark: #16213e;
+  --mystery-blue: #0f3460;
+  --text-light: #e0e0e0;
+  --text-muted: #b0b0b0;
+  --accent-gold: #d4af37;
+  --shadow-deep: rgba(0, 0, 0, 0.8);
+  --glow-blue: rgba(64, 179, 255, 0.3);
+}
+
+/* Global text effects for drama theme */
+.dramatic-text {
+  text-shadow: 2px 2px 4px var(--shadow-deep);
+  letter-spacing: 0.5px;
+}
+
+.mystery-glow {
+  box-shadow: 0 0 20px var(--glow-blue);
+  transition: all 0.3s ease;
+}
+
+.mystery-glow:hover {
+  box-shadow: 0 0 30px var(--glow-blue);
+}
+
+/* Subtle animations for atmosphere */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mysteryPulse {
+  0%, 100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.mystery-pulse {
+  animation: mysteryPulse 2s infinite;
+}

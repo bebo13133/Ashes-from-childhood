@@ -1,0 +1,285 @@
+.social-icons {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  z-index: 1000;
+  opacity: 0;
+  transform: translateX(-100px);
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+}
+
+.social-icons.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.social-button {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+  overflow: hidden;
+  animation: slideIn 0.6s ease-out both;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-100px) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.social-button:hover {
+  transform: translateX(10px) scale(1.1);
+  box-shadow: 
+    0 15px 40px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.social-button.facebook {
+  background: linear-gradient(135deg, rgba(24, 119, 242, 0.2), rgba(24, 119, 242, 0.1));
+  border-color: rgba(24, 119, 242, 0.3);
+}
+
+.social-button.facebook:hover {
+  background: linear-gradient(135deg, rgba(24, 119, 242, 0.3), rgba(24, 119, 242, 0.2));
+  border-color: rgba(24, 119, 242, 0.5);
+  box-shadow: 
+    0 15px 40px rgba(24, 119, 242, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.social-button.viber {
+  background: linear-gradient(135deg, rgba(115, 96, 242, 0.2), rgba(115, 96, 242, 0.1));
+  border-color: rgba(115, 96, 242, 0.3);
+}
+
+.social-button.viber:hover {
+  background: linear-gradient(135deg, rgba(115, 96, 242, 0.3), rgba(115, 96, 242, 0.2));
+  border-color: rgba(115, 96, 242, 0.5);
+  box-shadow: 
+    0 15px 40px rgba(115, 96, 242, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.icon-container {
+  position: relative;
+  z-index: 10;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.social-icon {
+  width: 100%;
+  height: 100%;
+  fill: #ffffff;
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.social-button:hover .social-icon {
+  transform: scale(1.1);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+}
+
+/* Ripple Effect */
+.ripple-effect {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+  opacity: 0;
+}
+
+.social-button:active .ripple-effect {
+  width: 120px;
+  height: 120px;
+  opacity: 1;
+  transition: width 0s, height 0s, opacity 0s;
+}
+
+/* Floating Label на hover */
+.social-button::after {
+  content: attr(title);
+  position: absolute;
+  left: 75px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: #ffffff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.social-button::before {
+  content: '';
+  position: absolute;
+  left: 65px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-right: none;
+  border-bottom: none;
+  transform: translateY(-50%) rotate(45deg);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.social-button:hover::after,
+.social-button:hover::before {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-50%) translateX(5px);
+}
+
+.social-button:hover::before {
+  transform: translateY(-50%) translateX(5px) rotate(45deg);
+}
+
+/* Glow effect за активен state */
+.social-button:active {
+  transform: translateX(8px) scale(1.05);
+}
+
+.social-button.facebook:active {
+  box-shadow: 
+    0 0 30px rgba(24, 119, 242, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.social-button.viber:active {
+  box-shadow: 
+    0 0 30px rgba(115, 96, 242, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .social-icons {
+    bottom: 20px;
+    left: 20px;
+    gap: 12px;
+  }
+  
+  .social-button {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .icon-container {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .social-button:hover {
+    transform: translateX(5px) scale(1.05);
+  }
+  
+  /* Скрива labels на мобилен */
+  .social-button::after,
+  .social-button::before {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .social-icons {
+    bottom: 15px;
+    left: 15px;
+    gap: 10px;
+  }
+  
+  .social-button {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .icon-container {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .social-button {
+    transition: opacity 0.2s ease;
+    animation: none;
+  }
+  
+  .social-icons {
+    transition: opacity 0.3s ease;
+  }
+  
+  .ripple-effect {
+    display: none;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .social-button {
+    background: rgba(255, 255, 255, 0.9);
+    border: 3px solid #000000;
+  }
+  
+  .social-icon {
+    fill: #000000;
+  }
+  
+  .social-button::after {
+    background: #000000;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+  }
+}
+
+/* Focus states за keyboard navigation */
+.social-button:focus {
+  outline: 3px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+.social-button:focus:not(:focus-visible) {
+  outline: none;
+}
