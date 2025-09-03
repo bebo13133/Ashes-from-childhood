@@ -291,7 +291,7 @@ function BookRating({ rating = 4.8, viewers }) {
                 <div className="stars-container">
                     {renderStars()}
                 </div>
-                <span className="rating-number">{rating}/5</span>
+                <span className="rating-number-3d">{rating}/5</span>
             </div>
             <div className="viewers-section">
                 <div className="live-indicator"></div>
