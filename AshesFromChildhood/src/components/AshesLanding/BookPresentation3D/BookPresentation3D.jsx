@@ -92,7 +92,7 @@ function Book3D({ bookImages, ...props }) {
                 color="#d4af37"
                 anchorX="center"
                 anchorY="middle"
-                font="/fonts/roboto-regular.woff"
+                // font="/fonts/roboto-regular.woff"
             >
                 ПЕПЕЛ ОТ ДЕТСТВОТО - СИБЕЛ ИБРЯМОВА
             </Text>
