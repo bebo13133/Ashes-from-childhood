@@ -135,7 +135,7 @@ const OrderSection = () => {
   }
 
   return (
-    <section className="order-section">
+    <section id="order-section" className="order-section">
       <div className="order-background">
         <div className="background-pattern"></div>
         <div className="floating-orbs">
