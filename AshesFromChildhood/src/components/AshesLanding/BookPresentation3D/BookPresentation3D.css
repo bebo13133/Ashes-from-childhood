@@ -679,7 +679,9 @@
   .book-presentation-3d-container {
     padding: 3rem 35px;
   }
-  
+  .quantity-controls {
+    justify-content: center;
+  }
   .book-presentation-3d-section-header {
     margin-bottom: 50px;
   }
@@ -928,7 +930,9 @@
   .book-presentation-3d-book-quote {
     font-size: 1.2rem;
   }
-  
+  .quantity-controls {
+    justify-content: center;
+  }
   .book-presentation-3d-interaction-hint {
     font-size: 0.85rem;
     padding: 8px 14px;
@@ -940,7 +944,9 @@
   .book-presentation-3d-container {
     padding: 2rem 25px;
   }
-  
+  .quantity-controls {
+    justify-content: center;
+  }
   .book-presentation-3d-section-header {
     margin-bottom: 40px;
   }
@@ -1073,7 +1079,9 @@
   .book-presentation-3d-container {
     padding: 1.5rem 20px;
   }
-  
+  .quantity-controls {
+    justify-content: center;
+  }
   .book-presentation-3d-section-header {
     margin-bottom: 35px;
   }
@@ -1225,7 +1233,9 @@
   .book-presentation-3d-container {
     padding: 1rem 15px;
   }
-  
+  .quantity-controls {
+    justify-content: center;
+  }
   .book-presentation-3d-section-header {
     margin-bottom: 30px;
   }
