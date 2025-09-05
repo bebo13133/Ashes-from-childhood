@@ -523,7 +523,7 @@ const BookPresentation3D = () => {
 
                             <div className="book-presentation-3d-cta-section">
                                 <blockquote className="book-presentation-3d-book-quote">
-                                    "От топлината на семейния дом до студената пустота след разялата..."
+                                    " Тишината в една стая може да е по-страшна от крясъците..."
                                 </blockquote>
                                 <p className="book-presentation-3d-quote-caption">
                                     История за развиване, приемане и надежда
