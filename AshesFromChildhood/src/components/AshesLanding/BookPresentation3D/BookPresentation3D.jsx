@@ -5,7 +5,7 @@ import { OrbitControls, Text, Environment, ContactShadows, Float } from '@react-
 import * as THREE from 'three';
 import './BookPresentation3D.css';
 
-// 3D Book компонент (без промени)
+// 3D Book компонент
 function Book3D({ bookImages, ...props }) {
     const groupRef = useRef();
     const [hovered, setHovered] = useState(false);
@@ -40,8 +40,8 @@ function Book3D({ bookImages, ...props }) {
                     map={frontTexture}
                     roughness={0.1}
                     metalness={0.1}
-                    emissive={new THREE.Color(0x333333)} // Добавя базова яркост
-                    emissiveIntensity={0.2} // Интензитет на яркостта
+                    emissive={new THREE.Color(0x333333)}
+                    emissiveIntensity={0.2}
                     side={THREE.FrontSide}
                 />
             </mesh>
@@ -53,8 +53,8 @@ function Book3D({ bookImages, ...props }) {
                     map={frontTexture}
                     roughness={0.2}
                     metalness={0.05}
-                    emissive={new THREE.Color(0x444444)} // Още яркост
-                    emissiveIntensity={0.3} // По-високо за предната корица
+                    emissive={new THREE.Color(0x444444)}
+                    emissiveIntensity={0.3}
                     transparent={true}
                     opacity={0.95}
                 />
@@ -67,7 +67,7 @@ function Book3D({ bookImages, ...props }) {
                     map={backTexture}
                     roughness={0.2}
                     metalness={0.05}
-                    emissive={new THREE.Color(0x444444)} // Яркост и за задната
+                    emissive={new THREE.Color(0x444444)}
                     emissiveIntensity={0.3}
                 />
             </mesh>
@@ -88,11 +88,11 @@ function Book3D({ bookImages, ...props }) {
             <Text
                 position={[1.401, 0, 0]}
                 rotation={[0, Math.PI / 2, Math.PI / 2]}
-                fontSize={0.15}
-                color="#d4af37"
+                fontSize={0.25}
+                color="#d6d6d6ff"
                 anchorX="center"
                 anchorY="middle"
-                // font="/fonts/roboto-regular.woff"
+                font="/fonts/d_CCEnemyLines_Infiltrated.woff"
             >
                 ПЕПЕЛ ОТ ДЕТСТВОТО - СИБЕЛ ИБРЯМОВА
             </Text>
@@ -104,7 +104,7 @@ function Book3D({ bookImages, ...props }) {
                     <meshBasicMaterial
                         color="#ffffff"
                         transparent={true}
-                        opacity={0.15} // Увеличено от 0.1
+                        opacity={0.15}
                         blending={THREE.AdditiveBlending}
                     />
                 </mesh>
@@ -113,7 +113,7 @@ function Book3D({ bookImages, ...props }) {
     );
 }
 
-// Частички около книгата (без промени)
+// Частички около книгата
 function Particles() {
     const points = useRef();
     const particleCount = 100;
@@ -166,17 +166,14 @@ function Particles() {
     );
 }
 
-// Светлинни ефекти (без промени)
+// Светлинни ефекти
 function LightingSetup() {
     return (
         <>
-            {/* Основно осветление - увеличено */}
             <ambientLight intensity={0.8} color="#6a7280" />
-
-            {/* Ключова светлина - увеличена */}
             <directionalLight
                 position={[5, 8, 3]}
-                intensity={1.8} // Увеличено от 1.2
+                intensity={1.8}
                 color="#ffffff"
                 castShadow
                 shadow-mapSize-width={2048}
@@ -187,25 +184,19 @@ function LightingSetup() {
                 shadow-camera-top={10}
                 shadow-camera-bottom={-10}
             />
-
-            {/* Акцентна светлина - увеличена */}
             <spotLight
                 position={[-3, 4, 2]}
-                intensity={1.2} // Увеличено от 0.8
+                intensity={1.2}
                 color="#d4af37"
                 angle={0.6}
                 penumbra={0.5}
                 castShadow
             />
-
-            {/* Попълваща светлина - увеличена */}
             <pointLight
                 position={[0, -2, 4]}
-                intensity={0.8} // Увеличено от 0.5
+                intensity={0.8}
                 color="#8b9dc3"
             />
-
-            {/* Допълнителна предна светлина */}
             <pointLight
                 position={[0, 0, 6]}
                 intensity={0.6}
@@ -215,10 +206,10 @@ function LightingSetup() {
     );
 }
 
-// 3D Сцена (без промени)
+// 3D Сцена
 function BookScene() {
     return (
-        <div className="book-3d-scene">
+        <div className="book-presentation-3d-scene">
             <Canvas
                 shadows
                 camera={{ position: [0, 0, 8], fov: 50 }}
@@ -226,8 +217,6 @@ function BookScene() {
             >
                 <Suspense fallback={null}>
                     <LightingSetup />
-
-                    {/* Книга с Float анимация */}
                     <Float
                         speed={1.5}
                         rotationIntensity={0.2}
@@ -235,11 +224,7 @@ function BookScene() {
                     >
                         <Book3D position={[0, 0, 0]} />
                     </Float>
-
-                    {/* Частички */}
                     <Particles />
-
-                    {/* Сенки */}
                     <ContactShadows
                         position={[0, -3, 0]}
                         opacity={0.4}
@@ -247,11 +232,7 @@ function BookScene() {
                         blur={2.5}
                         far={4}
                     />
-
-                    {/* Околна среда */}
-                    <Environment preset="night" />
-
-                    {/* Контроли за мишката */}
+                    <Environment preset="sunset" />
                     <OrbitControls
                         enablePan={false}
                         enableZoom={false}
@@ -266,7 +247,7 @@ function BookScene() {
     );
 }
 
-// НОВ Rating компонент
+// Book Rating компонент
 function BookRating({ rating = 4.8, viewers }) {
     const renderStars = () => {
         const stars = [];
@@ -275,51 +256,50 @@ function BookRating({ rating = 4.8, viewers }) {
 
         for (let i = 0; i < 5; i++) {
             if (i < fullStars) {
-                stars.push(<span key={i} className="star full">★</span>);
+                stars.push(<span key={i} className="book-presentation-3d-star book-presentation-3d-full">★</span>);
             } else if (i === fullStars && hasHalfStar) {
-                stars.push(<span key={i} className="star half">★</span>);
+                stars.push(<span key={i} className="book-presentation-3d-star book-presentation-3d-half">★</span>);
             } else {
-                stars.push(<span key={i} className="star empty">☆</span>);
+                stars.push(<span key={i} className="book-presentation-3d-star book-presentation-3d-empty">☆</span>);
             }
         }
         return stars;
     };
 
     return (
-        <div className="book-rating-container">
-            <div className="rating-section">
-                <div className="stars-container">
+        <div className="book-presentation-3d-rating-container">
+            <div className="book-presentation-3d-rating-section">
+                <div className="book-presentation-3d-stars-container">
                     {renderStars()}
                 </div>
-                <span className="rating-number-3d">{rating}/5</span>
+                <span className="book-presentation-3d-rating-number">{rating}/5</span>
             </div>
-            <div className="viewers-section">
-                <div className="live-indicator"></div>
-                <span className="viewers-count">{viewers} души наблюдават</span>
+            <div className="book-presentation-3d-viewers-section">
+                <div className="book-presentation-3d-live-indicator"></div>
+                <span className="book-presentation-3d-viewers-count">{viewers} души наблюдават</span>
             </div>
         </div>
     );
 }
 
-// НОВ ImageView компонент
+// ImageView компонент
 function ImageView({ imageSrc, imageAlt, onClose }) {
     return (
-        <div className="image-view-container">
-            <div className="large-image-wrapper">
-                <img 
-                    src={imageSrc} 
+        <div className="book-presentation-3d-image-view-container">
+            <div className="book-presentation-3d-large-image-wrapper">
+                <img
+                    src={imageSrc}
                     alt={imageAlt}
-                    className="large-display-image"
+                    className="book-presentation-3d-large-display-image"
                 />
-                <button className="back-to-3d-btn" onClick={onClose}>
-                    <span>← Назад към 3D модела</span>
+                <button className="book-presentation-3d-back-to-3d-btn" onClick={onClose}>
                 </button>
             </div>
         </div>
     );
 }
 
-// НОВ Thumbnail Gallery компонент
+// Thumbnail Gallery компонент с минималистичен дизайн
 function ThumbnailGallery({ currentView, onImageClick, onModelClick }) {
     const bookImages = [
         {
@@ -329,11 +309,11 @@ function ThumbnailGallery({ currentView, onImageClick, onModelClick }) {
         },
         {
             src: '/images/book/cover-back.jpg',
-            alt: 'Задна корица', 
+            alt: 'Задна корица',
             title: 'Задна част'
         },
         {
-            src: '/images/book/book-3d-1.jpg',
+            src: '/images/book/two-books3.png',
             alt: '3D изглед',
             title: '3D изглед'
         },
@@ -344,42 +324,62 @@ function ThumbnailGallery({ currentView, onImageClick, onModelClick }) {
         }
     ];
 
+    const scrollToOrder = () => {
+        const orderSection = document.getElementById('order-section');
+        if (orderSection) {
+            orderSection.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    };
+
     return (
-        <div className="thumbnail-gallery-3d">
-            <h4 className="gallery-title">Разгледайте книгата:</h4>
-            <div className="thumbnails-container">
-                <div 
-                    className={`thumbnail-3d model-thumb ${currentView === '3d' ? 'active' : ''}`}
+        <div className="book-presentation-3d-thumbnail-gallery">
+            {/* Минималистичен urgent message */}
+            <div className="book-presentation-3d-urgent-label">
+                <span>📖 Важно! Бройките са строго ограничени. Не отлагай. Тази история не чака.</span>
+            </div>
+
+            <h4 className="book-presentation-3d-gallery-title">Разгледайте книгата:</h4>
+            <div className="book-presentation-3d-thumbnails-container">
+                <div
+                    className={`book-presentation-3d-thumbnail book-presentation-3d-model-thumb ${currentView === '3d' ? 'book-presentation-3d-active' : ''}`}
                     onClick={onModelClick}
                 >
-                    <div className="model-thumb-content">
-                        <span className="model-thumb-icon">📱</span>
-                        <div className="model-thumb-text">3D</div>
+                    <div className="book-presentation-3d-model-thumb-content">
+                        <span className="book-presentation-3d-model-thumb-icon">📱</span>
+                        <div className="book-presentation-3d-model-thumb-text">3D</div>
                     </div>
                 </div>
-                
+
                 {bookImages.map((image, index) => (
                     <div
                         key={index}
-                        className={`thumbnail-3d ${currentView === image.src ? 'active' : ''}`}
+                        className={`book-presentation-3d-thumbnail ${currentView === image.src ? 'book-presentation-3d-active' : ''}`}
                         onClick={() => onImageClick(image.src, image.alt)}
                     >
                         <img src={image.src} alt={image.alt} />
-                        <div className="thumbnail-title">{image.title}</div>
+                        <div className="book-presentation-3d-thumbnail-title">{image.title}</div>
                     </div>
                 ))}
             </div>
+
+            {/* Простия order бутон */}
+            <button className="book-presentation-3d-order-btn-gallery" onClick={scrollToOrder}>
+                Вземи я сега
+            </button>
         </div>
     );
 }
 
-// Главен компонент (обновен)
+// Главен компонент
 const BookPresentation3D = () => {
     const [isVisible, setIsVisible] = useState(false);
-    const [currentView, setCurrentView] = useState('3d'); // '3d' или image src
+    const [currentView, setCurrentView] = useState('3d');
     const [currentImageSrc, setCurrentImageSrc] = useState('');
     const [currentImageAlt, setCurrentImageAlt] = useState('');
-    const [liveViewers, setLiveViewers] = useState(Math.floor(Math.random() * 40) + 25); // 25-64
+    const [liveViewers, setLiveViewers] = useState(Math.floor(Math.random() * 40) + 25);
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -391,7 +391,7 @@ const BookPresentation3D = () => {
             { threshold: 0.3 }
         );
 
-        const element = document.querySelector('.book-presentation-3d');
+        const element = document.querySelector('.book-presentation-3d-main');
         if (element) observer.observe(element);
         return () => observer.disconnect();
     }, []);
@@ -402,9 +402,9 @@ const BookPresentation3D = () => {
             const change = Math.random() > 0.5 ? 1 : -1;
             setLiveViewers(prev => {
                 const newCount = prev + change;
-                return Math.max(15, Math.min(65, newCount)); // Между 15 и 65
+                return Math.max(15, Math.min(65, newCount));
             });
-        }, 3000 + Math.random() * 2000); // Every 3-5 seconds
+        }, 3000 + Math.random() * 2000);
 
         return () => clearInterval(interval);
     }, []);
@@ -420,90 +420,59 @@ const BookPresentation3D = () => {
     };
 
     return (
-        <section id='book-presentation' className="book-presentation-3d">
-            {/* <video
-            className="video-background"
-            autoPlay
-            muted
-            loop
-            playsInline
-             ref={(video) => {
-                if (video) {
-                    video.playbackRate = 0.5; // 0.5 = половин скорост, 0.25 = четвърт скорост
-                }
-            }}
-            onLoadedData={(e) => {
-                e.target.playbackRate = 0.5; // Забавяне на 50%
-            }}
-            onError={(e) => {
-                console.log('Video failed to load:', e);
-                e.target.style.display = 'none';
-            }}
-        >
-            <source src="/images/book/burning-paper-ai3.mp4" type="video/mp4" />
-            <source src="/images/book/burning-paper-ai3.webm" type="video/webm" />
-        </video>
-        <div className="video-overlay"></div> */}
-        
-        {/* Fallback background ако видеото не работи */}
-        <div className="fallback-background"></div>
-            <div className="presentation-background-3d">
-                <div className="cosmic-particles">
+        <section id='book-presentation' className="book-presentation-3d-main">
+            <div className="book-presentation-3d-fallback-background"></div>
+
+            <div className="book-presentation-3d-presentation-background">
+                <div className="book-presentation-3d-cosmic-particles">
                     {[...Array(50)].map((_, i) => (
-                        <div key={i} className={`cosmic-particle cosmic-${i % 5}`}></div>
+                        <div key={i} className={`book-presentation-3d-cosmic-particle book-presentation-3d-cosmic-${i % 5}`}></div>
                     ))}
                 </div>
             </div>
 
-            <div className="container-3d">
-                <div className={`presentation-content-3d ${isVisible ? 'fade-in-up' : ''}`}>
+            <div className="book-presentation-3d-container">
+                <div className={`book-presentation-3d-presentation-content ${isVisible ? 'book-presentation-3d-fade-in-up' : ''}`}>
 
-                    <div className="section-header-3d">
-                        <h2 className="section-title-3d">
-                            Открийте Мистерията
+                    <div className="book-presentation-3d-section-header">
+                        <h2 className="book-presentation-3d-section-title">
+                            Чуйте мислите на детето
                         </h2>
-                        <p className="section-subtitle-3d">
-                            "Пепел от детството" - История, която ще докосне сърцето ви
+                        <p className="book-presentation-3d-section-subtitle">
+                            "Пепел от детството" – една история, която може да промени начина, по който гледаш на родителството, на болката и на любовта."
                         </p>
                     </div>
 
-                    <div className="presentation-grid-3d">
-
-                        {/* Enhanced 3D Scene or Image View */}
-                        <div className="book-showcase-3d">
-                            
-                            {/* Rating and Live Viewers */}
+                    <div className="book-presentation-3d-presentation-grid">
+                        <div className="book-presentation-3d-book-showcase">
                             <BookRating rating={4.8} viewers={liveViewers} />
-                            
-                            {/* Main Display Area */}
+
                             {currentView === '3d' ? (
                                 <>
                                     <BookScene />
-                                    <div className="interaction-hint">
+                                    <div className="book-presentation-3d-interaction-hint">
                                         <span>Влачете за въртене • Автоматично въртене</span>
                                     </div>
                                 </>
                             ) : (
-                                <ImageView 
+                                <ImageView
                                     imageSrc={currentImageSrc}
                                     imageAlt={currentImageAlt}
                                     onClose={handleModelClick}
                                 />
                             )}
 
-                            {/* Thumbnail Gallery */}
-                            <ThumbnailGallery 
+                            <ThumbnailGallery
                                 currentView={currentView}
                                 onImageClick={handleImageClick}
                                 onModelClick={handleModelClick}
                             />
 
-                            {/* Mini 3D Model when image is active */}
                             {currentView !== '3d' && (
-                                <div className="mini-3d-model" onClick={handleModelClick}>
-                                    <div className="mini-3d-content">
+                                <div className="book-presentation-3d-mini-3d-model" onClick={handleModelClick}>
+                                    <div className="book-presentation-3d-mini-3d-content">
                                         <BookScene />
-                                        <div className="mini-3d-overlay">
+                                        <div className="book-presentation-3d-mini-3d-overlay">
                                             <span>← Назад към 3D</span>
                                         </div>
                                     </div>
@@ -511,52 +480,53 @@ const BookPresentation3D = () => {
                             )}
                         </div>
 
-                        {/* Enhanced Information Panel */}
-                        <div className="book-info-3d">
-                            <h3 className="info-title-3d">
+                        <div className="book-presentation-3d-book-info">
+                            <h3 className="book-presentation-3d-info-title">
                                 Защо да изберете тази книга?
                             </h3>
 
-                            <div className="features-list">
-                                <div className={`feature-item ${isVisible ? 'animate-in' : ''}`} style={{ animationDelay: '0.2s' }}>
-                                    <div className="feature-icon">💭</div>
-                                    <div className="feature-content">
+                            <div className="book-presentation-3d-features-list">
+                                <div className={`book-presentation-3d-feature-item ${isVisible ? 'book-presentation-3d-animate-in' : ''}`} style={{ animationDelay: '0.2s' }}>
+                                    <div className="book-presentation-3d-feature-icon">💭</div>
+                                    <div className="book-presentation-3d-feature-content">
                                         <h4>Откровена История</h4>
-                                        <p>Разкрива най-дълбоките мисли и чувства на детската душа</p>
+                                        <p>Написана е през очите на дете.
+                                            Но говори на всички нас – възрастните.
+                                            На онези, които понякога забравяме как думите, мълчанието и изборите ни оставят следи – не върху стените, а в сърцата.</p>
                                     </div>
                                 </div>
 
-                                <div className={`feature-item ${isVisible ? 'animate-in' : ''}`} style={{ animationDelay: '0.4s' }}>
-                                    <div className="feature-icon">❤️</div>
-                                    <div className="feature-content">
+                                <div className={`book-presentation-3d-feature-item ${isVisible ? 'book-presentation-3d-animate-in' : ''}`} style={{ animationDelay: '0.4s' }}>
+                                    <div className="book-presentation-3d-feature-icon">❤️</div>
+                                    <div className="book-presentation-3d-feature-content">
                                         <h4>Емоционално Пътешествие</h4>
-                                        <p>Преживейте невинността, болката и надеждата през детски очи</p>
+                                        <p>Прочети я. </p>
+                                        <p>Почувствай я.</p>
+                                        <p>И най-важното – помни:  детето вижда. </p>
+                                        <p>Детето усеща. </p>
+                                        Детето никога не забравя.
                                     </div>
                                 </div>
 
-                                <div className={`feature-item ${isVisible ? 'animate-in' : ''}`} style={{ animationDelay: '0.6s' }}>
-                                    <div className="feature-icon">👁️</div>
-                                    <div className="feature-content">
-                                        <h4>Уникална Перспектива</h4>
-                                        <p>Взгляд към света от гледна точка на новородено дете</p>
-                                    </div>
-                                </div>
-
-                                <div className={`feature-item ${isVisible ? 'animate-in' : ''}`} style={{ animationDelay: '0.8s' }}>
-                                    <div className="feature-icon">✨</div>
-                                    <div className="feature-content">
+                                <div className={`book-presentation-3d-feature-item ${isVisible ? 'book-presentation-3d-animate-in' : ''}`} style={{ animationDelay: '0.8s' }}>
+                                    <div className="book-presentation-3d-feature-icon">✨</div>
+                                    <div className="book-presentation-3d-feature-content">
                                         <h4>Дълбок Смисъл</h4>
-                                        <p>Книга, която ще ви кара да преосмислите детството и семейството</p>
+                                        <p>Тази книга не е дълга. Не е трудна. Не е от онези, които те товарят или изтощават.
+                                            Но е от онези, които те хващат за гърлото… и не те пускат, докато не стигнеш края.
+                                            Дори и да не обичаш да четеш – ще я прочетеш.
+                                            С едно поемане на дъх.
+                                            И ще се замислиш – какво виждат децата ни? Какво попиват от нас? Какви спомени им оставяме?</p>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="cta-section">
-                                <blockquote className="book-quote">
+                            <div className="book-presentation-3d-cta-section">
+                                <blockquote className="book-presentation-3d-book-quote">
                                     "От топлината на семейния дом до студената пустота след разялата..."
                                 </blockquote>
-                                <p className="quote-caption">
-                                    История за развиране, приемане и надежда
+                                <p className="book-presentation-3d-quote-caption">
+                                    История за развиване, приемане и надежда
                                 </p>
                             </div>
                         </div>
