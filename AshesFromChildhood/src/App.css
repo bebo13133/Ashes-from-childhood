@@ -64,7 +64,15 @@ img {
   height: auto;
   display: block;
 }
-
+@font-face {
+  font-family: 'CCEnemyLines';
+  src: url('./assets/fonts/d_CCEnemyLines_Infiltrated.woff2') format('woff2'),
+       url('./assets/fonts/d_CCEnemyLines_Infiltrated.woff') format('woff'),
+       url('./assets/fonts/d_CCEnemyLines_Infiltrated.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 /* Reset table */
 table {
   border-collapse: collapse;
