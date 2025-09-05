@@ -2,7 +2,7 @@
   /* background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%); */
   color: #e0e0e0;
   font-family: 'Georgia', 'Times New Roman', serif;
-  position: relative;
+  /* position: relative; */
   overflow-x: hidden;
 }
 .book-presentation-3d {
@@ -42,7 +42,7 @@
   background: transparent; /* Премахни gradient background */
   color: #e0e0e0;
   font-family: 'Georgia', 'Times New Roman', serif;
-  position: relative;
+  /* position: relative; */
   overflow-x: hidden;
   min-height: 100vh;
   z-index: 1;
