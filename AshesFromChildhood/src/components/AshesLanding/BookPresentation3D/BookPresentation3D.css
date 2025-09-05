@@ -102,9 +102,8 @@
 
 /* 3D Book Showcase */
 .book-presentation-3d-book-showcase {
-
+  position: relative;
   height: 850px;
-
   background: radial-gradient(ellipse, rgba(15, 52, 96, 0.1), transparent);
   border-radius: 20px;
   border: 2px solid rgba(212, 175, 55, 0.2);
@@ -442,7 +441,6 @@
 .book-presentation-3d-image-view-container {
   width: 100%;
   height: 100%;
-  padding-bottom: 5rem;
   display: flex;
   align-items: center;
   justify-content: center;
