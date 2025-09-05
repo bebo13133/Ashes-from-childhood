@@ -523,8 +523,110 @@
   filter: brightness(1.3) contrast(1.15);
 }
 
-/* Responsive Design */
-@media (max-width: 1024px) {
+/* ===== RESPONSIVE CSS ===== */
+
+/* Extra Large Screens (1920px+) */
+@media (min-width: 1920px) {
+  .book-presentation-3d-container {
+    max-width: 1800px;
+    padding: 5rem 60px;
+  }
+  
+  .book-presentation-3d-section-title {
+    font-size: 5rem;
+  }
+  
+  .book-presentation-3d-section-subtitle {
+    font-size: 1.8rem;
+  }
+  
+  .book-presentation-3d-presentation-grid {
+    gap: 100px;
+  }
+  
+  .book-presentation-3d-book-showcase {
+    height: 950px;
+  }
+  
+  .book-presentation-3d-scene {
+    height: 820px;
+  }
+  
+  .book-presentation-3d-info-title {
+    font-size: 3.2rem;
+  }
+  
+  .book-presentation-3d-feature-item {
+    padding: 35px;
+    margin-bottom: 40px;
+  }
+  
+  .book-presentation-3d-feature-icon {
+    font-size: 2.6rem;
+    min-width: 60px;
+  }
+  
+  .book-presentation-3d-feature-content h4 {
+    font-size: 1.5rem;
+  }
+  
+  .book-presentation-3d-feature-content p {
+    font-size: 1.1rem;
+  }
+}
+
+/* Large Screens (1440px-1919px) */
+@media (min-width: 1440px) and (max-width: 1919px) {
+  .book-presentation-3d-container {
+    max-width: 1600px;
+    padding: 4.5rem 50px;
+  }
+  
+  .book-presentation-3d-presentation-grid {
+    gap: 90px;
+  }
+  
+  .book-presentation-3d-book-showcase {
+    height: 900px;
+  }
+  
+  .book-presentation-3d-scene {
+    height: 770px;
+  }
+}
+
+/* Medium Large Screens (1280px-1439px) */
+@media (min-width: 1280px) and (max-width: 1439px) {
+  .book-presentation-3d-container {
+    max-width: 1400px;
+    padding: 4rem 45px;
+  }
+  
+  .book-presentation-3d-presentation-grid {
+    gap: 85px;
+  }
+  
+  .book-presentation-3d-book-showcase {
+    height: 850px;
+  }
+  
+  .book-presentation-3d-feature-item {
+    padding: 28px;
+    margin-bottom: 32px;
+  }
+}
+
+/* Small Laptops/Large Tablets (1024px-1279px) */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .book-presentation-3d-container {
+    max-width: 1200px;
+    padding: 3.5rem 40px;
+  }
+  
+  .book-presentation-3d-section-header {
+    margin-bottom: 60px;
+  }
+  
   .book-presentation-3d-presentation-grid {
     grid-template-columns: 1fr;
     gap: 60px;
@@ -536,41 +638,122 @@
   }
   
   .book-presentation-3d-book-showcase {
-    height: 500px;
-  }
-}
-
-@media (max-width: 768px) {
-  .book-presentation-3d-container {
-    padding: 0 20px;
+    height: 780px;
+    margin: 0 200px;
+    max-width: 600px;
   }
   
-  .book-presentation-3d-book-showcase {
-    height: 600px;
+  .book-presentation-3d-scene {
+    height: 560px;
   }
   
+  .book-presentation-3d-info-title {
+    font-size: 2.4rem;
+  }
+  .book-presentation-3d-large-display-image {
+    max-height: 340px;
+    margin-bottom: 8rem;
+  }
   .book-presentation-3d-feature-item {
     padding: 25px;
     margin-bottom: 25px;
-    flex-direction: column;
-    text-align: center;
-    gap: 15px;
   }
   
-  .book-presentation-3d-feature-icon {
-    min-width: auto;
-    width: 80px;
-    height: 80px;
-    margin: 0 auto;
-  }
-
   .book-presentation-3d-rating-container {
-    padding: 8px 15px;
-    font-size: 0.8rem;
+    padding: 10px 18px;
   }
   
   .book-presentation-3d-thumbnail-gallery {
-    padding: 10px;
+    padding: 12px;
+  }
+  
+  .book-presentation-3d-mini-3d-model {
+    width: 110px;
+    height: 85px;
+    bottom: 115px;
+  }
+}
+
+/* Tablets Portrait (768px-1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .book-presentation-3d-container {
+    padding: 3rem 35px;
+  }
+  
+  .book-presentation-3d-section-header {
+    margin-bottom: 50px;
+  }
+  
+  .book-presentation-3d-section-title {
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+  }
+  
+  .book-presentation-3d-section-subtitle {
+    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  }
+  
+  .book-presentation-3d-presentation-grid {
+    grid-template-columns: 1fr;
+    gap: 50px;
+    text-align: center;
+  }
+  
+  .book-presentation-3d-book-info {
+    padding-left: 0;
+  }
+  
+  .book-presentation-3d-book-showcase {
+    height: 700px;
+    /* margin: 0 auto; */
+    max-width: 100%;
+  }
+  
+  .book-presentation-3d-scene {
+    height: 520px;
+  }
+  
+  .book-presentation-3d-info-title {
+    font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+  }
+  
+  .book-presentation-3d-feature-item {
+    padding: 22px;
+    margin-bottom: 22px;
+    flex-direction: row;
+    text-align: left;
+    align-items: center;
+    
+    gap: 18px;
+  }
+  
+  .book-presentation-3d-feature-icon {
+    font-size: 2rem;
+    min-width: 45px;
+  }
+  
+  .book-presentation-3d-feature-content h4 {
+    font-size: 1.2rem;
+  }
+  
+  .book-presentation-3d-feature-content p {
+    font-size: 0.95rem;
+  }
+  
+  .book-presentation-3d-rating-container {
+    padding: 10px 16px;
+  }
+  
+  .book-presentation-3d-star {
+    font-size: 1.1rem;
+  }
+  
+  .book-presentation-3d-rating-number,
+  .book-presentation-3d-viewers-count {
+    font-size: 0.85rem;
+  }
+  
+  .book-presentation-3d-thumbnail-gallery {
+    padding: 12px;
   }
   
   .book-presentation-3d-thumbnails-container {
@@ -578,48 +761,417 @@
   }
   
   .book-presentation-3d-thumbnail {
-    width: 50px;
-    height: 38px;
+    width: 55px;
+    height: 42px;
   }
   
   .book-presentation-3d-mini-3d-model {
-    width: 100px;
-    height: 75px;
+    width: 105px;
+    height: 80px;
     bottom: 110px;
   }
-
-  .book-presentation-3d-urgent-label span {
-    font-size: 0.7rem;
+  
+  .book-presentation-3d-large-display-image {
+    max-height: 320px;
+    margin-bottom: 7rem;
   }
   
-  .book-presentation-3d-order-btn-gallery {
-    padding: 10px 16px;
-    font-size: 0.8rem;
+  .book-presentation-3d-cta-section {
+    padding: 28px;
+  }
+  
+  .book-presentation-3d-book-quote {
+    font-size: 1.3rem;
+  }
+  
+  .book-presentation-3d-quote-caption {
+    font-size: 1rem;
   }
 }
 
-@media (max-width: 480px) {
-  .book-presentation-3d-cosmic-particles {
-    display: none;
+/* Large Mobile/Small Tablets (600px-767px) */
+@media (min-width: 600px) and (max-width: 767px) {
+  .book-presentation-3d-container {
+    padding: 2.5rem 30px;
+  }
+  
+  .book-presentation-3d-section-header {
+    margin-bottom: 45px;
+  }
+  
+  .book-presentation-3d-section-title {
+    font-size: clamp(2rem, 4.5vw, 3rem);
+  }
+  
+  .book-presentation-3d-section-subtitle {
+    font-size: clamp(1rem, 2.2vw, 1.3rem);
+  }
+  
+  .book-presentation-3d-presentation-grid {
+    grid-template-columns: 1fr;
+    gap: 45px;
+    text-align: center;
+  }
+  
+  .book-presentation-3d-book-info {
+    padding-left: 0;
   }
   
   .book-presentation-3d-book-showcase {
     height: 650px;
+    /* margin: 0 auto; */
+    max-width: 100%;
+  }
+  
+  .book-presentation-3d-scene {
+    height: 520px;
+  }
+  
+  .book-presentation-3d-info-title {
+    font-size: clamp(1.5rem, 3.2vw, 2rem);
   }
   
   .book-presentation-3d-feature-item {
     padding: 20px;
+    margin-bottom: 20px;
+    flex-direction: column;
+    text-align: center;
+     justify-items: center;
+     align-items: center;
+    gap: 15px;
+  }
+  
+  .book-presentation-3d-feature-icon {
+    font-size: 1.8rem;
+    min-width: auto;
+    width: 70px;
+    height: 70px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(212, 175, 55, 0.1);
+    border-radius: 50%;
+  }
+  
+  .book-presentation-3d-feature-content h4 {
+    font-size: 1.15rem;
+  }
+  
+  .book-presentation-3d-feature-content p {
+    font-size: 0.9rem;
+  }
+  
+  .book-presentation-3d-rating-container {
+    padding: 9px 14px;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .book-presentation-3d-rating-section,
+  .book-presentation-3d-viewers-section {
+    justify-content: center;
+  }
+  
+  .book-presentation-3d-star {
+    font-size: 1rem;
+  }
+  
+  .book-presentation-3d-rating-number,
+  .book-presentation-3d-viewers-count {
+    font-size: 0.8rem;
+  }
+  
+  .book-presentation-3d-thumbnail-gallery {
+    padding: 10px;
+  }
+  
+  .book-presentation-3d-gallery-title {
+    font-size: 0.85rem;
+  }
+  
+  .book-presentation-3d-thumbnails-container {
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .book-presentation-3d-thumbnail {
+    width: 50px;
+    height: 38px;
+  }
+  
+  .book-presentation-3d-urgent-label span {
+    font-size: 0.75rem;
+  }
+  
+  .book-presentation-3d-order-btn-gallery {
+    padding: 10px 16px;
+    font-size: 0.85rem;
+  }
+  
+  .book-presentation-3d-mini-3d-model {
+    width: 95px;
+    height: 72px;
+    bottom: 105px;
+  }
+  
+  .book-presentation-3d-large-display-image {
+    max-height: 300px;
+    margin-bottom: 7rem;
   }
   
   .book-presentation-3d-cta-section {
     padding: 25px;
   }
   
+  .book-presentation-3d-book-quote {
+    font-size: 1.2rem;
+  }
+  
+  .book-presentation-3d-interaction-hint {
+    font-size: 0.85rem;
+    padding: 8px 14px;
+  }
+}
+
+/* Medium Mobile (480px-599px) */
+@media (min-width: 480px) and (max-width: 599px) {
+  .book-presentation-3d-container {
+    padding: 2rem 25px;
+  }
+  
+  .book-presentation-3d-section-header {
+    margin-bottom: 40px;
+  }
+  
+  .book-presentation-3d-section-title {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+  }
+  
+  .book-presentation-3d-section-subtitle {
+    font-size: clamp(0.95rem, 2vw, 1.2rem);
+  }
+  
+  .book-presentation-3d-presentation-grid {
+    gap: 40px;
+    grid-template-columns: 1fr;
+  }
+  
+  .book-presentation-3d-book-showcase {
+    height: 600px;
+    max-width: 100% ;
+  }
+  
+  .book-presentation-3d-scene {
+    height: 400px;
+  }
+  
+  .book-presentation-3d-info-title {
+    font-size: clamp(1.4rem, 3vw, 1.8rem);
+  }
+  
+  .book-presentation-3d-feature-item {
+    padding: 18px;
+    margin-bottom: 18px;
+    align-items: center;
+   
+  }
+  
+  .book-presentation-3d-feature-icon {
+    width: 65px;
+    height: 65px;
+    font-size: 1.7rem;
+  }
+  
+  .book-presentation-3d-feature-content h4 {
+    font-size: 1.1rem;
+  }
+  
+  .book-presentation-3d-feature-content p {
+    font-size: 0.85rem;
+  }
+  
+  .book-presentation-3d-rating-container {
+    padding: 8px 12px;
+  }
+  
+  .book-presentation-3d-star {
+    font-size: 0.95rem;
+  }
+  
+  .book-presentation-3d-rating-number,
+  .book-presentation-3d-viewers-count {
+    font-size: 0.75rem;
+  }
+  
+  .book-presentation-3d-thumbnail-gallery {
+    padding: 9px;
+  }
+  
+  .book-presentation-3d-gallery-title {
+    font-size: 0.8rem;
+  }
+  
+  .book-presentation-3d-thumbnail {
+    width: 48px;
+    height: 36px;
+  }
+  
+  .book-presentation-3d-model-thumb-icon {
+    font-size: 1.1rem;
+  }
+  
+  .book-presentation-3d-model-thumb-text {
+    font-size: 0.55rem;
+  }
+  
+  .book-presentation-3d-urgent-label span {
+    font-size: 0.7rem;
+  }
+  
+  .book-presentation-3d-order-btn-gallery {
+    padding: 9px 14px;
+    font-size: 0.8rem;
+  }
+  
+  .book-presentation-3d-mini-3d-model {
+    width: 90px;
+    height: 68px;
+    bottom: 100px;
+  }
+  
+  .book-presentation-3d-mini-3d-overlay {
+    font-size: 0.65rem;
+  }
+  
+  .book-presentation-3d-large-display-image {
+    max-height: 250px;
+    margin-bottom: 8rem;
+  }
+  
+  .book-presentation-3d-cta-section {
+    padding: 22px;
+  }
+  
+  .book-presentation-3d-book-quote {
+    font-size: 1.1rem;
+  }
+  
+  .book-presentation-3d-quote-caption {
+    font-size: 0.95rem;
+  }
+  
   .book-presentation-3d-interaction-hint {
     font-size: 0.8rem;
-    padding: 8px 15px;
+    padding: 7px 12px;
   }
+}
 
+/* Small Mobile (375px-479px) */
+@media (min-width: 375px) and (max-width: 479px) {
+  .book-presentation-3d-container {
+    padding: 1.5rem 20px;
+  }
+  
+  .book-presentation-3d-section-header {
+    margin-bottom: 35px;
+  }
+  
+  .book-presentation-3d-section-title {
+    font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+  }
+  
+  .book-presentation-3d-section-subtitle {
+    font-size: clamp(0.9rem, 1.8vw, 1.1rem);
+  }
+  
+  .book-presentation-3d-presentation-grid {
+    gap: 35px;
+    text-align: center;
+    grid-template-columns: 1fr;
+  }
+  
+  .book-presentation-3d-book-showcase {
+    height: 620px;
+    max-width: 100%;
+  }
+  
+  .book-presentation-3d-scene {
+    height: 380px;
+    margin-top: 3rem;
+  }
+  
+  .book-presentation-3d-info-title {
+    font-size: clamp(1.3rem, 2.8vw, 1.7rem);
+  }
+  
+  .book-presentation-3d-feature-item {
+    padding: 16px;
+    margin-bottom: 16px;
+    flex-direction: column;
+    align-items: center;
+  }
+  .book-presentation-3d-book-info {
+    padding-left: 0;
+  }
+  
+  .book-presentation-3d-feature-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 1.6rem;
+  }
+  
+  .book-presentation-3d-feature-content h4 {
+    font-size: 1.05rem;
+  }
+  
+  .book-presentation-3d-feature-content p {
+    font-size: 0.8rem;
+  }
+  
+  .book-presentation-3d-rating-container {
+    padding: 7px 10px;
+  }
+  
+  .book-presentation-3d-star {
+    font-size: 0.9rem;
+  }
+  
+  .book-presentation-3d-rating-number,
+  .book-presentation-3d-viewers-count {
+    font-size: 0.7rem;
+  }
+  
+  .book-presentation-3d-thumbnail-gallery {
+    padding: 8px;
+  }
+  
+  .book-presentation-3d-gallery-title {
+    font-size: 0.75rem;
+  }
+  
+  .book-presentation-3d-thumbnail {
+    width: 45px;
+    height: 34px;
+  }
+  
+  .book-presentation-3d-model-thumb-icon {
+    font-size: 1rem;
+  }
+  
+  .book-presentation-3d-model-thumb-text {
+    font-size: 0.5rem;
+  }
+  
+  .book-presentation-3d-thumbnail-title {
+    font-size: 0.45rem;
+  }
+  
+  .book-presentation-3d-urgent-label {
+    padding: 6px 10px;
+  }
+  
   .book-presentation-3d-urgent-label span {
     font-size: 0.65rem;
   }
@@ -628,16 +1180,416 @@
     padding: 8px 12px;
     font-size: 0.75rem;
   }
+  
+  .book-presentation-3d-mini-3d-model {
+    width: 85px;
+    height: 64px;
+    bottom: 95px;
+  }
+  
+  .book-presentation-3d-mini-3d-overlay {
+    font-size: 0.6rem;
+  }
+  
+  .book-presentation-3d-large-display-image {
+    max-height: 220px;
+    margin-bottom: 6rem;
+  }
+  
+  .book-presentation-3d-cta-section {
+    padding: 20px;
+  }
+  
+  .book-presentation-3d-book-quote {
+    font-size: 1rem;
+  }
+  
+  .book-presentation-3d-quote-caption {
+    font-size: 0.9rem;
+  }
+  
+  .book-presentation-3d-interaction-hint {
+    font-size: 0.75rem;
+    padding: 6px 10px;
+  }
 }
 
-/* Performance optimizations */
-@media (prefers-reduced-motion: reduce) {
-  .book-presentation-3d-cosmic-particles,
-  .book-presentation-3d-interaction-hint {
-    animation: none;
+/* Extra Small Mobile (320px-374px) */
+@media (min-width: 320px) and (max-width: 374px) {
+  .book-presentation-3d-cosmic-particles {
+    display: none;
+  }
+  .book-presentation-3d-book-info {
+    padding-left: 0;
+  }
+  .book-presentation-3d-container {
+    padding: 1rem 15px;
+  }
+  
+  .book-presentation-3d-section-header {
+    margin-bottom: 30px;
+  }
+  
+  .book-presentation-3d-section-title {
+    font-size: clamp(1.4rem, 3.2vw, 1.9rem);
+  }
+  
+  .book-presentation-3d-section-subtitle {
+    font-size: clamp(0.8rem, 1.6vw, 1rem);
+  }
+  
+  .book-presentation-3d-presentation-grid {
+    gap: 30px;
+  }
+  
+  .book-presentation-3d-book-showcase {
+    height: 500px;
+    max-width: 100%;
+  }
+  
+  .book-presentation-3d-scene {
+    height: 320px;
+    margin-top: 2rem;
+  }
+  
+  .book-presentation-3d-info-title {
+    font-size: clamp(1.2rem, 2.5vw, 1.5rem);
   }
   
   .book-presentation-3d-feature-item {
+    padding: 14px;
+    margin-bottom: 14px;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+
+  }
+  
+  .book-presentation-3d-feature-icon {
+    width: 55px;
+    height: 55px;
+    font-size: 1.4rem;
+  }
+  
+  .book-presentation-3d-feature-content h4 {
+    font-size: 1rem;
+  }
+  
+  .book-presentation-3d-feature-content p {
+    font-size: 0.75rem;
+  }
+  
+  .book-presentation-3d-rating-container {
+    padding: 6px 8px;
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .book-presentation-3d-star {
+    font-size: 0.8rem;
+  }
+  
+  .book-presentation-3d-rating-number,
+  .book-presentation-3d-viewers-count {
+    font-size: 0.65rem;
+  }
+  
+  .book-presentation-3d-thumbnail-gallery {
+    padding: 6px;
+  }
+  
+  .book-presentation-3d-gallery-title {
+    font-size: 0.7rem;
+    margin-bottom: 8px;
+  }
+  
+  .book-presentation-3d-thumbnails-container {
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  
+  .book-presentation-3d-thumbnail {
+    width: 40px;
+    height: 30px;
+  }
+  
+  .book-presentation-3d-model-thumb-content {
+    padding: 8px 0;
+  }
+  
+  .book-presentation-3d-model-thumb-icon {
+    font-size: 0.9rem;
+  }
+  
+  .book-presentation-3d-model-thumb-text {
+    font-size: 0.45rem;
+  }
+  
+  .book-presentation-3d-thumbnail-title {
+    font-size: 0.4rem;
+    padding: 1px 2px;
+  }
+  
+  .book-presentation-3d-urgent-label {
+    padding: 5px 8px;
+    margin-bottom: 8px;
+  }
+  
+  .book-presentation-3d-urgent-label span {
+    font-size: 0.6rem;
+  }
+  
+  .book-presentation-3d-order-btn-gallery {
+    padding: 6px 10px;
+    font-size: 0.7rem;
+  }
+  
+  .book-presentation-3d-mini-3d-model {
+    width: 75px;
+    height: 56px;
+    bottom: 85px;
+    right: 15px;
+  }
+  
+  .book-presentation-3d-mini-3d-overlay {
+    font-size: 0.55rem;
+    padding: 3px;
+  }
+  
+  .book-presentation-3d-large-display-image {
+    max-height: 180px;
+    margin-bottom: 6rem;
+  }
+  
+  .book-presentation-3d-cta-section {
+    padding: 16px;
+  }
+  
+  .book-presentation-3d-book-quote {
+    font-size: 0.9rem;
+  }
+  
+  .book-presentation-3d-quote-caption {
+    font-size: 0.8rem;
+  }
+  
+  .book-presentation-3d-interaction-hint {
+    font-size: 0.7rem;
+    padding: 5px 8px;
+    bottom: 15px;
+  }
+  .book-presentation-3d-presentation-grid {
+    grid-template-columns: 1fr;
+    gap: 45px;
+    text-align: center;
+  }
+}
+
+/* Very Small Screens (max-width: 319px) */
+@media (max-width: 319px) {
+  .book-presentation-3d-cosmic-particles {
+    display: none;
+  }
+  
+  .book-presentation-3d-container {
+    padding: 0.5rem 10px;
+  }
+  
+  .book-presentation-3d-section-header {
+    margin-bottom: 25px;
+  }
+  
+  .book-presentation-3d-section-title {
+    font-size: 1.3rem;
+  }
+  
+  .book-presentation-3d-section-subtitle {
+    font-size: 0.75rem;
+  }
+  
+  .book-presentation-3d-presentation-grid {
+    gap: 25px;
+  }
+  
+  .book-presentation-3d-book-showcase {
+    height: 400px;
+    max-width: 100%;
+  }
+  
+  .book-presentation-3d-scene {
+    height: 270px;
+  }
+  
+  .book-presentation-3d-info-title {
+    font-size: 1.1rem;
+  }
+  
+  .book-presentation-3d-feature-item {
+    padding: 12px;
+    margin-bottom: 12px;
+    flex-direction: column;
+  }
+  
+  .book-presentation-3d-feature-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+  }
+  
+  .book-presentation-3d-feature-content h4 {
+    font-size: 0.95rem;
+  }
+  
+  .book-presentation-3d-feature-content p {
+    font-size: 0.7rem;
+  }
+  
+  .book-presentation-3d-rating-container {
+    padding: 5px 6px;
+  }
+  
+  .book-presentation-3d-star {
+    font-size: 0.75rem;
+  }
+  
+  .book-presentation-3d-rating-number,
+  .book-presentation-3d-viewers-count {
+    font-size: 0.6rem;
+  }
+  
+  .book-presentation-3d-thumbnail-gallery {
+    padding: 5px;
+  }
+  
+  .book-presentation-3d-gallery-title {
+    font-size: 0.65rem;
+  }
+  
+  .book-presentation-3d-thumbnail {
+    width: 35px;
+    height: 26px;
+  }
+  
+  .book-presentation-3d-model-thumb-icon {
+    font-size: 0.8rem;
+  }
+  
+  .book-presentation-3d-model-thumb-text {
+    font-size: 0.4rem;
+  }
+  
+  .book-presentation-3d-urgent-label span {
+    font-size: 0.55rem;
+  }
+  
+  .book-presentation-3d-order-btn-gallery {
+    padding: 5px 8px;
+    font-size: 0.65rem;
+  }
+  
+  .book-presentation-3d-mini-3d-model {
+    width: 70px;
+    height: 52px;
+    bottom: 80px;
+  }
+  
+  .book-presentation-3d-large-display-image {
+    max-height: 150px;
+  }
+  
+  .book-presentation-3d-cta-section {
+    padding: 14px;
+  }
+  
+  .book-presentation-3d-book-quote {
+    font-size: 0.8rem;
+  }
+  
+  .book-presentation-3d-quote-caption {
+    font-size: 0.75rem;
+  }
+  
+  .book-presentation-3d-interaction-hint {
+    font-size: 0.65rem;
+    padding: 4px 6px;
+  }
+  .book-presentation-3d-book-info {
+    padding-left: 0;
+  }
+}
+
+/* Performance and Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .book-presentation-3d-cosmic-particles,
+  .book-presentation-3d-cosmic-particle,
+  .book-presentation-3d-interaction-hint,
+  .book-presentation-3d-live-indicator {
+    animation: none;
+  }
+  
+  .book-presentation-3d-feature-item,
+  .book-presentation-3d-thumbnail,
+  .book-presentation-3d-mini-3d-model,
+  .book-presentation-3d-order-btn-gallery {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  
+  .book-presentation-3d-presentation-content {
     transition: opacity 0.5s ease;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .book-presentation-3d-section-title {
+    color: #ffffff;
+    text-shadow: 2px 2px 4px #000000;
+  }
+  
+  .book-presentation-3d-feature-item {
+    border: 2px solid #ffffff;
+    background: rgba(0, 0, 0, 0.9);
+  }
+  
+  .book-presentation-3d-thumbnail.book-presentation-3d-active {
+    border-color: #ffffff;
+    box-shadow: 0 0 10px #ffffff;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .book-presentation-3d-cosmic-particles,
+  .book-presentation-3d-interaction-hint,
+  .book-presentation-3d-thumbnail-gallery,
+  .book-presentation-3d-mini-3d-model,
+  .book-presentation-3d-rating-container {
+    display: none;
+  }
+  
+  .book-presentation-3d-container {
+    padding: 1rem;
+    max-width: 100%;
+  }
+  
+  .book-presentation-3d-presentation-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .book-presentation-3d-book-showcase {
+    height: auto;
+    min-height: 300px;
+  }
+  
+  .book-presentation-3d-section-title,
+  .book-presentation-3d-info-title,
+  .book-presentation-3d-feature-content h4 {
+    color: #000000;
+  }
+  
+  .book-presentation-3d-feature-content p,
+  .book-presentation-3d-section-subtitle {
+    color: #333333;
   }
 }
