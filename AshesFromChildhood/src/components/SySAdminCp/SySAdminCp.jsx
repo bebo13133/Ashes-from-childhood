@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './SySAdminCp.css';
+import './sySAdminCp.css';
 import { useAuthContext } from '../contexts/userContext';
 import DashboardOverview from './DashboardOverview/DashboardOverview';
 import OrdersManagement from './OrdersManagement/OrdersManagement';
