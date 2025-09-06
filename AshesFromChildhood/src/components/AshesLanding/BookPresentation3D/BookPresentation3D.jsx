@@ -25,7 +25,7 @@ function Book3D({ bookImages, ...props }) {
     // Зареждане на текстурите
     const frontTexture = useLoader(THREE.TextureLoader, '/images/book/cover-front.jpg');
     const backTexture = useLoader(THREE.TextureLoader, '/images/book/cover-back.jpg');
-
+    const pageTexture = useLoader(THREE.TextureLoader, '/images/book/Paper-Texture.jpg');
     return (
         <group
             ref={groupRef}
@@ -45,7 +45,6 @@ function Book3D({ bookImages, ...props }) {
                     side={THREE.FrontSide}
                 />
             </mesh>
-
             {/* Предна корица */}
             <mesh position={[0, 0, 0.201]} castShadow>
                 <planeGeometry args={[2.8, 4]} />
@@ -73,33 +72,76 @@ function Book3D({ bookImages, ...props }) {
             </mesh>
 
             {/* Гръб на книгата */}
-            <mesh position={[1.4, 0, 0]} rotation={[0, Math.PI / 2, 0]}>
+            <mesh position={[1.41, 0, 0]} rotation={[0, Math.PI / 2, 0]}>
                 <planeGeometry args={[0.4, 4]} />
                 <meshStandardMaterial
-                    color="#1a1a2e"
-                    roughness={0.8}
-                    metalness={0.1}
-                    emissive={new THREE.Color(0x444444)}
-                    emissiveIntensity={0.1}
+                    color="#f5f5f0"
+                    map={pageTexture}
+                    roughness={0.9}
+                    metalness={0.0}
+                    emissive={new THREE.Color(0x222222)}
+                    emissiveIntensity={0.05}
+                />
+            </mesh>
+            <mesh position={[0, 2.001, 0]} rotation={[Math.PI / 2, 0, 0]}>
+                <planeGeometry args={[2.8, 0.4]} />
+                <meshStandardMaterial
+                    color="#f5f5f0"
+                    roughness={0.9}
+                    metalness={0.0}
                 />
             </mesh>
 
-            {/* Текст на гърба */}
+            {/* Ляв страничен край */}
+            <mesh position={[-1.41, 0, 0]} rotation={[0, -Math.PI / 2, 0]}>
+                <planeGeometry args={[0.4, 4]} />
+                <meshStandardMaterial
+                    color="#1a1a2e"
+                    // map={pageTexture}
+                    roughness={0.9}
+                    metalness={0.0}
+                    emissive={new THREE.Color(0x444444)}
+                    emissiveIntensity={0.05}
+                />
+            </mesh>
+            {/* Текст на лявата страна */}
             <Text
-                position={[1.401, 0, 0]}
-                rotation={[0, Math.PI / 2, Math.PI / 2]}
+                position={[-1.411, 0, 0]}
+                rotation={[0, -Math.PI / 2, Math.PI / 2]}
                 fontSize={0.25}
                 color="#d6d6d6ff"
                 anchorX="center"
                 anchorY="middle"
                 font="/fonts/d_CCEnemyLines_Infiltrated.woff"
             >
-                ПЕПЕЛ ОТ ДЕТСТВОТО - СИБЕЛ ИБРЯМОВА
+                ПЕПЕЛ от ДЕТСТВОТО - СИБЕЛ ИБРЯМОВА
             </Text>
+
+            {/* Горен капак (страници) */}
+            <mesh position={[0, 2.03, 0]} rotation={[Math.PI / 2, 0, 0]}>
+                <planeGeometry args={[2.8, 0.4]} />
+                <meshStandardMaterial
+                    color="#f5f5f0"
+                    roughness={0.9}
+                    metalness={0.0}
+                    // emissive={new THREE.Color(0x222222)}
+                    emissiveIntensity={0.05}
+                />
+            </mesh>
+
+            {/* Долен капак (страници) */}
+            <mesh position={[0, -2.017, 0]} rotation={[Math.PI / 2, 0, 0]}>
+                <planeGeometry args={[2.8, 0.4]} />
+                <meshStandardMaterial
+                    color="#f5f5f0"
+                    roughness={0.9}
+                    metalness={0.0}
+                />
+            </mesh>
 
             {/* Блясък ефект */}
             {hovered && (
-                <mesh position={[0, 0, 0.202]}>
+                <mesh position={[0, 0, 0.22]}>
                     <planeGeometry args={[2.8, 4]} />
                     <meshBasicMaterial
                         color="#ffffff"
