@@ -278,7 +278,7 @@ const DashboardOverview = () => {
       </div>
 
       {/* Quick Actions */}
-      <div className="quick-actions">
+      {/* <div className="quick-actions">
         <h3 className="actions-title">Бързи действия</h3>
         <div className="actions-grid">
           <button className="action-btn">
@@ -298,7 +298,7 @@ const DashboardOverview = () => {
             <span className="action-text">Настройки</span>
           </button>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
