@@ -207,6 +207,7 @@ const Reports = () => {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
   });
 };
+
   const generateCSV = () => {
     let csvContent = '';
     
