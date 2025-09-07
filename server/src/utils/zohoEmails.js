@@ -1,16 +1,72 @@
 async function sendResetEmail(email, resetToken) {
     const resetLink = `${process.env.FRONTEND_SERVER}/reset-password?token=${resetToken}`;
-    const subject = 'Password Reset Request';
+    const subject = 'Заявка за смяна на парола';
     const body = `
-      <html>
-        <body>
-          <p>Click the following link to reset your password:</p>
-          <a href="${resetLink}" style="color: #1a73e8; text-decoration: none;">${resetLink}</a>
-        </body>
-      </html>
+        <html>
+            <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f9f9f9;">
+                <div style="
+                    padding: 12px 0 12px 16px;
+                    margin: 20px 0 0 0;
+                    text-align: left;
+                    color: #222;
+                    font-size: 20px;
+                    font-weight: bold;
+                    background: #fff;
+                    position: relative;
+                    overflow: hidden;
+                ">
+                    <table width="100%" cellpadding="0" cellspacing="0" style="background: #fff; margin-bottom: 20px;">
+                        <tr>
+                            <td width="8" style="
+                                background: linear-gradient(to bottom, #f47920, #2986c7);
+                                background-color: #f47920;
+                                border-radius: 4px;
+                            ">
+                                &nbsp;
+                            </td>
+                            <td style="
+                                padding: 4px 0 4px 12px;
+                                color: #222;
+                                font-size: 20px;
+                                font-weight: bold;
+                            ">
+                                ${subject}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div style="background: #fff; padding: 20px; border-radius: 0 0 8px 8px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); margin-top: 16px;">
+                    <p style="color: #222; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+                        Здравейте,
+                    </p>
+                    <p style="color: #222; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+                        Получихме заявка за нулиране на паролата за вашия акаунт. Ако сте направили тази заявка, моля кликнете на линка по-долу:
+                    </p>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <a href="${resetLink}" style="
+                            background: linear-gradient(to bottom, #f47920, #2986c7);
+                            color: white;
+                            padding: 12px 24px;
+                            text-decoration: none;
+                            border-radius: 6px;
+                            font-weight: bold;
+                            display: inline-block;
+                        ">Смяна на парола</a>
+                    </div>
+                    <p style="color: #666; font-size: 14px; line-height: 1.6; margin-top: 20px;">
+                        <strong>Важно:</strong> Този линк е валиден само 15 минути. Ако не сте направили тази заявка, моля игнорирайте този имейл.
+                    </p>
+                    <hr style="margin: 20px 0; border: none; border-top: 1px solid #eee;">
+                    <p style="color: #999; font-size: 12px; line-height: 1.4;">
+                        Ако имате проблеми с линка, моля копирайте и поставете следния адрес в браузъра си:<br>
+                        <span style="word-break: break-all; color: #666;">${resetLink}</span>
+                    </p>
+                </div>
+            </body>
+        </html>
     `;
     const data = {
-        fromAddress: 'info@pensa.club',
+        fromAddress: 'info@pensa.club', // Will be changed later as you mentioned
         toAddress: email,
         subject,
         content: body,
