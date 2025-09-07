@@ -45,6 +45,11 @@ module.exports = (sequelize, DataTypes) => {
                 await this.update({ sessionTokens: validTokens });
             }
         }
+
+        // Clear all session tokens (used when password is changed)
+        async clearAllSessions() {
+            await this.update({ sessionTokens: [] });
+        }
     }
     User.init(
         {

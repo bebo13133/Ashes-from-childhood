@@ -70,13 +70,9 @@ authController.post('/logout', async (req, res, next) => {
     }
 });
 
-authController.post('/request-reset-password', async (req, res, next) => {
+authController.post('/forgot-password', async (req, res, next) => {
     try {
         const { email } = req.body;
-
-        if (email !== process.env.ADMIN_EMAIL) {
-            return res.status(404).json({ message: 'There is no user registered with that email address.' });
-        }
 
         const user = await User.findOne({ where: { email } });
 
@@ -103,7 +99,7 @@ authController.post('/request-reset-password', async (req, res, next) => {
     }
 });
 
-authController.post('/reset-password-with-token', async (req, res, next) => {
+authController.post('/reset-password', async (req, res, next) => {
     try {
         const { resetToken, newPassword } = req.body;
 
@@ -111,12 +107,11 @@ authController.post('/reset-password-with-token', async (req, res, next) => {
             return res.status(400).json({ message: 'Reset token and new password are required.' });
         }
 
-        // Find user by reset token
         const user = await User.findOne({
             where: {
                 resetToken: resetToken,
                 tokenExpiration: {
-                    [Op.gt]: new Date(), // Token not expired
+                    [Op.gt]: new Date(),
                 },
             },
         });
@@ -125,15 +120,15 @@ authController.post('/reset-password-with-token', async (req, res, next) => {
             return res.status(400).json({ message: 'Invalid or expired reset token.' });
         }
 
-        // Hash new password
         const hashedNewPassword = await bcrypt.hash(newPassword, 10);
 
-        // Update password and clear reset token
         await user.update({
             password: hashedNewPassword,
             resetToken: null,
             tokenExpiration: null,
         });
+
+        await user.clearAllSessions();
 
         return res.json({ message: 'Password reset successfully.' });
     } catch (error) {
@@ -141,21 +136,19 @@ authController.post('/reset-password-with-token', async (req, res, next) => {
     }
 });
 
-authController.post('/reset-password', isAuth, async (req, res, next) => {
+authController.put('/change-password', isAuth, async (req, res, next) => {
     try {
         const { currentPassword, newPassword } = req.body;
 
-        // Verify current password
         const isCurrentPasswordValid = await bcrypt.compare(currentPassword, req.user.password);
         if (!isCurrentPasswordValid) {
             return res.status(400).json({ message: 'Current password is incorrect' });
         }
 
-        // Hash new password
         const hashedNewPassword = await bcrypt.hash(newPassword, 10);
 
-        // Update password
         await req.user.update({ password: hashedNewPassword });
+        await req.user.clearAllSessions();
 
         return res.json({ message: 'Password changed successfully' });
     } catch (error) {
