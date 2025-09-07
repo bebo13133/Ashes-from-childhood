@@ -6,43 +6,43 @@ module.exports = (sequelize, DataTypes) => {
             // define association here
         }
 
-        // Helper method to add a refresh token ID
-        async addRefreshToken(refreshTokenId, expiryDate) {
-            const currentTokens = this.refreshTokens || [];
+        // Helper method to add a session token
+        async addSessionToken(sessionToken, expiryDate) {
+            const currentTokens = this.sessionTokens || [];
             const newTokens = [
                 ...currentTokens,
                 {
-                    token: refreshTokenId,
+                    token: sessionToken,
                     createdAt: new Date(),
                     expiresAt: expiryDate,
                 },
             ];
 
-            await this.update({ refreshTokens: newTokens });
+            await this.update({ sessionTokens: newTokens });
         }
 
-        // Helper method to remove a refresh token ID
-        async removeRefreshToken(refreshTokenId) {
-            const tokens = this.refreshTokens || [];
-            const filteredTokens = tokens.filter((t) => t.token !== refreshTokenId);
+        // Helper method to remove a session token
+        async removeSessionToken(sessionToken) {
+            const tokens = this.sessionTokens || [];
+            const filteredTokens = tokens.filter((t) => t.token !== sessionToken);
 
-            await this.update({ refreshTokens: filteredTokens });
+            await this.update({ sessionTokens: filteredTokens });
         }
 
-        // Helper method to check if refresh token ID exists
-        hasRefreshToken(refreshTokenId) {
-            const tokens = this.refreshTokens || [];
-            return tokens.some((t) => t.token === refreshTokenId);
+        // Helper method to check if session token exists
+        hasSessionToken(sessionToken) {
+            const tokens = this.sessionTokens || [];
+            return tokens.some((t) => t.token === sessionToken);
         }
 
         // Clean expired tokens when user logs in or refreshes
         async cleanupExpiredTokens() {
             const now = new Date();
-            const tokens = this.refreshTokens || [];
+            const tokens = this.sessionTokens || [];
             const validTokens = tokens.filter((t) => new Date(t.expiresAt) > now);
 
             if (validTokens.length !== tokens.length) {
-                await this.update({ refreshTokens: validTokens });
+                await this.update({ sessionTokens: validTokens });
             }
         }
     }
@@ -57,9 +57,9 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
-            refreshTokens: {
+            sessionTokens: {
                 type: DataTypes.JSON,
-                field: 'refresh_tokens',
+                field: 'session_tokens',
                 allowNull: true,
                 defaultValue: [],
             },
