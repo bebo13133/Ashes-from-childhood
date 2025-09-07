@@ -66,13 +66,20 @@ async function seedAdminIfNeeded() {
     try {
         const modelsConfig = require('../config/modelsConfig');
 
-        if (!modelsConfig.Admin) {
-            console.log('✅ No Admin model found, skipping admin seeding.');
+        if (!modelsConfig.User) {
+            console.log('✅ No User model found, skipping admin seeding.');
             return;
         }
 
-        const { Admin } = modelsConfig;
-        const adminExists = await Admin.findOne({ where: { username: 'admin' } });
+        const { User } = modelsConfig;
+        const adminEmail = process.env.admin_email;
+
+        if (!adminEmail) {
+            console.log('✅ No admin email in environment, skipping admin seeding.');
+            return;
+        }
+
+        const adminExists = await User.findOne({ where: { email: adminEmail } });
 
         if (!adminExists) {
             console.log('🔄 Seeding admin account...');
