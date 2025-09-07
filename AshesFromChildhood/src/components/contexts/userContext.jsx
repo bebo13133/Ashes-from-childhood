@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useLocalStorage } from '../Hooks/useLocalStorage';
@@ -17,6 +18,35 @@ export const AuthProvider = ({ children }) => {
   const [visitorsStats, setVisitorsStats] = useState(null);
   const [ratingsData, setRatingsData] = useState(null);
   
+  // Notifications state
+  const [notifications, setNotifications] = useState([
+    // Mock initial notifications for demo
+    {
+      id: 1,
+      type: 'order',
+      title: 'Нова поръчка',
+      message: 'Поръчка от Мария Петрова за "Пепел от детството"',
+      timestamp: new Date().toISOString(),
+      read: false
+    },
+    {
+      id: 2,
+      type: 'review',
+      title: 'Нов отзив',
+      message: 'Нов отзив с 5 звезди чака одобрение',
+      timestamp: new Date(Date.now() - 10 * 60 * 1000).toISOString(), // 10 minutes ago
+      read: false
+    },
+    {
+      id: 3,
+      type: 'order',
+      title: 'Поръчка завършена',
+      message: 'Поръчка #ORD-001 е успешно доставена',
+      timestamp: new Date(Date.now() - 60 * 60 * 1000).toISOString(), // 1 hour ago
+      read: true
+    }
+  ]);
+  
   const userService = userServiceFactory(isAuth.token);
 
   useEffect(() => {
@@ -30,6 +60,48 @@ export const AuthProvider = ({ children }) => {
     setTimeout(() => {
       setErrorMessage('');
     }, 3000);
+  };
+
+  // ===== NOTIFICATIONS FUNCTIONS =====
+  const addNotification = (notification) => {
+    const newNotification = {
+      id: Date.now(),
+      timestamp: new Date().toISOString(),
+      read: false,
+      ...notification
+    };
+    
+    setNotifications(prev => {
+      // Add new notification at the beginning and keep only last 50
+      const updated = [newNotification, ...prev];
+      return updated.slice(0, 50);
+    });
+  };
+
+  const markNotificationAsRead = (notificationId) => {
+    setNotifications(prev => 
+      prev.map(notification => 
+        notification.id === notificationId 
+          ? { ...notification, read: true }
+          : notification
+      )
+    );
+  };
+
+  const markAllNotificationsAsRead = () => {
+    setNotifications(prev => 
+      prev.map(notification => ({ ...notification, read: true }))
+    );
+  };
+
+  const removeNotification = (notificationId) => {
+    setNotifications(prev => 
+      prev.filter(notification => notification.id !== notificationId)
+    );
+  };
+
+  const clearAllNotifications = () => {
+    setNotifications([]);
   };
 
   // ===== AUTH FUNCTIONS =====
@@ -128,6 +200,7 @@ export const AuthProvider = ({ children }) => {
       setOrders([]);
       setVisitorsStats(null);
       setRatingsData(null);
+      setNotifications([]);
       setIsLoading(false);
     }
   };
@@ -303,6 +376,14 @@ export const AuthProvider = ({ children }) => {
     
     try {
       const response = await userService.submitReview(reviewData);
+      
+      // Add notification for admin about new review
+      addNotification({
+        type: 'review',
+        title: 'Нов отзив',
+        message: `Нов отзив с ${reviewData.rating} звезди чака одобрение`
+      });
+      
       return { 
         success: true, 
         message: 'Отзивът е изпратен успешно! Ще бъде публикуван след одобрение.',
@@ -398,6 +479,14 @@ export const AuthProvider = ({ children }) => {
     
     try {
       const response = await userService.submitOrder(orderData);
+      
+      // Add notification for admin about new order
+      addNotification({
+        type: 'order',
+        title: 'Нова поръчка',
+        message: `Поръчка от ${orderData.firstName} ${orderData.lastName} за "${orderData.bookTitle}"`
+      });
+      
       return { 
         success: true, 
         message: 'Поръчката е изпратена успешно!',
@@ -411,7 +500,25 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(false);
     }
   };
-
+const changePassword = async (passwordData) => {
+  setIsLoading(true);
+  setErrorMessage('');
+  
+  try {
+    const response = await userService.changePassword(passwordData);
+    
+    return { 
+      success: true, 
+      message: 'Паролата е сменена успешно!' 
+    };
+  } catch (error) {
+    const errorMsg = error.message || 'Грешка при смяна на паролата.';
+    showErrorAndSetTimeout(errorMsg);
+    throw error;
+  } finally {
+    setIsLoading(false);
+  }
+};
   const contextValue = {
     // Auth state
     isAuthenticated: !!isAuth.token && isAdmin,
@@ -425,12 +532,20 @@ export const AuthProvider = ({ children }) => {
     onRegisterSubmit,
     onForgotPasswordSubmit,
     onLogout,
-    
+    changePassword,
     // Admin data
     dashboardData,
     orders,
     visitorsStats,
     ratingsData,
+    
+    // Notifications data and actions
+    notifications,
+    addNotification,
+    markNotificationAsRead,
+    markAllNotificationsAsRead,
+    removeNotification,
+    clearAllNotifications,
     
     // Admin actions
     fetchDashboardData,
