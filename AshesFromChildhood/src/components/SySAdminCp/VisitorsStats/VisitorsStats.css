@@ -515,7 +515,10 @@
   .visitors-stats-overview {
     grid-template-columns: 1fr;
   }
-  
+  .visitors-stats-chart-header {
+    flex-direction: column;
+    gap: 12px;
+  }
   .visitors-stats-timeframe-buttons {
     width: 100%;
     justify-content: space-between;
