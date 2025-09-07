@@ -7,6 +7,8 @@ import { AdminGuard } from './components/Guards/AdminGuard'
 import SySAdminLogin from './components/SySAdminLogin/SySAdminLogin'
 import SySAdminRegister from './components/SySAdminRegister/SySAdminRegister'
 import SySAdminCp from './components/SySAdminCp/SySAdminCp'
+import Unauthorized from './components/Unauthorized/Unauthorized'
+import NotFound from './components/NotFound/NotFound'
 
 function App() {
   return (
@@ -16,9 +18,9 @@ function App() {
 
         <Route path="/login-admin-sys" element={<SySAdminLogin />} />
         <Route path="/register-admin-sys" element={<SySAdminRegister />} />
-        {/* <Route path="unauthorized" element={<Unauthorized />} /> */}
-        {/* <Route path="404/*" element={<NotFound />} />
-        <Route path="*" element={<NotFound />} /> */}
+        <Route path="unauthorized" element={<Unauthorized />} />
+        <Route path="404/*" element={<NotFound />} />
+        <Route path="*" element={<NotFound />} />
          <Route path="sys-panel" element={<SySAdminCp />} />
       </Routes>
 
