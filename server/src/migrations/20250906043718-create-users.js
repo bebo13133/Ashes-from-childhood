@@ -24,6 +24,14 @@ module.exports = {
                 allowNull: true,
                 defaultValue: [],
             },
+            reset_token: {
+                type: Sequelize.STRING,
+                allowNull: true,
+            },
+            token_expiration: {
+                type: Sequelize.DATE,
+                allowNull: true,
+            },
             created_at: {
                 allowNull: false,
                 type: Sequelize.DATE,
