@@ -223,6 +223,35 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(false);
     }
   };
+// Добави тази функция в contextValue секцията
+const resetPassword = async (resetData) => {
+  setIsLoading(true);
+  setErrorMessage('');
+  
+  try {
+    const response = await userService.resetPassword(resetData);
+    
+    return { 
+      success: true, 
+      message: 'Паролата е сменена успешно!' 
+    };
+  } catch (error) {
+    let errorMsg = 'Грешка при смяна на паролата.';
+    
+    if (error.message.includes('token')) {
+      errorMsg = 'Невалиден или изтекъл линк за възстановяване.';
+    } else if (error.message.includes('password')) {
+      errorMsg = 'Паролата не отговаря на изискванията.';
+    } else if (error.message) {
+      errorMsg = error.message;
+    }
+    
+    showErrorAndSetTimeout(errorMsg);
+    throw error;
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   // ===== ADMIN DASHBOARD FUNCTIONS =====
   const fetchDashboardData = async () => {
@@ -533,6 +562,7 @@ const changePassword = async (passwordData) => {
     onForgotPasswordSubmit,
     onLogout,
     changePassword,
+    resetPassword,
     // Admin data
     dashboardData,
     orders,
