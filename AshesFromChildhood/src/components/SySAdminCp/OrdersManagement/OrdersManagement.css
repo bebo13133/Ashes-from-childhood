@@ -348,6 +348,111 @@
   border-color: #ef4444;
 }
 
+/* Mobile Card Layout */
+.orders-cards {
+  display: none;
+}
+
+.order-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.order-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.order-card-id {
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  color: #667eea;
+  font-size: 0.9rem;
+}
+
+.order-card-status {
+  padding: 4px 8px;
+  border-radius: 12px;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.order-card-customer {
+  margin-bottom: 8px;
+}
+
+.order-card-customer-name {
+  font-weight: 500;
+  color: #1f2937;
+  font-size: 0.95rem;
+  margin-bottom: 2px;
+}
+
+.order-card-contact {
+  font-size: 0.8rem;
+  color: #6b7280;
+  line-height: 1.3;
+}
+
+.order-card-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 8px 0;
+  border-top: 1px solid #f3f4f6;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.order-card-detail {
+  font-size: 0.8rem;
+}
+
+.order-card-detail-label {
+  color: #6b7280;
+  margin-bottom: 2px;
+}
+
+.order-card-detail-value {
+  color: #1f2937;
+  font-weight: 500;
+}
+
+.order-card-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.order-card-status-select {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  background: white;
+}
+
+.order-card-action-btn {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+}
+
 /* Pagination */
 .pagination {
   display: flex;
@@ -546,7 +651,7 @@
   background: #5a67d8;
 }
 
-/* Responsive */
+/* Responsive Design */
 @media (max-width: 1024px) {
   .orders-filters {
     flex-direction: column;
@@ -561,12 +666,10 @@
     justify-content: space-between;
   }
   
-  .orders-table-container {
-    overflow-x: auto;
-  }
-  
-  .orders-table {
-    min-width: 800px;
+  /* Start hiding less important columns */
+  .orders-table th:nth-child(4), /* Контакти */
+  .orders-table td:nth-child(4) {
+    display: none;
   }
 }
 
@@ -587,6 +690,14 @@
     justify-content: space-between;
   }
   
+  /* Hide more columns */
+  .orders-table th:nth-child(6), /* Сума */
+  .orders-table td:nth-child(6),
+  .orders-table th:nth-child(8), /* Дата */
+  .orders-table td:nth-child(8) {
+    display: none;
+  }
+  
   .action-buttons {
     flex-direction: column;
     gap: 4px;
@@ -597,10 +708,14 @@
   }
 }
 
-@media (max-width: 480px) {
-  .email-modal {
-    width: 95%;
-    margin: 20px;
+@media (max-width: 640px) {
+  /* Switch to card layout for mobile */
+  .orders-table-container {
+    display: none;
+  }
+  
+  .orders-cards {
+    display: block;
   }
   
   .pagination {
@@ -614,9 +729,88 @@
     justify-content: center;
     margin-bottom: 8px;
   }
+  
+  .page-number,
+  .page-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .orders-management {
+    padding: 0;
+  }
+  
+  .search-box {
+    min-width: 100%;
+  }
+  
+  .search-input {
+    padding: 14px 16px 14px 44px;
+  }
+  
+  .filter-group {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .filter-select {
+    min-width: 100%;
+    padding: 12px;
+  }
+  
+  .order-card {
+    padding: 12px;
+  }
+  
+  .order-card-details {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  
+  .email-modal {
+    width: 95%;
+    margin: 10px;
+  }
+  
+  .export-btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+/* Mobile Cards - допълнителни стилове */
+.order-card-checkbox {
+  margin-bottom: 8px;
+}
+
+.order-card-checkbox input {
+  width: 16px;
+  height: 16px;
+}
+
+.order-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.order-card-checkbox {
+  order: 1;
+}
+
+.order-card-id {
+  order: 2;
+}
+
+.order-card-status {
+  order: 3;
 }

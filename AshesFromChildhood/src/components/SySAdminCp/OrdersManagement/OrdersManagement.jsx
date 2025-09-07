@@ -464,6 +464,91 @@ const OrdersManagement = () => {
         )}
       </div>
 
+      {/* Mobile Cards Layout */}
+      <div className="orders-cards">
+        {paginatedOrders.map(order => (
+          <div key={order.id} className="order-card">
+            <div className="order-card-header">
+              <div className="order-card-checkbox">
+                <input
+                  type="checkbox"
+                  checked={selectedOrders.includes(order.id)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setSelectedOrders(prev => [...prev, order.id]);
+                    } else {
+                      setSelectedOrders(prev => prev.filter(id => id !== order.id));
+                    }
+                  }}
+                />
+              </div>
+              <div className="order-card-id">{order.id}</div>
+              <span 
+                className="order-card-status"
+                style={{ backgroundColor: getStatusColor(order.status) }}
+              >
+                {getStatusText(order.status)}
+              </span>
+            </div>
+            
+            <div className="order-card-customer">
+              <div className="order-card-customer-name">{order.customerName}</div>
+              <div className="order-card-contact">
+                {order.email}<br />
+                {order.phone}<br />
+                {order.address}
+              </div>
+            </div>
+            
+            <div className="order-card-details">
+              <div className="order-card-detail">
+                <div className="order-card-detail-label">Количество:</div>
+                <div className="order-card-detail-value">{order.quantity}</div>
+              </div>
+              <div className="order-card-detail">
+                <div className="order-card-detail-label">Сума:</div>
+                <div className="order-card-detail-value">{order.totalPrice} лв</div>
+              </div>
+              <div className="order-card-detail">
+                <div className="order-card-detail-label">Дата:</div>
+                <div className="order-card-detail-value">{formatDate(order.createdAt)}</div>
+              </div>
+            </div>
+            
+            <div className="order-card-actions">
+              <select
+                value={order.status}
+                onChange={(e) => handleStatusChange(order.id, e.target.value)}
+                className="order-card-status-select"
+              >
+                <option value="pending">В обработка</option>
+                <option value="completed">Завършена</option>
+                <option value="cancelled">Отказана</option>
+              </select>
+              
+              <button
+                className="order-card-action-btn email-btn"
+                onClick={() => {
+                  setSelectedOrder(order);
+                  setShowEmailModal(true);
+                }}
+                title="Изпрати имейл"
+              >
+                📧
+              </button>
+              
+              <button
+                className="order-card-action-btn delete-btn"
+                onClick={() => handleDeleteOrder(order.id)}
+                title="Изтрий поръчка"
+              >
+                🗑️
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="pagination">
@@ -568,6 +653,7 @@ const EmailModal = ({ order, onSend, onClose }) => {
           </div>
         </form>
       </div>
+      
     </div>
   );
 };

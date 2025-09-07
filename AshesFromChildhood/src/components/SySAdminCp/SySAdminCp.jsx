@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './sySAdminCp.css';
 import { useAuthContext } from '../contexts/userContext';
@@ -9,13 +9,7 @@ import VisitorsStats from './VisitorsStats/VisitorsStats';
 import RatingsReviews from './RatingsReviews/RatingsReviews';
 import EmailManager from './EmailManager/EmailManager';
 import Reports from './Reports/Reports';
-
-// Import sub-components (ще ги създадем един по един)
-// import DashboardOverview from './components/DashboardOverview';
-// import OrdersManagement from './components/OrdersManagement';
-// import VisitorsStats from './components/VisitorsStats';
-// import RatingsReviews from './components/RatingsReviews';
-// import EmailManager from './components/EmailManager';
+import NotificationDropdown from './NotificationDropdown/NotificationDropdown';
 
 const SySAdminCp = () => {
     const navigate = useNavigate();
@@ -24,16 +18,19 @@ const SySAdminCp = () => {
         adminName,
         adminEmail,
         onLogout,
-        // Admin specific functions - ще ги добавим в AuthContext
-        // fetchDashboardData,
-        // fetchOrders,
-        // fetchStats,
-        // sendEmail
+        notifications,
+        markNotificationAsRead,
+        markAllNotificationsAsRead,
+        changePassword
     } = useAuthContext();
 
     const [activeSection, setActiveSection] = useState('dashboard');
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
+    
+    const profileDropdownRef = useRef(null);
 
     // Redirect if not authenticated
     //   useEffect(() => {
@@ -42,6 +39,20 @@ const SySAdminCp = () => {
     //     }
     //   }, [isAuthenticated, navigate]);
 
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
+                setShowProfileDropdown(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     const handleLogout = async () => {
         try {
             await onLogout();
@@ -49,7 +60,26 @@ const SySAdminCp = () => {
         } catch (error) {
             console.error('Logout error:', error);
         }
+    };
 
+    const handleNotificationClick = (notification) => {
+        // Navigate to relevant section based on notification type
+        switch (notification.type) {
+            case 'order':
+                setActiveSection('orders');
+                break;
+            case 'review':
+                setActiveSection('ratings');
+                break;
+            default:
+                setActiveSection('dashboard');
+                break;
+        }
+    };
+
+    const handlePasswordChange = () => {
+        setShowProfileDropdown(false);
+        setShowPasswordModal(true);
     };
 
     const menuItems = [
@@ -107,7 +137,6 @@ const SySAdminCp = () => {
                 return <Reports />;
             default:
                 return <div className="section-placeholder">Секцията не е намерена</div>;
-    
         }
     };
 
@@ -180,29 +209,63 @@ const SySAdminCp = () => {
 
                     <div className="header-right">
                         <div className="header-actions">
-                            <button className="action-btn notification-btn">
-                                <span className="btn-icon">🔔</span>
-                                <span className="notification-badge">3</span>
-                            </button>
+                            <NotificationDropdown 
+                                notifications={notifications}
+                                onMarkAsRead={markNotificationAsRead}
+                                onMarkAllAsRead={markAllNotificationsAsRead}
+                                onNotificationClick={handleNotificationClick}
+                            />
 
-                            <div className="admin-profile">
-                                <div className="profile-info">
-                                    <span className="profile-name">{adminName || 'Admin'}</span>
-                                    <span className="profile-email">{adminEmail}</span>
+                            <div className="admin-profile-wrapper" ref={profileDropdownRef}>
+                                <div 
+                                    className="admin-profile"
+                                    onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+                                >
+                                    <div className="profile-info">
+                                        <span className="profile-name">{adminName || 'Admin'}</span>
+                                        <span className="profile-email">{adminEmail}</span>
+                                    </div>
+                                    <div className="profile-avatar">
+                                        <span className="avatar-text">{adminName?.charAt(0) || 'A'}</span>
+                                    </div>
+                                    <button className="profile-dropdown">▼</button>
                                 </div>
-                                <div className="profile-avatar">
-                                    <span className="avatar-text">{adminName?.charAt(0) || 'A'}</span>
-                                </div>
-                                <button className="profile-dropdown">▼</button>
+
+                                {/* Profile Dropdown Menu */}
+                                {showProfileDropdown && (
+                                    <div className="profile-dropdown-menu">
+                                        <div className="profile-dropdown-header">
+                                            <div className="dropdown-avatar">
+                                                <span className="avatar-text">{adminName?.charAt(0) || 'A'}</span>
+                                            </div>
+                                            <div className="dropdown-info">
+                                                <span className="dropdown-name">{adminName || 'Admin'}</span>
+                                                <span className="dropdown-email">{adminEmail}</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="profile-dropdown-divider"></div>
+
+                                        <div className="profile-dropdown-items">
+                                            <button 
+                                                className="profile-dropdown-item"
+                                                onClick={handlePasswordChange}
+                                            >
+                                                <span className="dropdown-item-icon">🔑</span>
+                                                <span className="dropdown-item-text">Смяна на парола</span>
+                                            </button>
+                                            
+                                            <button 
+                                                className="profile-dropdown-item logout-item"
+                                                onClick={handleLogout}
+                                            >
+                                                <span className="dropdown-item-icon">🚪</span>
+                                                <span className="dropdown-item-text">Изход</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
-
-                            <button
-                                className="action-btn logout-btn"
-                                onClick={handleLogout}
-                                title="Изход"
-                            >
-                                <span className="btn-icon">🚪</span>
-                            </button>
                         </div>
                     </div>
                 </header>
@@ -221,6 +284,201 @@ const SySAdminCp = () => {
                     </div>
                 </div>
             </main>
+
+            {/* Password Change Modal */}
+            {showPasswordModal && (
+                <PasswordChangeModal 
+                    onClose={() => setShowPasswordModal(false)}
+                    changePassword={changePassword}
+                />
+            )}
+        </div>
+    );
+};
+
+// Password Change Modal Component
+const PasswordChangeModal = ({ onClose, changePassword }) => {
+    const [passwordData, setPasswordData] = useState({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+    });
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [showPasswords, setShowPasswords] = useState({
+        current: false,
+        new: false,
+        confirm: false
+    });
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+
+        // Validation
+        if (!passwordData.currentPassword || !passwordData.newPassword || !passwordData.confirmPassword) {
+            setError('Всички полета са задължителни');
+            return;
+        }
+
+        if (passwordData.newPassword !== passwordData.confirmPassword) {
+            setError('Новите пароли не съвпадат');
+            return;
+        }
+
+        if (passwordData.newPassword.length < 6) {
+            setError('Новата парола трябва да е поне 6 символа');
+            return;
+        }
+
+        if (passwordData.currentPassword === passwordData.newPassword) {
+            setError('Новата парола трябва да се различава от текущата');
+            return;
+        }
+
+        setIsLoading(true);
+
+        try {
+            await changePassword({
+                currentPassword: passwordData.currentPassword,
+                newPassword: passwordData.newPassword
+            });
+            
+            alert('Паролата е сменена успешно!');
+            onClose();
+        } catch (error) {
+            setError(error.message || 'Грешка при смяна на паролата');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const togglePasswordVisibility = (field) => {
+        setShowPasswords(prev => ({
+            ...prev,
+            [field]: !prev[field]
+        }));
+    };
+
+    return (
+        <div className="password-modal-overlay">
+            <div className="password-modal">
+                <div className="password-modal-header">
+                    <h3>Смяна на парола</h3>
+                    <button 
+                        className="password-modal-close"
+                        onClick={onClose}
+                        disabled={isLoading}
+                    >
+                        ×
+                    </button>
+                </div>
+
+                <form onSubmit={handleSubmit} className="password-form">
+                    {error && (
+                        <div className="password-error">
+                            <span className="error-icon">⚠️</span>
+                            <span className="error-text">{error}</span>
+                        </div>
+                    )}
+
+                    <div className="password-form-group">
+                        <label>Текуща парола:</label>
+                        <div className="password-input-wrapper">
+                            <input
+                                type={showPasswords.current ? "text" : "password"}
+                                value={passwordData.currentPassword}
+                                onChange={(e) => setPasswordData(prev => ({ 
+                                    ...prev, 
+                                    currentPassword: e.target.value 
+                                }))}
+                                placeholder="Въведете текущата парола"
+                                disabled={isLoading}
+                                required
+                            />
+                            <button
+                                type="button"
+                                className="password-toggle"
+                                onClick={() => togglePasswordVisibility('current')}
+                                disabled={isLoading}
+                            >
+                                {showPasswords.current ? '👁️' : '👁️‍🗨️'}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="password-form-group">
+                        <label>Нова парола:</label>
+                        <div className="password-input-wrapper">
+                            <input
+                                type={showPasswords.new ? "text" : "password"}
+                                value={passwordData.newPassword}
+                                onChange={(e) => setPasswordData(prev => ({ 
+                                    ...prev, 
+                                    newPassword: e.target.value 
+                                }))}
+                                placeholder="Въведете новата парола"
+                                disabled={isLoading}
+                                required
+                            />
+                            <button
+                                type="button"
+                                className="password-toggle"
+                                onClick={() => togglePasswordVisibility('new')}
+                                disabled={isLoading}
+                            >
+                                {showPasswords.new ? '👁️' : '👁️‍🗨️'}
+                            </button>
+                        </div>
+                        <div className="password-requirements">
+                            Минимум 6 символа
+                        </div>
+                    </div>
+
+                    <div className="password-form-group">
+                        <label>Потвърди новата парола:</label>
+                        <div className="password-input-wrapper">
+                            <input
+                                type={showPasswords.confirm ? "text" : "password"}
+                                value={passwordData.confirmPassword}
+                                onChange={(e) => setPasswordData(prev => ({ 
+                                    ...prev, 
+                                    confirmPassword: e.target.value 
+                                }))}
+                                placeholder="Повторете новата парола"
+                                disabled={isLoading}
+                                required
+                            />
+                            <button
+                                type="button"
+                                className="password-toggle"
+                                onClick={() => togglePasswordVisibility('confirm')}
+                                disabled={isLoading}
+                            >
+                                {showPasswords.confirm ? '👁️' : '👁️‍🗨️'}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="password-modal-actions">
+                        <button 
+                            type="button" 
+                            className="password-cancel-btn"
+                            onClick={onClose}
+                            disabled={isLoading}
+                        >
+                            Отказ
+                        </button>
+                        <button 
+                            type="submit" 
+                            className="password-save-btn"
+                            disabled={isLoading}
+                        >
+                            {isLoading ? 'Променяне...' : '🔑 Смени парола'}
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     );
 };
