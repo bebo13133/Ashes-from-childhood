@@ -4,13 +4,16 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   LineChart, Line, PieChart, Pie, Cell, AreaChart, Area 
 } from 'recharts';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 import './Reports.css';
 import { useAuthContext } from '../../contexts/userContext';
 
 const Reports = () => {
   const { 
     generateReport, 
-    exportData, 
     isLoading 
   } = useAuthContext();
 
@@ -115,24 +118,165 @@ const Reports = () => {
     }
   };
 
+  const generatePDF = async () => {
+    const element = document.querySelector('.reports-content');
+    const canvas = await html2canvas(element, {
+      scale: 2,
+      useCORS: true,
+      allowTaint: false
+    });
+    
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF();
+    
+    const imgWidth = 210;
+    const pageHeight = 295;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    let heightLeft = imgHeight;
+    
+    let position = 0;
+    
+    // Добавяне на заглавие
+    pdf.setFontSize(16);
+    pdf.text(`Отчет: ${reportTypes.find(r => r.id === selectedReport)?.name}`, 20, 20);
+    pdf.setFontSize(12);
+    pdf.text(`Период: ${periods.find(p => p.value === selectedPeriod)?.label}`, 20, 30);
+    pdf.text(`Генериран на: ${new Date().toLocaleDateString('bg-BG')}`, 20, 40);
+    
+    position = 50;
+    
+    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+    heightLeft -= pageHeight;
+    
+    while (heightLeft >= 0) {
+      position = heightLeft - imgHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+    }
+    
+    return pdf.output('blob');
+  };
+
+  const generateExcel = () => {
+  const wb = XLSX.utils.book_new();
+  
+  switch (selectedReport) {
+    case 'overview': {
+      const overviewData = [
+        ['Показател', 'Стойност'],
+        ['Общо поръчки', reportData.overview.totalOrders],
+        ['Общи приходи (лв)', reportData.overview.totalRevenue],
+        ['Посетители', reportData.overview.totalVisitors],
+        ['Общо отзиви', reportData.overview.totalReviews],
+        ['Среден рейтинг', reportData.overview.averageRating],
+        ['Конверсия (%)', reportData.overview.conversionRate]
+      ];
+      const ws1 = XLSX.utils.aoa_to_sheet(overviewData);
+      XLSX.utils.book_append_sheet(wb, ws1, 'Общ преглед');
+      
+      // Добавяне и на sales data
+      const ws2 = XLSX.utils.json_to_sheet(reportData.salesData);
+      XLSX.utils.book_append_sheet(wb, ws2, 'Продажби по месеци');
+      break;
+    }
+      
+    case 'sales': {
+      const ws3 = XLSX.utils.json_to_sheet(reportData.salesData);
+      XLSX.utils.book_append_sheet(wb, ws3, 'Продажби');
+      break;
+    }
+      
+    case 'traffic': {
+      const ws4 = XLSX.utils.json_to_sheet(reportData.trafficData);
+      XLSX.utils.book_append_sheet(wb, ws4, 'Трафик');
+      
+      const ws5 = XLSX.utils.json_to_sheet(reportData.topPages);
+      XLSX.utils.book_append_sheet(wb, ws5, 'Топ страници');
+      break;
+    }
+      
+    case 'reviews': {
+      const ws6 = XLSX.utils.json_to_sheet(reportData.reviewsData);
+      XLSX.utils.book_append_sheet(wb, ws6, 'Отзиви');
+      break;
+    }
+  }
+  
+  return new Blob([XLSX.write(wb, { bookType: 'xlsx', type: 'array' })], {
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+  });
+};
+  const generateCSV = () => {
+    let csvContent = '';
+    
+    switch (selectedReport) {
+      case 'sales':
+        csvContent = 'Месец,Поръчки,Приходи (лв),Цел (лв)\n';
+        reportData.salesData.forEach(row => {
+          csvContent += `${row.month},${row.orders},${row.revenue},${row.target}\n`;
+        });
+        break;
+        
+      case 'traffic':
+        csvContent = 'Дата,Посетители,Прегледи,Сесии\n';
+        reportData.trafficData.forEach(row => {
+          csvContent += `${row.date},${row.visitors},${row.pageviews},${row.sessions}\n`;
+        });
+        break;
+        
+      case 'reviews':
+        csvContent = 'Рейтинг,Брой,Процент\n';
+        reportData.reviewsData.forEach(row => {
+          csvContent += `${row.rating},${row.count},${row.percentage}%\n`;
+        });
+        break;
+        
+      default: // overview
+        csvContent = 'Показател,Стойност\n';
+        csvContent += `Общо поръчки,${reportData.overview.totalOrders}\n`;
+        csvContent += `Общи приходи (лв),${reportData.overview.totalRevenue}\n`;
+        csvContent += `Посетители,${reportData.overview.totalVisitors}\n`;
+        csvContent += `Общо отзиви,${reportData.overview.totalReviews}\n`;
+        csvContent += `Среден рейтинг,${reportData.overview.averageRating}\n`;
+        csvContent += `Конверсия (%),${reportData.overview.conversionRate}\n`;
+    }
+    
+    // Добавяне на BOM за правилно показване на кирилица
+    const BOM = '\uFEFF';
+    return new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
+  };
+
   const handleExport = async (format) => {
     setIsGenerating(true);
     try {
-      const result = await exportData(selectedReport, format);
+      let blob;
+      const fileName = `отчет-${selectedReport}-${selectedPeriod}`;
+      const currentDate = new Date().toISOString().split('T')[0];
       
-      // Създаване на линк за сваляне
-      const url = window.URL.createObjectURL(new Blob([result]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', `report-${selectedReport}-${selectedPeriod}.${format}`);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url);
+      switch (format) {
+        case 'pdf':
+          blob = await generatePDF();
+          saveAs(blob, `${fileName}-${currentDate}.pdf`);
+          break;
+          
+        case 'xlsx':
+          blob = generateExcel();
+          saveAs(blob, `${fileName}-${currentDate}.xlsx`);
+          break;
+          
+        case 'csv':
+          blob = generateCSV();
+          saveAs(blob, `${fileName}-${currentDate}.csv`);
+          break;
+          
+        default:
+          throw new Error('Неподдържан формат');
+      }
       
     } catch (error) {
       console.error('Error exporting report:', error);
-      alert('Грешка при експортиране на отчета');
+      alert('Грешка при експортиране на отчета: ' + error.message);
     } finally {
       setIsGenerating(false);
     }
