@@ -12,7 +12,7 @@ module.exports = {
             {
                 email: adminEmail,
                 password: hashedPassword,
-                refresh_tokens: JSON.stringify([]),
+                session_tokens: JSON.stringify([]),
                 created_at: new Date(),
                 updated_at: new Date(),
             },

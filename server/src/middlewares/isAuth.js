@@ -1,22 +1,29 @@
-const { tokenVerification } = require('../utils/jwt');
 const { User } = require('../config/modelsConfig');
 
 const isAuth = async (req, res, next) => {
     try {
-        const authHeader = req.headers.authorization;
+        const sessionToken = req.cookies.adminSession;
 
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        if (!sessionToken) {
             return res.status(401).json({ message: 'Unauthorized' });
         }
 
-        const token = authHeader.split(' ')[1];
-
-        const decodedToken = tokenVerification('access', token);
-
-        const user = await User.findOne({ where: { email: decodedToken.email } });
+        const users = await User.findAll();
+        const user = users.find((u) => {
+            const tokens = u.sessionTokens || [];
+            return tokens.some((t) => t.token === sessionToken);
+        });
 
         if (!user) {
             return res.status(401).json({ message: 'Unauthorized' });
+        }
+
+        const tokens = user.sessionTokens || [];
+        const tokenData = tokens.find((t) => t.token === sessionToken);
+
+        if (!tokenData || new Date(tokenData.expiresAt) < new Date()) {
+            await user.removeSessionToken(sessionToken);
+            return res.status(401).json({ message: 'Session expired' });
         }
 
         req.user = user;
