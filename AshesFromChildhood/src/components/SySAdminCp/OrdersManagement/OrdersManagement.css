@@ -1,10 +1,10 @@
-.orders-management {
+.OrdersManagement-orders-management {
   padding: 0;
   max-width: 100%;
 }
 
 /* Header */
-.orders-header {
+.OrdersManagement-orders-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -13,25 +13,25 @@
   border-bottom: 1px solid #e5e7eb;
 }
 
-.header-info h2 {
+.OrdersManagement-header-info h2 {
   margin: 0 0 4px 0;
   color: #1f2937;
   font-size: 1.5rem;
   font-weight: 600;
 }
 
-.orders-subtitle {
+.OrdersManagement-orders-subtitle {
   margin: 0;
   color: #6b7280;
   font-size: 0.9rem;
 }
 
-.header-actions {
+.OrdersManagement-header-actions {
   display: flex;
   gap: 12px;
 }
 
-.export-btn {
+.OrdersManagement-export-btn {
   background: #667eea;
   color: white;
   border: none;
@@ -43,13 +43,13 @@
   transition: all 0.2s ease;
 }
 
-.export-btn:hover {
+.OrdersManagement-export-btn:hover {
   background: #5a67d8;
   transform: translateY(-1px);
 }
 
 /* Filters */
-.orders-filters {
+.OrdersManagement-orders-filters {
   display: flex;
   gap: 16px;
   margin-bottom: 24px;
@@ -57,13 +57,13 @@
   align-items: center;
 }
 
-.search-box {
+.OrdersManagement-search-box {
   position: relative;
   flex: 1;
   min-width: 300px;
 }
 
-.search-input {
+.OrdersManagement-search-input {
   width: 100%;
   padding: 12px 16px 12px 44px;
   border: 1px solid #d1d5db;
@@ -73,13 +73,13 @@
   transition: all 0.2s ease;
 }
 
-.search-input:focus {
+.OrdersManagement-search-input:focus {
   outline: none;
   border-color: #667eea;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-.search-icon {
+.OrdersManagement-search-icon {
   position: absolute;
   left: 16px;
   top: 50%;
@@ -88,13 +88,13 @@
   font-size: 1rem;
 }
 
-.filter-group {
+.OrdersManagement-filter-group {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
 }
 
-.filter-select {
+.OrdersManagement-filter-select {
   padding: 10px 12px;
   border: 1px solid #d1d5db;
   border-radius: 8px;
@@ -105,14 +105,14 @@
   min-width: 120px;
 }
 
-.filter-select:focus {
+.OrdersManagement-filter-select:focus {
   outline: none;
   border-color: #667eea;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 /* Bulk Actions */
-.bulk-actions {
+.OrdersManagement-bulk-actions {
   background: #f9fafb;
   border: 1px solid #e5e7eb;
   border-radius: 10px;
@@ -123,17 +123,17 @@
   align-items: center;
 }
 
-.selected-count {
+.OrdersManagement-selected-count {
   color: #374151;
   font-weight: 500;
 }
 
-.bulk-buttons {
+.OrdersManagement-bulk-buttons {
   display: flex;
   gap: 8px;
 }
 
-.bulk-btn {
+.OrdersManagement-bulk-btn {
   padding: 8px 12px;
   border: none;
   border-radius: 6px;
@@ -143,35 +143,35 @@
   transition: all 0.2s ease;
 }
 
-.bulk-btn.completed {
+.OrdersManagement-bulk-btn.OrdersManagement-completed {
   background: #10b981;
   color: white;
 }
 
-.bulk-btn.completed:hover {
+.OrdersManagement-bulk-btn.OrdersManagement-completed:hover {
   background: #059669;
 }
 
-.bulk-btn.cancelled {
+.OrdersManagement-bulk-btn.OrdersManagement-cancelled {
   background: #ef4444;
   color: white;
 }
 
-.bulk-btn.cancelled:hover {
+.OrdersManagement-bulk-btn.OrdersManagement-cancelled:hover {
   background: #dc2626;
 }
 
-.bulk-btn.delete {
+.OrdersManagement-bulk-btn.OrdersManagement-delete {
   background: #6b7280;
   color: white;
 }
 
-.bulk-btn.delete:hover {
+.OrdersManagement-bulk-btn.OrdersManagement-delete:hover {
   background: #4b5563;
 }
 
 /* Table */
-.orders-table-container {
+.OrdersManagement-orders-table-container {
   background: white;
   border-radius: 12px;
   border: 1px solid #e5e7eb;
@@ -179,7 +179,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
-.loading-state {
+.OrdersManagement-loading-state {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -188,22 +188,22 @@
   color: #6b7280;
 }
 
-.loading-spinner {
+.OrdersManagement-loading-spinner {
   width: 32px;
   height: 32px;
   border: 2px solid #e5e7eb;
   border-top: 2px solid #667eea;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  animation: OrdersManagement-spin 1s linear infinite;
   margin-bottom: 12px;
 }
 
-.orders-table {
+.OrdersManagement-orders-table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.orders-table th {
+.OrdersManagement-orders-table th {
   background: #f9fafb;
   padding: 16px 12px;
   text-align: left;
@@ -215,80 +215,80 @@
   border-bottom: 1px solid #e5e7eb;
 }
 
-.orders-table th:first-child {
+.OrdersManagement-orders-table th:first-child {
   width: 40px;
   text-align: center;
 }
 
-.order-row {
+.OrdersManagement-order-row {
   border-bottom: 1px solid #f3f4f6;
   transition: all 0.2s ease;
 }
 
-.order-row:hover {
+.OrdersManagement-order-row:hover {
   background: #f9fafb;
 }
 
-.orders-table td {
+.OrdersManagement-orders-table td {
   padding: 16px 12px;
   vertical-align: top;
 }
 
-.orders-table td:first-child {
+.OrdersManagement-orders-table td:first-child {
   text-align: center;
 }
 
-.order-id {
+.OrdersManagement-order-id {
   font-family: 'Courier New', monospace;
   font-weight: 600;
   color: #667eea;
 }
 
-.customer-info {
+.OrdersManagement-customer-info {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.customer-name {
+.OrdersManagement-customer-name {
   font-weight: 500;
   color: #1f2937;
 }
 
-.customer-address {
+.OrdersManagement-customer-address {
   font-size: 0.85rem;
   color: #6b7280;
 }
 
-.contact-info {
+.OrdersManagement-contact-info {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.email {
+.OrdersManagement-email {
   color: #1f2937;
   font-size: 0.9rem;
 }
 
-.phone {
+.OrdersManagement-phone {
   color: #6b7280;
   font-size: 0.85rem;
 }
 
-.quantity {
+.OrdersManagement-quantity {
   font-weight: 600;
   color: #1f2937;
   text-align: center;
 }
 
-.price {
+.OrdersManagement-price {
   font-weight: 600;
   color: #059669;
   text-align: right;
 }
 
-.status-badge {
+.OrdersManagement-status-badge {
   display: inline-block;
   padding: 4px 12px;
   border-radius: 20px;
@@ -298,19 +298,19 @@
   text-align: center;
 }
 
-.date {
+.OrdersManagement-date {
   color: #6b7280;
   font-size: 0.85rem;
   white-space: nowrap;
 }
 
-.action-buttons {
+.OrdersManagement-action-buttons {
   display: flex;
   gap: 8px;
   align-items: center;
 }
 
-.status-select {
+.OrdersManagement-status-select {
   padding: 6px 8px;
   border: 1px solid #d1d5db;
   border-radius: 6px;
@@ -319,7 +319,7 @@
   cursor: pointer;
 }
 
-.action-btn {
+.OrdersManagement-action-btn {
   width: 32px;
   height: 32px;
   border: 1px solid #e5e7eb;
@@ -333,27 +333,27 @@
   font-size: 0.9rem;
 }
 
-.action-btn:hover {
+.OrdersManagement-action-btn:hover {
   background: #f3f4f6;
   border-color: #d1d5db;
 }
 
-.email-btn:hover {
+.OrdersManagement-action-btn.OrdersManagement-email-btn:hover {
   background: #dbeafe;
   border-color: #3b82f6;
 }
 
-.delete-btn:hover {
+.OrdersManagement-action-btn.OrdersManagement-delete-btn:hover {
   background: #fef2f2;
   border-color: #ef4444;
 }
 
 /* Mobile Card Layout */
-.orders-cards {
+.OrdersManagement-orders-cards {
   display: none;
 }
 
-.order-card {
+.OrdersManagement-order-card {
   background: white;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
@@ -362,46 +362,60 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
-.order-card-header {
+.OrdersManagement-order-card-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.order-card-id {
+.OrdersManagement-order-card-checkbox {
+  order: 1;
+  margin-bottom: 8px;
+}
+
+.OrdersManagement-order-card-checkbox input {
+  width: 16px;
+  height: 16px;
+}
+
+.OrdersManagement-order-card-id {
   font-family: 'Courier New', monospace;
   font-weight: 600;
   color: #667eea;
   font-size: 0.9rem;
+  order: 2;
 }
 
-.order-card-status {
+.OrdersManagement-order-card-status {
   padding: 4px 8px;
   border-radius: 12px;
   color: white;
   font-size: 0.75rem;
   font-weight: 500;
+  order: 3;
 }
 
-.order-card-customer {
+.OrdersManagement-order-card-customer {
   margin-bottom: 8px;
 }
 
-.order-card-customer-name {
+.OrdersManagement-order-card-customer-name {
   font-weight: 500;
   color: #1f2937;
   font-size: 0.95rem;
   margin-bottom: 2px;
 }
 
-.order-card-contact {
+.OrdersManagement-order-card-contact {
   font-size: 0.8rem;
   color: #6b7280;
   line-height: 1.3;
 }
 
-.order-card-details {
+.OrdersManagement-order-card-details {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
@@ -411,27 +425,27 @@
   border-bottom: 1px solid #f3f4f6;
 }
 
-.order-card-detail {
+.OrdersManagement-order-card-detail {
   font-size: 0.8rem;
 }
 
-.order-card-detail-label {
+.OrdersManagement-order-card-detail-label {
   color: #6b7280;
   margin-bottom: 2px;
 }
 
-.order-card-detail-value {
+.OrdersManagement-order-card-detail-value {
   color: #1f2937;
   font-weight: 500;
 }
 
-.order-card-actions {
+.OrdersManagement-order-card-actions {
   display: flex;
   gap: 8px;
   align-items: center;
 }
 
-.order-card-status-select {
+.OrdersManagement-order-card-status-select {
   flex: 1;
   padding: 8px;
   border: 1px solid #d1d5db;
@@ -440,7 +454,7 @@
   background: white;
 }
 
-.order-card-action-btn {
+.OrdersManagement-order-card-action-btn {
   width: 36px;
   height: 36px;
   border: 1px solid #e5e7eb;
@@ -454,7 +468,7 @@
 }
 
 /* Pagination */
-.pagination {
+.OrdersManagement-pagination {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -462,7 +476,7 @@
   margin-top: 24px;
 }
 
-.page-btn {
+.OrdersManagement-page-btn {
   padding: 8px 12px;
   border: 1px solid #d1d5db;
   background: white;
@@ -473,22 +487,22 @@
   transition: all 0.2s ease;
 }
 
-.page-btn:hover:not(:disabled) {
+.OrdersManagement-page-btn:hover:not(:disabled) {
   background: #f3f4f6;
   border-color: #9ca3af;
 }
 
-.page-btn:disabled {
+.OrdersManagement-page-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.page-numbers {
+.OrdersManagement-page-numbers {
   display: flex;
   gap: 4px;
 }
 
-.page-number {
+.OrdersManagement-page-number {
   width: 36px;
   height: 36px;
   border: 1px solid #d1d5db;
@@ -503,19 +517,19 @@
   justify-content: center;
 }
 
-.page-number:hover {
+.OrdersManagement-page-number:hover {
   background: #f3f4f6;
   border-color: #9ca3af;
 }
 
-.page-number.active {
+.OrdersManagement-page-number.OrdersManagement-active {
   background: #667eea;
   border-color: #667eea;
   color: white;
 }
 
 /* Email Modal */
-.modal-overlay {
+.OrdersManagement-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -528,7 +542,7 @@
   z-index: 1000;
 }
 
-.email-modal {
+.OrdersManagement-email-modal {
   background: white;
   border-radius: 12px;
   width: 90%;
@@ -538,7 +552,7 @@
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 }
 
-.modal-header {
+.OrdersManagement-modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -546,14 +560,14 @@
   border-bottom: 1px solid #e5e7eb;
 }
 
-.modal-header h3 {
+.OrdersManagement-modal-header h3 {
   margin: 0;
   color: #1f2937;
   font-size: 1.2rem;
   font-weight: 600;
 }
 
-.close-btn {
+.OrdersManagement-close-btn {
   background: none;
   border: none;
   font-size: 1.5rem;
@@ -567,20 +581,20 @@
   border-radius: 6px;
 }
 
-.close-btn:hover {
+.OrdersManagement-close-btn:hover {
   background: #f3f4f6;
   color: #374151;
 }
 
-.email-form {
+.OrdersManagement-email-form {
   padding: 24px;
 }
 
-.form-group {
+.OrdersManagement-form-group {
   margin-bottom: 20px;
 }
 
-.form-group label {
+.OrdersManagement-form-group label {
   display: block;
   margin-bottom: 6px;
   color: #374151;
@@ -588,8 +602,8 @@
   font-size: 0.9rem;
 }
 
-.form-group input,
-.form-group textarea {
+.OrdersManagement-form-group input,
+.OrdersManagement-form-group textarea {
   width: 100%;
   padding: 12px;
   border: 1px solid #d1d5db;
@@ -600,26 +614,26 @@
   box-sizing: border-box;
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
+.OrdersManagement-form-group input:focus,
+.OrdersManagement-form-group textarea:focus {
   outline: none;
   border-color: #667eea;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-.form-group input[readonly] {
+.OrdersManagement-form-group input[readonly] {
   background: #f9fafb;
   color: #6b7280;
 }
 
-.modal-actions {
+.OrdersManagement-modal-actions {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
   margin-top: 24px;
 }
 
-.cancel-btn {
+.OrdersManagement-cancel-btn {
   padding: 10px 16px;
   border: 1px solid #d1d5db;
   background: white;
@@ -630,12 +644,12 @@
   transition: all 0.2s ease;
 }
 
-.cancel-btn:hover {
+.OrdersManagement-cancel-btn:hover {
   background: #f3f4f6;
   border-color: #9ca3af;
 }
 
-.send-btn {
+.OrdersManagement-send-btn {
   padding: 10px 16px;
   border: none;
   background: #667eea;
@@ -647,170 +661,140 @@
   transition: all 0.2s ease;
 }
 
-.send-btn:hover {
+.OrdersManagement-send-btn:hover {
   background: #5a67d8;
 }
 
 /* Responsive Design */
 @media (max-width: 1024px) {
-  .orders-filters {
+  .OrdersManagement-orders-filters {
     flex-direction: column;
     align-items: stretch;
   }
   
-  .search-box {
+  .OrdersManagement-search-box {
     min-width: 100%;
   }
   
-  .filter-group {
+  .OrdersManagement-filter-group {
     justify-content: space-between;
   }
   
   /* Start hiding less important columns */
-  .orders-table th:nth-child(4), /* Контакти */
-  .orders-table td:nth-child(4) {
+  .OrdersManagement-orders-table th:nth-child(4), /* Контакти */
+  .OrdersManagement-orders-table td:nth-child(4) {
     display: none;
   }
 }
 
 @media (max-width: 768px) {
-  .orders-header {
+  .OrdersManagement-orders-header {
     flex-direction: column;
     align-items: stretch;
     gap: 16px;
   }
   
-  .bulk-actions {
+  .OrdersManagement-bulk-actions {
     flex-direction: column;
     align-items: stretch;
     gap: 12px;
   }
   
-  .bulk-buttons {
+  .OrdersManagement-bulk-buttons {
     justify-content: space-between;
   }
   
   /* Hide more columns */
-  .orders-table th:nth-child(6), /* Сума */
-  .orders-table td:nth-child(6),
-  .orders-table th:nth-child(8), /* Дата */
-  .orders-table td:nth-child(8) {
+  .OrdersManagement-orders-table th:nth-child(6), /* Сума */
+  .OrdersManagement-orders-table td:nth-child(6),
+  .OrdersManagement-orders-table th:nth-child(8), /* Дата */
+  .OrdersManagement-orders-table td:nth-child(8) {
     display: none;
   }
   
-  .action-buttons {
+  .OrdersManagement-action-buttons {
     flex-direction: column;
     gap: 4px;
   }
   
-  .status-select {
+  .OrdersManagement-status-select {
     width: 100%;
   }
 }
 
 @media (max-width: 640px) {
   /* Switch to card layout for mobile */
-  .orders-table-container {
+  .OrdersManagement-orders-table-container {
     display: none;
   }
   
-  .orders-cards {
+  .OrdersManagement-orders-cards {
     display: block;
   }
   
-  .pagination {
+  .OrdersManagement-pagination {
     flex-wrap: wrap;
     gap: 4px;
   }
   
-  .page-numbers {
+  .OrdersManagement-page-numbers {
     order: -1;
     width: 100%;
     justify-content: center;
     margin-bottom: 8px;
   }
   
-  .page-number,
-  .page-btn {
+  .OrdersManagement-page-number,
+  .OrdersManagement-page-btn {
     min-width: 44px;
     min-height: 44px;
   }
 }
 
 @media (max-width: 480px) {
-  .orders-management {
+  .OrdersManagement-orders-management {
     padding: 0;
   }
   
-  .search-box {
+  .OrdersManagement-search-box {
     min-width: 100%;
   }
   
-  .search-input {
+  .OrdersManagement-search-input {
     padding: 14px 16px 14px 44px;
   }
   
-  .filter-group {
+  .OrdersManagement-filter-group {
     flex-direction: column;
     gap: 8px;
   }
   
-  .filter-select {
+  .OrdersManagement-filter-select {
     min-width: 100%;
     padding: 12px;
   }
   
-  .order-card {
+  .OrdersManagement-order-card {
     padding: 12px;
   }
   
-  .order-card-details {
+  .OrdersManagement-order-card-details {
     grid-template-columns: 1fr;
     gap: 6px;
   }
   
-  .email-modal {
+  .OrdersManagement-email-modal {
     width: 95%;
     margin: 10px;
   }
   
-  .export-btn {
+  .OrdersManagement-export-btn {
     width: 100%;
     justify-content: center;
   }
 }
 
-@keyframes spin {
+@keyframes OrdersManagement-spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
-}
-/* Mobile Cards - допълнителни стилове */
-.order-card-checkbox {
-  margin-bottom: 8px;
-}
-
-.order-card-checkbox input {
-  width: 16px;
-  height: 16px;
-}
-
-.order-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 12px;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.order-card-checkbox {
-  order: 1;
-}
-
-.order-card-id {
-  order: 2;
-}
-
-.order-card-status {
-  order: 3;
 }

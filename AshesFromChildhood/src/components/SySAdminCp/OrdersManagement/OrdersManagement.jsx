@@ -247,19 +247,19 @@ const OrdersManagement = () => {
   };
 
   return (
-    <div className="orders-management">
+    <div className="OrdersManagement-orders-management">
       {/* Header */}
-      <div className="orders-header">
-        <div className="header-info">
-          <h2 className="orders-title">Управление на поръчки</h2>
-          <p className="orders-subtitle">
+      <div className="OrdersManagement-orders-header">
+        <div className="OrdersManagement-header-info">
+          <h2 className="OrdersManagement-orders-title">Управление на поръчки</h2>
+          <p className="OrdersManagement-orders-subtitle">
             Общо {sortedOrders.length} поръчки
           </p>
         </div>
         
-        <div className="header-actions">
+        <div className="OrdersManagement-header-actions">
           <button 
-            className="export-btn"
+            className="OrdersManagement-export-btn"
             onClick={() => window.print()}
           >
             📊 Експорт
@@ -268,23 +268,23 @@ const OrdersManagement = () => {
       </div>
 
       {/* Filters */}
-      <div className="orders-filters">
-        <div className="search-box">
+      <div className="OrdersManagement-orders-filters">
+        <div className="OrdersManagement-search-box">
           <input
             type="text"
             placeholder="Търсене по име, имейл, телефон или номер..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input"
+            className="OrdersManagement-search-input"
           />
-          <span className="search-icon">🔍</span>
+          <span className="OrdersManagement-search-icon">🔍</span>
         </div>
 
-        <div className="filter-group">
+        <div className="OrdersManagement-filter-group">
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="filter-select"
+            className="OrdersManagement-filter-select"
           >
             <option value="all">Всички статуси</option>
             <option value="pending">В обработка</option>
@@ -295,7 +295,7 @@ const OrdersManagement = () => {
           <select
             value={dateFilter}
             onChange={(e) => setDateFilter(e.target.value)}
-            className="filter-select"
+            className="OrdersManagement-filter-select"
           >
             <option value="all">Всички периоди</option>
             <option value="today">Днес</option>
@@ -310,7 +310,7 @@ const OrdersManagement = () => {
               setSortBy(field);
               setSortOrder(order);
             }}
-            className="filter-select"
+            className="OrdersManagement-filter-select"
           >
             <option value="createdAt-desc">Най-нови първо</option>
             <option value="createdAt-asc">Най-стари първо</option>
@@ -324,25 +324,25 @@ const OrdersManagement = () => {
 
       {/* Bulk Actions */}
       {selectedOrders.length > 0 && (
-        <div className="bulk-actions">
-          <span className="selected-count">
+        <div className="OrdersManagement-bulk-actions">
+          <span className="OrdersManagement-selected-count">
             Избрани: {selectedOrders.length} поръчки
           </span>
-          <div className="bulk-buttons">
+          <div className="OrdersManagement-bulk-buttons">
             <button 
-              className="bulk-btn completed"
+              className="OrdersManagement-bulk-btn OrdersManagement-completed"
               onClick={() => handleBulkAction('completed')}
             >
               Отбележи като завършени
             </button>
             <button 
-              className="bulk-btn cancelled"
+              className="OrdersManagement-bulk-btn OrdersManagement-cancelled"
               onClick={() => handleBulkAction('cancelled')}
             >
               Отбележи като отказани
             </button>
             <button 
-              className="bulk-btn delete"
+              className="OrdersManagement-bulk-btn OrdersManagement-delete"
               onClick={() => handleBulkAction('delete')}
             >
               Изтрий
@@ -352,14 +352,14 @@ const OrdersManagement = () => {
       )}
 
       {/* Orders Table */}
-      <div className="orders-table-container">
+      <div className="OrdersManagement-orders-table-container">
         {isLoading ? (
-          <div className="loading-state">
-            <div className="loading-spinner"></div>
+          <div className="OrdersManagement-loading-state">
+            <div className="OrdersManagement-loading-spinner"></div>
             <p>Зареждане на поръчки...</p>
           </div>
         ) : (
-          <table className="orders-table">
+          <table className="OrdersManagement-orders-table">
             <thead>
               <tr>
                 <th>
@@ -387,7 +387,7 @@ const OrdersManagement = () => {
             </thead>
             <tbody>
               {paginatedOrders.map(order => (
-                <tr key={order.id} className="order-row">
+                <tr key={order.id} className="OrdersManagement-order-row">
                   <td>
                     <input
                       type="checkbox"
@@ -401,36 +401,36 @@ const OrdersManagement = () => {
                       }}
                     />
                   </td>
-                  <td className="order-id">{order.id}</td>
+                  <td className="OrdersManagement-order-id">{order.id}</td>
                   <td>
-                    <div className="customer-info">
-                      <div className="customer-name">{order.customerName}</div>
-                      <div className="customer-address">{order.address}</div>
+                    <div className="OrdersManagement-customer-info">
+                      <div className="OrdersManagement-customer-name">{order.customerName}</div>
+                      <div className="OrdersManagement-customer-address">{order.address}</div>
                     </div>
                   </td>
                   <td>
-                    <div className="contact-info">
-                      <div className="email">{order.email}</div>
-                      <div className="phone">{order.phone}</div>
+                    <div className="OrdersManagement-contact-info">
+                      <div className="OrdersManagement-email">{order.email}</div>
+                      <div className="OrdersManagement-phone">{order.phone}</div>
                     </div>
                   </td>
-                  <td className="quantity">{order.quantity}</td>
-                  <td className="price">{order.totalPrice} лв</td>
+                  <td className="OrdersManagement-quantity">{order.quantity}</td>
+                  <td className="OrdersManagement-price">{order.totalPrice} лв</td>
                   <td>
                     <span 
-                      className="status-badge"
+                      className="OrdersManagement-status-badge"
                       style={{ backgroundColor: getStatusColor(order.status) }}
                     >
                       {getStatusText(order.status)}
                     </span>
                   </td>
-                  <td className="date">{formatDate(order.createdAt)}</td>
+                  <td className="OrdersManagement-date">{formatDate(order.createdAt)}</td>
                   <td>
-                    <div className="action-buttons">
+                    <div className="OrdersManagement-action-buttons">
                       <select
                         value={order.status}
                         onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                        className="status-select"
+                        className="OrdersManagement-status-select"
                       >
                         <option value="pending">В обработка</option>
                         <option value="completed">Завършена</option>
@@ -438,7 +438,7 @@ const OrdersManagement = () => {
                       </select>
                       
                       <button
-                        className="action-btn email-btn"
+                        className="OrdersManagement-action-btn OrdersManagement-email-btn"
                         onClick={() => {
                           setSelectedOrder(order);
                           setShowEmailModal(true);
@@ -449,7 +449,7 @@ const OrdersManagement = () => {
                       </button>
                       
                       <button
-                        className="action-btn delete-btn"
+                        className="OrdersManagement-action-btn OrdersManagement-delete-btn"
                         onClick={() => handleDeleteOrder(order.id)}
                         title="Изтрий поръчка"
                       >
@@ -465,11 +465,11 @@ const OrdersManagement = () => {
       </div>
 
       {/* Mobile Cards Layout */}
-      <div className="orders-cards">
+      <div className="OrdersManagement-orders-cards">
         {paginatedOrders.map(order => (
-          <div key={order.id} className="order-card">
-            <div className="order-card-header">
-              <div className="order-card-checkbox">
+          <div key={order.id} className="OrdersManagement-order-card">
+            <div className="OrdersManagement-order-card-header">
+              <div className="OrdersManagement-order-card-checkbox">
                 <input
                   type="checkbox"
                   checked={selectedOrders.includes(order.id)}
@@ -482,44 +482,44 @@ const OrdersManagement = () => {
                   }}
                 />
               </div>
-              <div className="order-card-id">{order.id}</div>
+              <div className="OrdersManagement-order-card-id">{order.id}</div>
               <span 
-                className="order-card-status"
+                className="OrdersManagement-order-card-status"
                 style={{ backgroundColor: getStatusColor(order.status) }}
               >
                 {getStatusText(order.status)}
               </span>
             </div>
             
-            <div className="order-card-customer">
-              <div className="order-card-customer-name">{order.customerName}</div>
-              <div className="order-card-contact">
+            <div className="OrdersManagement-order-card-customer">
+              <div className="OrdersManagement-order-card-customer-name">{order.customerName}</div>
+              <div className="OrdersManagement-order-card-contact">
                 {order.email}<br />
                 {order.phone}<br />
                 {order.address}
               </div>
             </div>
             
-            <div className="order-card-details">
-              <div className="order-card-detail">
-                <div className="order-card-detail-label">Количество:</div>
-                <div className="order-card-detail-value">{order.quantity}</div>
+            <div className="OrdersManagement-order-card-details">
+              <div className="OrdersManagement-order-card-detail">
+                <div className="OrdersManagement-order-card-detail-label">Количество:</div>
+                <div className="OrdersManagement-order-card-detail-value">{order.quantity}</div>
               </div>
-              <div className="order-card-detail">
-                <div className="order-card-detail-label">Сума:</div>
-                <div className="order-card-detail-value">{order.totalPrice} лв</div>
+              <div className="OrdersManagement-order-card-detail">
+                <div className="OrdersManagement-order-card-detail-label">Сума:</div>
+                <div className="OrdersManagement-order-card-detail-value">{order.totalPrice} лв</div>
               </div>
-              <div className="order-card-detail">
-                <div className="order-card-detail-label">Дата:</div>
-                <div className="order-card-detail-value">{formatDate(order.createdAt)}</div>
+              <div className="OrdersManagement-order-card-detail">
+                <div className="OrdersManagement-order-card-detail-label">Дата:</div>
+                <div className="OrdersManagement-order-card-detail-value">{formatDate(order.createdAt)}</div>
               </div>
             </div>
             
-            <div className="order-card-actions">
+            <div className="OrdersManagement-order-card-actions">
               <select
                 value={order.status}
                 onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                className="order-card-status-select"
+                className="OrdersManagement-order-card-status-select"
               >
                 <option value="pending">В обработка</option>
                 <option value="completed">Завършена</option>
@@ -527,7 +527,7 @@ const OrdersManagement = () => {
               </select>
               
               <button
-                className="order-card-action-btn email-btn"
+                className="OrdersManagement-order-card-action-btn OrdersManagement-email-btn"
                 onClick={() => {
                   setSelectedOrder(order);
                   setShowEmailModal(true);
@@ -538,7 +538,7 @@ const OrdersManagement = () => {
               </button>
               
               <button
-                className="order-card-action-btn delete-btn"
+                className="OrdersManagement-order-card-action-btn OrdersManagement-delete-btn"
                 onClick={() => handleDeleteOrder(order.id)}
                 title="Изтрий поръчка"
               >
@@ -551,20 +551,20 @@ const OrdersManagement = () => {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="pagination">
+        <div className="OrdersManagement-pagination">
           <button
-            className="page-btn"
+            className="OrdersManagement-page-btn"
             disabled={currentPage === 1}
             onClick={() => setCurrentPage(currentPage - 1)}
           >
             ← Предишна
           </button>
           
-          <div className="page-numbers">
+          <div className="OrdersManagement-page-numbers">
             {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
               <button
                 key={page}
-                className={`page-number ${page === currentPage ? 'active' : ''}`}
+                className={`OrdersManagement-page-number ${page === currentPage ? 'OrdersManagement-active' : ''}`}
                 onClick={() => setCurrentPage(page)}
               >
                 {page}
@@ -573,7 +573,7 @@ const OrdersManagement = () => {
           </div>
           
           <button
-            className="page-btn"
+            className="OrdersManagement-page-btn"
             disabled={currentPage === totalPages}
             onClick={() => setCurrentPage(currentPage + 1)}
           >
@@ -610,20 +610,20 @@ const EmailModal = ({ order, onSend, onClose }) => {
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="email-modal">
-        <div className="modal-header">
+    <div className="OrdersManagement-modal-overlay">
+      <div className="OrdersManagement-email-modal">
+        <div className="OrdersManagement-modal-header">
           <h3>Изпрати имейл до {order.customerName}</h3>
-          <button className="close-btn" onClick={onClose}>×</button>
+          <button className="OrdersManagement-close-btn" onClick={onClose}>×</button>
         </div>
         
-        <form onSubmit={handleSubmit} className="email-form">
-          <div className="form-group">
+        <form onSubmit={handleSubmit} className="OrdersManagement-email-form">
+          <div className="OrdersManagement-form-group">
             <label>До:</label>
             <input type="email" value={order.email} readOnly />
           </div>
           
-          <div className="form-group">
+          <div className="OrdersManagement-form-group">
             <label>Тема:</label>
             <input
               type="text"
@@ -633,7 +633,7 @@ const EmailModal = ({ order, onSend, onClose }) => {
             />
           </div>
           
-          <div className="form-group">
+          <div className="OrdersManagement-form-group">
             <label>Съобщение:</label>
             <textarea
               rows={8}
@@ -643,11 +643,11 @@ const EmailModal = ({ order, onSend, onClose }) => {
             />
           </div>
           
-          <div className="modal-actions">
-            <button type="button" className="cancel-btn" onClick={onClose}>
+          <div className="OrdersManagement-modal-actions">
+            <button type="button" className="OrdersManagement-cancel-btn" onClick={onClose}>
               Отказ
             </button>
-            <button type="submit" className="send-btn">
+            <button type="submit" className="OrdersManagement-send-btn">
               📧 Изпрати
             </button>
           </div>
