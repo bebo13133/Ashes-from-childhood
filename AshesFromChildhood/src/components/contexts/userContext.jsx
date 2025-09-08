@@ -11,13 +11,13 @@ export const AuthProvider = ({ children }) => {
   const [isAdmin, setIsAdmin] = useLocalStorage('isAdmin', false);
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  
+
   // Admin specific states
   const [dashboardData, setDashboardData] = useState(null);
   const [orders, setOrders] = useState([]);
   const [visitorsStats, setVisitorsStats] = useState(null);
   const [ratingsData, setRatingsData] = useState(null);
-  
+  const [bookPrice, setBookPrice] = useState(25.00);
   // Notifications state
   const [notifications, setNotifications] = useState([
     // Mock initial notifications for demo
@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
       read: true
     }
   ]);
-  
+
   const userService = userServiceFactory(isAuth.token);
 
   useEffect(() => {
@@ -70,7 +70,7 @@ export const AuthProvider = ({ children }) => {
       read: false,
       ...notification
     };
-    
+
     setNotifications(prev => {
       // Add new notification at the beginning and keep only last 50
       const updated = [newNotification, ...prev];
@@ -79,9 +79,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   const markNotificationAsRead = (notificationId) => {
-    setNotifications(prev => 
-      prev.map(notification => 
-        notification.id === notificationId 
+    setNotifications(prev =>
+      prev.map(notification =>
+        notification.id === notificationId
           ? { ...notification, read: true }
           : notification
       )
@@ -89,13 +89,13 @@ export const AuthProvider = ({ children }) => {
   };
 
   const markAllNotificationsAsRead = () => {
-    setNotifications(prev => 
+    setNotifications(prev =>
       prev.map(notification => ({ ...notification, read: true }))
     );
   };
 
   const removeNotification = (notificationId) => {
-    setNotifications(prev => 
+    setNotifications(prev =>
       prev.filter(notification => notification.id !== notificationId)
     );
   };
@@ -108,10 +108,10 @@ export const AuthProvider = ({ children }) => {
   const onLoginSubmit = async (data) => {
     setIsLoading(true);
     setErrorMessage('');
-    
+
     try {
       const response = await userService.login(data);
-      
+
       if (response.user.role !== 'admin') {
         throw new Error('Access denied. Admin privileges required.');
       }
@@ -125,9 +125,9 @@ export const AuthProvider = ({ children }) => {
 
       setIsAuth(authData);
       setIsAdmin(true);
-      
+
       return { success: true };
-      
+
     } catch (error) {
       const errorMsg = error.message || 'Login failed. Please try again.';
       showErrorAndSetTimeout(errorMsg);
@@ -140,7 +140,7 @@ export const AuthProvider = ({ children }) => {
   const onRegisterSubmit = async (data) => {
     setIsLoading(true);
     setErrorMessage('');
-    
+
     try {
       const registerData = {
         name: data.name,
@@ -150,7 +150,7 @@ export const AuthProvider = ({ children }) => {
       };
 
       const response = await userService.register(registerData);
-      
+
       const authData = {
         token: response.token,
         email: response.user.email,
@@ -160,15 +160,15 @@ export const AuthProvider = ({ children }) => {
 
       setIsAuth(authData);
       setIsAdmin(true);
-      
-      return { 
-        success: true, 
-        message: 'Акаунтът е създаден успешно!' 
+
+      return {
+        success: true,
+        message: 'Акаунтът е създаден успешно!'
       };
-      
+
     } catch (error) {
       let errorMsg = 'Registration failed. Please try again.';
-      
+
       if (error.message.includes('email')) {
         errorMsg = 'Този имейл вече е регистриран в системата.';
       } else if (error.message.includes('validation')) {
@@ -176,7 +176,7 @@ export const AuthProvider = ({ children }) => {
       } else if (error.message) {
         errorMsg = error.message;
       }
-      
+
       showErrorAndSetTimeout(errorMsg);
       throw error;
     } finally {
@@ -186,7 +186,7 @@ export const AuthProvider = ({ children }) => {
 
   const onLogout = async () => {
     setIsLoading(true);
-    
+
     try {
       if (isAuth.token) {
         await userService.logout?.();
@@ -208,12 +208,12 @@ export const AuthProvider = ({ children }) => {
   const onForgotPasswordSubmit = async (email) => {
     setIsLoading(true);
     setErrorMessage('');
-    
+
     try {
       await userService.forgotPassword({ email });
-      return { 
-        success: true, 
-        message: 'Инструкции за възстановяване са изпратени на вашия имейл.' 
+      return {
+        success: true,
+        message: 'Инструкции за възстановяване са изпратени на вашия имейл.'
       };
     } catch (error) {
       const errorMsg = error.message || 'Грешка при изпращането. Моля, опитайте отново.';
@@ -223,41 +223,41 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(false);
     }
   };
-// Добави тази функция в contextValue секцията
-const resetPassword = async (resetData) => {
-  setIsLoading(true);
-  setErrorMessage('');
-  
-  try {
-    const response = await userService.resetPassword(resetData);
-    
-    return { 
-      success: true, 
-      message: 'Паролата е сменена успешно!' 
-    };
-  } catch (error) {
-    let errorMsg = 'Грешка при смяна на паролата.';
-    
-    if (error.message.includes('token')) {
-      errorMsg = 'Невалиден или изтекъл линк за възстановяване.';
-    } else if (error.message.includes('password')) {
-      errorMsg = 'Паролата не отговаря на изискванията.';
-    } else if (error.message) {
-      errorMsg = error.message;
+  // Добави тази функция в contextValue секцията
+  const resetPassword = async (resetData) => {
+    setIsLoading(true);
+    setErrorMessage('');
+
+    try {
+      const response = await userService.resetPassword(resetData);
+
+      return {
+        success: true,
+        message: 'Паролата е сменена успешно!'
+      };
+    } catch (error) {
+      let errorMsg = 'Грешка при смяна на паролата.';
+
+      if (error.message.includes('token')) {
+        errorMsg = 'Невалиден или изтекъл линк за възстановяване.';
+      } else if (error.message.includes('password')) {
+        errorMsg = 'Паролата не отговаря на изискванията.';
+      } else if (error.message) {
+        errorMsg = error.message;
+      }
+
+      showErrorAndSetTimeout(errorMsg);
+      throw error;
+    } finally {
+      setIsLoading(false);
     }
-    
-    showErrorAndSetTimeout(errorMsg);
-    throw error;
-  } finally {
-    setIsLoading(false);
-  }
-};
+  };
 
   // ===== ADMIN DASHBOARD FUNCTIONS =====
   const fetchDashboardData = async () => {
     setIsLoading(true);
     setErrorMessage('');
-    
+
     try {
       const response = await userService.getDashboardStats();
       setDashboardData(response);
@@ -275,7 +275,7 @@ const resetPassword = async (resetData) => {
   const fetchOrders = async (filters = {}) => {
     setIsLoading(true);
     setErrorMessage('');
-    
+
     try {
       const response = await userService.getAllOrders(filters);
       setOrders(response.orders || response);
@@ -292,19 +292,19 @@ const resetPassword = async (resetData) => {
   const updateOrderStatus = async (orderId, status) => {
     setIsLoading(true);
     setErrorMessage('');
-    
+
     try {
       const response = await userService.updateOrderStatus(orderId, status);
-      
+
       // Update local state
-      setOrders(prevOrders => 
-        prevOrders.map(order => 
-          order.id === orderId 
+      setOrders(prevOrders =>
+        prevOrders.map(order =>
+          order.id === orderId
             ? { ...order, status, updatedAt: new Date().toISOString() }
             : order
         )
       );
-      
+
       return response;
     } catch (error) {
       const errorMsg = error.message || 'Грешка при обновяване на поръчката.';
@@ -318,13 +318,13 @@ const resetPassword = async (resetData) => {
   const deleteOrder = async (orderId) => {
     setIsLoading(true);
     setErrorMessage('');
-    
+
     try {
       await userService.deleteOrder(orderId);
-      
+
       // Update local state
       setOrders(prevOrders => prevOrders.filter(order => order.id !== orderId));
-      
+
       return { success: true, message: 'Поръчката е изтрита успешно.' };
     } catch (error) {
       const errorMsg = error.message || 'Грешка при изтриване на поръчката.';
@@ -339,7 +339,7 @@ const resetPassword = async (resetData) => {
   const fetchVisitorsStats = async (period = '30d') => {
     setIsLoading(true);
     setErrorMessage('');
-    
+
     try {
       const response = await userService.getVisitorsStatistics(period);
       setVisitorsStats(response);
@@ -357,7 +357,7 @@ const resetPassword = async (resetData) => {
   const fetchRatingsData = async () => {
     setIsLoading(true);
     setErrorMessage('');
-    
+
     try {
       const response = await userService.getRatingsAndReviews();
       setRatingsData(response);
@@ -374,20 +374,20 @@ const resetPassword = async (resetData) => {
   const updateReviewStatus = async (reviewId, status) => {
     setIsLoading(true);
     setErrorMessage('');
-    
+
     try {
       const response = await userService.updateReviewStatus(reviewId, status);
-      
+
       // Update local state if needed
       if (ratingsData?.reviews) {
         setRatingsData(prev => ({
           ...prev,
-          reviews: prev.reviews.map(review => 
+          reviews: prev.reviews.map(review =>
             review.id === reviewId ? { ...review, status } : review
           )
         }));
       }
-      
+
       return response;
     } catch (error) {
       const errorMsg = error.message || 'Грешка при обновяване на отзива.';
@@ -402,21 +402,21 @@ const resetPassword = async (resetData) => {
   const submitReview = async (reviewData) => {
     setIsLoading(true);
     setErrorMessage('');
-    
+
     try {
       const response = await userService.submitReview(reviewData);
-      
+
       // Add notification for admin about new review
       addNotification({
         type: 'review',
         title: 'Нов отзив',
         message: `Нов отзив с ${reviewData.rating} звезди чака одобрение`
       });
-      
-      return { 
-        success: true, 
+
+      return {
+        success: true,
         message: 'Отзивът е изпратен успешно! Ще бъде публикуван след одобрение.',
-        reviewId: response.reviewId 
+        reviewId: response.reviewId
       };
     } catch (error) {
       const errorMsg = error.message || 'Грешка при изпращане на отзива. Моля, опитайте отново.';
@@ -431,13 +431,13 @@ const resetPassword = async (resetData) => {
   const sendEmailToCustomer = async (emailData) => {
     setIsLoading(true);
     setErrorMessage('');
-    
+
     try {
       const response = await userService.sendEmail(emailData);
-      return { 
-        success: true, 
+      return {
+        success: true,
         message: 'Имейлът е изпратен успешно!',
-        ...response 
+        ...response
       };
     } catch (error) {
       const errorMsg = error.message || 'Грешка при изпращане на имейла.';
@@ -451,13 +451,13 @@ const resetPassword = async (resetData) => {
   const sendBulkEmail = async (emailData) => {
     setIsLoading(true);
     setErrorMessage('');
-    
+
     try {
       const response = await userService.sendBulkEmail(emailData);
-      return { 
-        success: true, 
+      return {
+        success: true,
         message: 'Масовият имейл е изпратен успешно!',
-        ...response 
+        ...response
       };
     } catch (error) {
       const errorMsg = error.message || 'Грешка при изпращане на масовия имейл.';
@@ -472,7 +472,7 @@ const resetPassword = async (resetData) => {
   const generateReport = async (reportType, period = '30d') => {
     setIsLoading(true);
     setErrorMessage('');
-    
+
     try {
       const response = await userService.generateReport(reportType, period);
       return response;
@@ -488,7 +488,7 @@ const resetPassword = async (resetData) => {
   const exportData = async (dataType, format = 'xlsx') => {
     setIsLoading(true);
     setErrorMessage('');
-    
+
     try {
       const response = await userService.exportData(dataType, format);
       return response;
@@ -505,21 +505,21 @@ const resetPassword = async (resetData) => {
   const submitBookOrder = async (orderData) => {
     setIsLoading(true);
     setErrorMessage('');
-    
+
     try {
       const response = await userService.submitOrder(orderData);
-      
+
       // Add notification for admin about new order
       addNotification({
         type: 'order',
         title: 'Нова поръчка',
         message: `Поръчка от ${orderData.firstName} ${orderData.lastName} за "${orderData.bookTitle}"`
       });
-      
-      return { 
-        success: true, 
+
+      return {
+        success: true,
         message: 'Поръчката е изпратена успешно!',
-        orderId: response.orderId 
+        orderId: response.orderId
       };
     } catch (error) {
       const errorMsg = error.message || 'Грешка при изпращане на поръчката. Моля, опитайте отново.';
@@ -529,25 +529,57 @@ const resetPassword = async (resetData) => {
       setIsLoading(false);
     }
   };
-const changePassword = async (passwordData) => {
-  setIsLoading(true);
-  setErrorMessage('');
-  
-  try {
-    const response = await userService.changePassword(passwordData);
-    
-    return { 
-      success: true, 
-      message: 'Паролата е сменена успешно!' 
-    };
-  } catch (error) {
-    const errorMsg = error.message || 'Грешка при смяна на паролата.';
-    showErrorAndSetTimeout(errorMsg);
-    throw error;
-  } finally {
-    setIsLoading(false);
-  }
-};
+  const changePassword = async (passwordData) => {
+    setIsLoading(true);
+    setErrorMessage('');
+
+    try {
+      const response = await userService.changePassword(passwordData);
+
+      return {
+        success: true,
+        message: 'Паролата е сменена успешно!'
+      };
+    } catch (error) {
+      const errorMsg = error.message || 'Грешка при смяна на паролата.';
+      showErrorAndSetTimeout(errorMsg);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const updateBookPrice = async (newPrice) => {
+    setIsLoading(true);
+    setErrorMessage('');
+
+    try {
+      const response = await userService.updateBookPrice(newPrice);
+      setBookPrice(newPrice);
+
+      return {
+        success: true,
+        message: 'Цената е обновена успешно!'
+      };
+    } catch (error) {
+      const errorMsg = error.message || 'Грешка при обновяване на цената.';
+      showErrorAndSetTimeout(errorMsg);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchBookPrice = async () => {
+    try {
+      const response = await userService.getBookPrice();
+      setBookPrice(response.price || response);
+      return response;
+    } catch (error) {
+      console.error('Error fetching book price:', error);
+      // Запази default цената при грешка
+    }
+  };
+
   const contextValue = {
     // Auth state
     isAuthenticated: !!isAuth.token && isAdmin,
@@ -555,7 +587,7 @@ const changePassword = async (passwordData) => {
     adminEmail: isAuth.email,
     adminName: isAuth.name,
     token: isAuth.token,
-    
+
     // Auth actions
     onLoginSubmit,
     onRegisterSubmit,
@@ -568,7 +600,7 @@ const changePassword = async (passwordData) => {
     orders,
     visitorsStats,
     ratingsData,
-    
+
     // Notifications data and actions
     notifications,
     addNotification,
@@ -576,7 +608,7 @@ const changePassword = async (passwordData) => {
     markAllNotificationsAsRead,
     removeNotification,
     clearAllNotifications,
-    
+
     // Admin actions
     fetchDashboardData,
     fetchOrders,
@@ -589,11 +621,13 @@ const changePassword = async (passwordData) => {
     sendBulkEmail,
     generateReport,
     exportData,
-    
+
     // Public actions (for regular users)
     submitBookOrder,
     submitReview,
-    
+    bookPrice,
+    updateBookPrice,
+    fetchBookPrice,
     // UI state
     isLoading,
     errorMessage,

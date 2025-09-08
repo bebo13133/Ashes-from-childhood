@@ -220,11 +220,26 @@
   align-items: center;
   justify-content: space-between;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  gap: 20px;
 }
 
 .header-left {
   display: flex;
   flex-direction: column;
+  flex: 1;
+}
+
+.header-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
 }
 
 .page-title {
@@ -243,11 +258,6 @@
   color: #6b7280;
   font-size: 0.9rem;
   margin: 4px 0 0 0;
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
 }
 
 .header-actions {
@@ -363,6 +373,156 @@
   font-size: 1.1rem;
 }
 
+/* ===== BOOK PRICE MANAGER ===== */
+.book-price-manager {
+  background: rgba(102, 126, 234, 0.05);
+  border: 1px solid rgba(102, 126, 234, 0.1);
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 200px;
+  backdrop-filter: blur(10px);
+}
+
+.price-display {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+}
+
+.price-label {
+  font-size: 0.75rem;
+  color: #6b7280;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.price-value-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.price-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #667eea;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.edit-price-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 4px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  opacity: 0.6;
+}
+
+.edit-price-btn:hover {
+  background: rgba(102, 126, 234, 0.1);
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.book-price-manager.editing {
+  background: rgba(102, 126, 234, 0.1);
+  border-color: rgba(102, 126, 234, 0.2);
+}
+
+.price-edit-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.price-input-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.price-input {
+  border: none;
+  outline: none;
+  width: 80px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1f2937;
+  text-align: center;
+}
+
+.price-input:disabled {
+  background: transparent;
+  opacity: 0.6;
+}
+
+.currency {
+  font-size: 0.85rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.price-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.save-price-btn,
+.cancel-price-btn {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  transition: all 0.2s ease;
+}
+
+.save-price-btn {
+  background: #10b981;
+  color: white;
+}
+
+.save-price-btn:hover:not(:disabled) {
+  background: #059669;
+  transform: scale(1.05);
+}
+
+.cancel-price-btn {
+  background: #ef4444;
+  color: white;
+}
+
+.cancel-price-btn:hover:not(:disabled) {
+  background: #dc2626;
+  transform: scale(1.05);
+}
+
+.save-price-btn:disabled,
+.cancel-price-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
 /* ===== CONTENT AREA ===== */
 .admin-content {
   flex: 1;
@@ -424,6 +584,14 @@
   
   .admin-header {
     padding: 16px 20px;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .header-left,
+  .header-center,
+  .header-right {
+    flex: none;
   }
   
   .header-actions {
@@ -437,10 +605,17 @@
   .admin-content {
     padding: 20px;
   }
+  
+  .book-price-manager {
+    min-width: 180px;
+  }
 }
 
 @media (max-width: 768px) {
   .admin-panel {
+    flex-direction: column;
+  }
+  .price-display {
     flex-direction: column;
   }
   
@@ -490,6 +665,11 @@
     display: none;
   }
   
+  .admin-header {
+    padding: 16px;
+    gap: 12px;
+  }
+  
   .page-title {
     font-size: 1.5rem;
   }
@@ -497,7 +677,17 @@
   .admin-content {
     padding: 16px;
   }
+  
+  .book-price-manager {
+    min-width: 160px;
+    padding: 10px 12px;
+  }
+  
+  .price-value {
+    font-size: 1rem;
+  }
 }
+
 /* ===== PROFILE DROPDOWN ===== */
 .admin-profile-wrapper {
   position: relative;

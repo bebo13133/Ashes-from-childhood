@@ -21,7 +21,10 @@ const SySAdminCp = () => {
         notifications,
         markNotificationAsRead,
         markAllNotificationsAsRead,
-        changePassword
+        changePassword,
+        updateBookPrice,
+        bookPrice,
+        fetchBookPrice
     } = useAuthContext();
 
     const [activeSection, setActiveSection] = useState('dashboard');
@@ -38,6 +41,11 @@ const SySAdminCp = () => {
     //       navigate('/login-admin-sys', { replace: true });
     //     }
     //   }, [isAuthenticated, navigate]);
+
+    // Load book price on mount
+    useEffect(() => {
+        fetchBookPrice();
+    }, [fetchBookPrice]);
 
     // Close dropdown when clicking outside
     useEffect(() => {
@@ -207,6 +215,13 @@ const SySAdminCp = () => {
                         </p>
                     </div>
 
+                    <div className="header-center">
+                        <BookPriceManager 
+                            currentPrice={bookPrice}
+                            onPriceUpdate={updateBookPrice}
+                        />
+                    </div>
+
                     <div className="header-right">
                         <div className="header-actions">
                             <NotificationDropdown 
@@ -292,6 +307,105 @@ const SySAdminCp = () => {
                     changePassword={changePassword}
                 />
             )}
+        </div>
+    );
+};
+
+// Book Price Manager Component
+const BookPriceManager = ({ currentPrice, onPriceUpdate }) => {
+    const [isEditing, setIsEditing] = useState(false);
+    const [newPrice, setNewPrice] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        if (currentPrice) {
+            setNewPrice(currentPrice.toString());
+        }
+    }, [currentPrice]);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        
+        const price = parseFloat(newPrice);
+        if (isNaN(price) || price <= 0) {
+            alert('Моля, въведете валидна цена');
+            return;
+        }
+
+        setIsLoading(true);
+        try {
+            await onPriceUpdate(price);
+            setIsEditing(false);
+            alert('Цената е обновена успешно!');
+        } catch (error) {
+            alert('Грешка при обновяване на цената: ' + error.message);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleCancel = () => {
+        setNewPrice(currentPrice?.toString() || '');
+        setIsEditing(false);
+    };
+
+    if (isEditing) {
+        return (
+            <div className="book-price-manager editing">
+                <form onSubmit={handleSubmit} className="price-edit-form">
+                    <div className="price-input-group">
+                        <input
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            value={newPrice}
+                            onChange={(e) => setNewPrice(e.target.value)}
+                            className="price-input"
+                            placeholder="0.00"
+                            disabled={isLoading}
+                            autoFocus
+                        />
+                        <span className="currency">лв</span>
+                    </div>
+                    <div className="price-actions">
+                        <button 
+                            type="submit" 
+                            className="save-price-btn"
+                            disabled={isLoading}
+                        >
+                            {isLoading ? '...' : '✓'}
+                        </button>
+                        <button 
+                            type="button" 
+                            className="cancel-price-btn"
+                            onClick={handleCancel}
+                            disabled={isLoading}
+                        >
+                            ✕
+                        </button>
+                    </div>
+                </form>
+            </div>
+        );
+    }
+
+    return (
+        <div className="book-price-manager">
+            <div className="price-display">
+                <span className="price-label">Цена на книгата:</span>
+                <div className="price-value-container">
+                    <span className="price-value">
+                        {currentPrice ? `${currentPrice.toFixed(2)} лв` : 'Зареждане...'}
+                    </span>
+                    <button 
+                        className="edit-price-btn"
+                        onClick={() => setIsEditing(true)}
+                        title="Редактирай цената"
+                    >
+                        ✏️
+                    </button>
+                </div>
+            </div>
         </div>
     );
 };
