@@ -27,6 +27,13 @@ export const userServiceFactory = (token) => {
         newPassword: passwordData.newPassword
       });
     },
+    updateBookPrice: (price) => {
+  return requester.put(`${apiUrl}/sys/book-price`, { price });
+},
+
+getBookPrice: () => {
+  return requester.get(`${apiUrl}/sys/book-price`);
+},
     // ===== DASHBOARD & STATISTICS =====
     getDashboardStats: () => {
       return requester.get(`${apiUrl}/sys/dashboard/stats`);
