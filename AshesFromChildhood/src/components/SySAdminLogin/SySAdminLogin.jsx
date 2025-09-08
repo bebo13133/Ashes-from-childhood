@@ -195,10 +195,9 @@ const SySAdminLogin = () => {
                   Забравена парола?
                 </button>
                 
-                <Link to="/register-admin-sys" className="register-link">
-                  {/* <span className="register-icon">✨</span> */}
+                {/* <Link to="/register-admin-sys" className="register-link">
                   Създай нов акаунт
-                </Link>
+                </Link> */}
               </div>
             </form>
           ) : (
