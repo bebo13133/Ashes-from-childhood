@@ -3,20 +3,36 @@ import './OrderSection.css';
 import { useAuthContext } from '../../contexts/userContext';
 
 const OrderSection = () => {
-  const { submitBookOrder, isLoading, errorMessage, clearError } = useAuthContext();
-  
+  const { 
+    submitBookOrder, 
+    isLoading, 
+    errorMessage, 
+    clearError,
+    bookPrice,
+    fetchBookPrice 
+  } = useAuthContext();
+  console.log('bookPrice:', bookPrice);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
-    quantity: 1, // Вече е число
+    quantity: 1,
     address: '',
     city: '',
-    phone: ''
+    phone: '',
+    acceptTerms: false // НОВИ state
   });
   const [isVisible, setIsVisible] = useState(false);
   const [focusedField, setFocusedField] = useState('');
   const [orderSuccess, setOrderSuccess] = useState(false);
+  const [priceLoading, setPriceLoading] = useState(true);
+
+  // Конвертиране на цената локално
+  const exchangeRate = 1.95583;
+  const priceBgn = bookPrice ? Number(bookPrice) : 25.00;
+  const priceEur = priceBgn / exchangeRate;
+  const totalPriceBgn = priceBgn * formData.quantity;
+  const totalPriceEur = priceEur * formData.quantity;
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -28,20 +44,39 @@ const OrderSection = () => {
       { threshold: 0.2 }
     );
 
-    const element = document.querySelector('.order-section');
+    const element = document.querySelector('.OrderSection-order-section');
     if (element) observer.observe(element);
     return () => observer.disconnect();
   }, []);
 
+  // Load book price on component mount
+  useEffect(() => {
+    const loadPrice = async () => {
+      try {
+        await fetchBookPrice();
+      } catch (error) {
+        console.error('Error loading book price:', error);
+      } finally {
+        setPriceLoading(false);
+      }
+    };
+
+    loadPrice();
+  }, []);
+
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     
-    // Специално третиране на quantity
     if (name === 'quantity') {
       const numValue = parseInt(value) || 1;
       setFormData(prev => ({
         ...prev,
-        [name]: Math.max(1, Math.min(10, numValue)) // Ограничава между 1 и 10
+        [name]: Math.max(1, Math.min(10, numValue))
+      }));
+    } else if (type === 'checkbox') {
+      setFormData(prev => ({
+        ...prev,
+        [name]: checked
       }));
     } else {
       setFormData(prev => ({
@@ -50,13 +85,11 @@ const OrderSection = () => {
       }));
     }
     
-    // Clear any errors when user starts typing
     if (errorMessage) {
       clearError();
     }
   };
 
-  // Поправени функции за quantity бутоните
   const decreaseQuantity = () => {
     setFormData(prev => ({
       ...prev,
@@ -74,10 +107,16 @@ const OrderSection = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    // ВАЛИДАЦИЯ за условията
+    if (!formData.acceptTerms) {
+      alert('Моля, съгласете се с общите условия за да продължите.');
+      return;
+    }
+    
     try {
       const orderData = {
         ...formData,
-        totalPrice: totalPrice,
+        totalPrice: totalPriceBgn,
         paymentMethod: 'cash_on_delivery',
         bookTitle: 'Пепел от детството',
         orderDate: new Date().toISOString()
@@ -94,10 +133,10 @@ const OrderSection = () => {
           quantity: 1,
           address: '',
           city: '',
-          phone: ''
+          phone: '',
+          acceptTerms: false
         });
         
-        // Hide success message after 5 seconds
         setTimeout(() => {
           setOrderSuccess(false);
         }, 5000);
@@ -107,22 +146,19 @@ const OrderSection = () => {
     }
   };
 
-  // Поправено изчисление - винаги се уверяваме, че quantity е число
-  const totalPrice = Number(formData.quantity) * 25;
-
   if (orderSuccess) {
     return (
-      <section className="order-section">
+      <section className="OrderSection-order-section">
         <div className="container">
-          <div className="success-message">
-            <div className="success-animation">
-              <div className="success-icon">✅</div>
-              <h2 className="success-title">Поръчката е изпратена!</h2>
-              <p className="success-text">
+          <div className="OrderSection-success-message">
+            <div className="OrderSection-success-animation">
+              <div className="OrderSection-success-icon">✅</div>
+              <h2 className="OrderSection-success-title">Поръчката е изпратена!</h2>
+              <p className="OrderSection-success-text">
                 Благодарим ви! Ще се свържем с вас в рамките на 24 часа за потвърждение.
               </p>
               <button 
-                className="success-btn"
+                className="OrderSection-success-btn"
                 onClick={() => setOrderSuccess(false)}
               >
                 Нова поръчка
@@ -135,55 +171,65 @@ const OrderSection = () => {
   }
 
   return (
-    <section id="order-section" className="order-section">
-      <div className="order-background">
-        <div className="background-pattern"></div>
-        <div className="floating-orbs">
+    <section id="order-section" className="OrderSection-order-section">
+      <div className="OrderSection-order-background">
+        <div className="OrderSection-background-pattern"></div>
+        <div className="OrderSection-floating-orbs">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className={`floating-orb orb-${i + 1}`}></div>
+            <div key={i} className={`OrderSection-floating-orb OrderSection-orb-${i + 1}`}></div>
           ))}
         </div>
       </div>
 
       <div className="container">
-        <div className={`order-content ${isVisible ? 'fade-in-up' : ''}`}>
+        <div className={`OrderSection-order-content ${isVisible ? 'OrderSection-fade-in-up' : ''}`}>
           
-          <div className="order-header">
-            <h2 className="order-title dramatic-text">
-              <span className="title-accent">Поръчайте</span> Вашето Копие
+          <div className="OrderSection-order-header">
+            <h2 className="OrderSection-order-title OrderSection-dramatic-text">
+              <span className="OrderSection-title-accent">Поръчайте</span> Вашето Копие
             </h2>
-            <p className="order-subtitle">
+            <p className="OrderSection-order-subtitle">
               Получете "Пепел от детството" директно до вашия дом
             </p>
-            <div className="price-display">
-              <span className="price-label">Цена:</span>
-              <span className="price-amount">25.00 лв</span>
+            <div className="OrderSection-price-display">
+              <span className="OrderSection-price-label">Цена:</span>
+              <span className="OrderSection-price-amount">
+                {priceLoading ? (
+                  <span className="OrderSection-price-loading">Зареждане...</span>
+                ) : bookPrice ? (
+                  <span className="OrderSection-dual-price">
+                    {priceBgn.toFixed(2)} лв. / {priceEur.toFixed(2)} €
+                  </span>
+                ) : (
+                  <span className="OrderSection-price-error">Грешка при зареждане</span>
+                )}
+              </span>
             </div>
           </div>
 
           {/* Error Message */}
           {errorMessage && (
-            <div className="error-message">
-              <div className="error-icon">⚠️</div>
+            <div className="OrderSection-error-message">
+              <div className="OrderSection-error-icon">⚠️</div>
               <p>{errorMessage}</p>
-              <button onClick={clearError} className="error-close">×</button>
+              <button onClick={clearError} className="OrderSection-error-close">×</button>
             </div>
           )}
 
-          <div className="order-grid">
+          <div className="OrderSection-order-grid">
             
-            <div className="order-form-container">
-              <div className="form-wrapper">
-                <div className="form-header">
-                  <h3 className="form-title">Данни за поръчка</h3>
-                  <div className="form-decoration"></div>
+            <div className="OrderSection-order-form-container">
+              <div className="OrderSection-form-wrapper">
+                <div className="OrderSection-form-header">
+                  <h3 className="OrderSection-form-title">Данни за поръчка</h3>
+                  <div className="OrderSection-form-decoration"></div>
                 </div>
 
-                <form onSubmit={handleSubmit} className="order-form">
+                <form onSubmit={handleSubmit} className="OrderSection-order-form">
                   
-                  <div className="form-row">
-                    <div className={`form-group ${focusedField === 'firstName' ? 'focused' : ''}`}>
-                      <label htmlFor="firstName" className="form-label">Име</label>
+                  <div className="OrderSection-form-row">
+                    <div className={`OrderSection-form-group ${focusedField === 'firstName' ? 'OrderSection-focused' : ''}`}>
+                      <label htmlFor="firstName" className="OrderSection-form-label">Име</label>
                       <input
                         type="text"
                         id="firstName"
@@ -192,14 +238,14 @@ const OrderSection = () => {
                         onChange={handleInputChange}
                         onFocus={() => setFocusedField('firstName')}
                         onBlur={() => setFocusedField('')}
-                        className="form-input"
+                        className="OrderSection-form-input"
                         required
                       />
-                      <div className="input-glow"></div>
+                      <div className="OrderSection-input-glow"></div>
                     </div>
 
-                    <div className={`form-group ${focusedField === 'lastName' ? 'focused' : ''}`}>
-                      <label htmlFor="lastName" className="form-label">Фамилия</label>
+                    <div className={`OrderSection-form-group ${focusedField === 'lastName' ? 'OrderSection-focused' : ''}`}>
+                      <label htmlFor="lastName" className="OrderSection-form-label">Фамилия</label>
                       <input
                         type="text"
                         id="lastName"
@@ -208,15 +254,15 @@ const OrderSection = () => {
                         onChange={handleInputChange}
                         onFocus={() => setFocusedField('lastName')}
                         onBlur={() => setFocusedField('')}
-                        className="form-input"
+                        className="OrderSection-form-input"
                         required
                       />
-                      <div className="input-glow"></div>
+                      <div className="OrderSection-input-glow"></div>
                     </div>
                   </div>
 
-                  <div className={`form-group ${focusedField === 'email' ? 'focused' : ''}`}>
-                    <label htmlFor="email" className="form-label">Имейл адрес</label>
+                  <div className={`OrderSection-form-group ${focusedField === 'email' ? 'OrderSection-focused' : ''}`}>
+                    <label htmlFor="email" className="OrderSection-form-label">Имейл адрес</label>
                     <input
                       type="email"
                       id="email"
@@ -225,14 +271,14 @@ const OrderSection = () => {
                       onChange={handleInputChange}
                       onFocus={() => setFocusedField('email')}
                       onBlur={() => setFocusedField('')}
-                      className="form-input"
+                      className="OrderSection-form-input"
                       required
                     />
-                    <div className="input-glow"></div>
+                    <div className="OrderSection-input-glow"></div>
                   </div>
 
-                  <div className={`form-group ${focusedField === 'phone' ? 'focused' : ''}`}>
-                    <label htmlFor="phone" className="form-label">Телефон</label>
+                  <div className={`OrderSection-form-group ${focusedField === 'phone' ? 'OrderSection-focused' : ''}`}>
+                    <label htmlFor="phone" className="OrderSection-form-label">Телефон</label>
                     <input
                       type="tel"
                       id="phone"
@@ -241,14 +287,14 @@ const OrderSection = () => {
                       onChange={handleInputChange}
                       onFocus={() => setFocusedField('phone')}
                       onBlur={() => setFocusedField('')}
-                      className="form-input"
+                      className="OrderSection-form-input"
                       required
                     />
-                    <div className="input-glow"></div>
+                    <div className="OrderSection-input-glow"></div>
                   </div>
 
-                  <div className={`form-group ${focusedField === 'address' ? 'focused' : ''}`}>
-                    <label htmlFor="address" className="form-label">Адрес за доставка</label>
+                  <div className={`OrderSection-form-group ${focusedField === 'address' ? 'OrderSection-focused' : ''}`}>
+                    <label htmlFor="address" className="OrderSection-form-label">Адрес за доставка</label>
                     <textarea
                       id="address"
                       name="address"
@@ -256,15 +302,15 @@ const OrderSection = () => {
                       onChange={handleInputChange}
                       onFocus={() => setFocusedField('address')}
                       onBlur={() => setFocusedField('')}
-                      className="form-textarea"
+                      className="OrderSection-form-textarea"
                       rows={3}
                       required
                     ></textarea>
-                    <div className="input-glow"></div>
+                    <div className="OrderSection-input-glow"></div>
                   </div>
 
-                  <div className={`form-group ${focusedField === 'city' ? 'focused' : ''}`}>
-                    <label htmlFor="city" className="form-label">Град</label>
+                  <div className={`OrderSection-form-group ${focusedField === 'city' ? 'OrderSection-focused' : ''}`}>
+                    <label htmlFor="city" className="OrderSection-form-label">Град</label>
                     <input
                       type="text"
                       id="city"
@@ -273,19 +319,19 @@ const OrderSection = () => {
                       onChange={handleInputChange}
                       onFocus={() => setFocusedField('city')}
                       onBlur={() => setFocusedField('')}
-                      className="form-input"
+                      className="OrderSection-form-input"
                       required
                     />
-                    <div className="input-glow"></div>
+                    <div className="OrderSection-input-glow"></div>
                   </div>
 
-                  <div className="quantity-row">
-                    <div className={`form-group quantity-group ${focusedField === 'quantity' ? 'focused' : ''}`}>
-                      <label htmlFor="quantity" className="form-label">Количество</label>
-                      <div className="quantity-controls">
+                  <div className="OrderSection-quantity-row">
+                    <div className={`OrderSection-form-group OrderSection-quantity-group ${focusedField === 'quantity' ? 'OrderSection-focused' : ''}`}>
+                      <label htmlFor="quantity" className="OrderSection-form-label">Количество</label>
+                      <div className="OrderSection-quantity-controls">
                         <button
                           type="button"
-                          className="quantity-btn"
+                          className="OrderSection-quantity-btn"
                           onClick={decreaseQuantity}
                         >
                           −
@@ -298,47 +344,90 @@ const OrderSection = () => {
                           onChange={handleInputChange}
                           onFocus={() => setFocusedField('quantity')}
                           onBlur={() => setFocusedField('')}
-                          className="quantity-input"
+                          className="OrderSection-quantity-input"
                           min="1"
                           max="10"
                         />
                         <button
                           type="button"
-                          className="quantity-btn"
+                          className="OrderSection-quantity-btn"
                           onClick={increaseQuantity}
                         >
                           +
                         </button>
                       </div>
-                      <div className="input-glow"></div>
+                      <div className="OrderSection-input-glow"></div>
                     </div>
 
-                    <div className="total-display">
-                      <span className="total-label">Общо:</span>
-                      <span className="total-amount">{totalPrice.toFixed(2)} лв</span>
+                    <div className="OrderSection-total-display">
+                      <span className="OrderSection-total-label">Общо:</span>
+                      <span className="OrderSection-total-amount">
+                        {priceLoading ? (
+                          <span className="OrderSection-total-loading">...</span>
+                        ) : bookPrice ? (
+                          <span className="OrderSection-dual-total">
+                            {totalPriceBgn.toFixed(2)} лв. / {totalPriceEur.toFixed(2)} €
+                          </span>
+                        ) : (
+                          <span className="OrderSection-total-error">Грешка</span>
+                        )}
+                      </span>
                     </div>
                   </div>
 
-                  <div className="payment-info">
-                    <div className="payment-icon">💳</div>
-                    <div className="payment-text">
+                  <div className="OrderSection-payment-info">
+                    <div className="OrderSection-payment-icon">💳</div>
+                    <div className="OrderSection-payment-text">
                       <h4>Начин на плащане</h4>
                       <p>Наложено плащане при доставка</p>
                     </div>
                   </div>
 
+                  {/* НОВА СЕКЦИЯ - Съгласие с условията */}
+                  <div className="OrderSection-terms-section">
+                    <div className="OrderSection-terms-checkbox">
+                      <label className="OrderSection-terms-label">
+                        <input
+                          type="checkbox"
+                          name="acceptTerms"
+                          checked={formData.acceptTerms}
+                          onChange={handleInputChange}
+                          className="OrderSection-terms-input"
+                          required
+                        />
+                        <span className="OrderSection-terms-checkmark"></span>
+                        <span className="OrderSection-terms-text">
+                          Съгласявам се с{' '}
+                          <a 
+                            href="/terms" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="OrderSection-terms-link"
+                          >
+                            общите условия за продажба
+                          </a>{' '}
+                          и политиката за поверителност
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+
                   <button 
                     type="submit" 
-                    className={`submit-btn ${isLoading ? 'submitting' : ''}`}
-                    disabled={isLoading}
+                    className={`OrderSection-submit-btn ${isLoading ? 'OrderSection-submitting' : ''} ${priceLoading || !bookPrice || !formData.acceptTerms ? 'OrderSection-disabled' : ''}`}
+                    disabled={isLoading || priceLoading || !bookPrice || !formData.acceptTerms}
                   >
-                    <span className="btn-content">
-                      {isLoading ? 'Изпращане...' : 'Поръчай сега'}
+                    <span className="OrderSection-btn-content">
+                      {isLoading ? 'Изпращане...' : 
+                       priceLoading ? 'Зареждане...' : 
+                       !bookPrice ? 'Грешка при зареждане' :
+                       !formData.acceptTerms ? 'Съгласете се с условията' :
+                       'Поръчай сега'}
                     </span>
-                    <div className="btn-glow"></div>
-                    <div className="btn-particles">
+                    <div className="OrderSection-btn-glow"></div>
+                    <div className="OrderSection-btn-particles">
                       {[...Array(8)].map((_, i) => (
-                        <div key={i} className="btn-particle"></div>
+                        <div key={i} className="OrderSection-btn-particle"></div>
                       ))}
                     </div>
                   </button>
@@ -346,56 +435,56 @@ const OrderSection = () => {
               </div>
             </div>
 
-            <div className="order-benefits">
-              <h3 className="benefits-title">Защо да поръчате от нас?</h3>
+            <div className="OrderSection-order-benefits">
+              <h3 className="OrderSection-benefits-title">Защо да поръчате от нас?</h3>
               
-              <div className="benefits-list">
-                <div className="benefit-item">
-                  <div className="benefit-icon">🚚</div>
-                  <div className="benefit-content">
+              <div className="OrderSection-benefits-list">
+                <div className="OrderSection-benefit-item">
+                  <div className="OrderSection-benefit-icon">🚚</div>
+                  <div className="OrderSection-benefit-content">
                     <h4>Бърза доставка</h4>
                     <p>2-3 работни дни до цяла България</p>
                   </div>
                 </div>
 
-                <div className="benefit-item">
-                  <div className="benefit-icon">🔒</div>
-                  <div className="benefit-content">
+                <div className="OrderSection-benefit-item">
+                  <div className="OrderSection-benefit-icon">🔒</div>
+                  <div className="OrderSection-benefit-content">
                     <h4>Сигурно плащане</h4>
                     <p>Плащате при получаване на книгата</p>
                   </div>
                 </div>
 
-                <div className="benefit-item">
-                  <div className="benefit-icon">📞</div>
-                  <div className="benefit-content">
+                <div className="OrderSection-benefit-item">
+                  <div className="OrderSection-benefit-icon">📞</div>
+                  <div className="OrderSection-benefit-content">
                     <h4>Поддръжка 24/7</h4>
                     <p>Винаги сме на разположение за въпроси</p>
                   </div>
                 </div>
 
-                <div className="benefit-item">
-                  <div className="benefit-icon">✨</div>
-                  <div className="benefit-content">
+                <div className="OrderSection-benefit-item">
+                  <div className="OrderSection-benefit-icon">✨</div>
+                  <div className="OrderSection-benefit-content">
                     <h4>Автентично издание</h4>
                     <p>Оригинална книга с висококачествена печат</p>
                   </div>
                 </div>
               </div>
 
-              <div className="trust-section">
-                <h4 className="trust-title">Гаранция за качество</h4>
-                <div className="trust-badges">
-                  <div className="trust-badge">
-                    <div className="badge-icon">🛡️</div>
+              <div className="OrderSection-trust-section">
+                <h4 className="OrderSection-trust-title">Гаранция за качество</h4>
+                <div className="OrderSection-trust-badges">
+                  <div className="OrderSection-trust-badge">
+                    <div className="OrderSection-badge-icon">🛡️</div>
                     <span>Сигурна поръчка</span>
                   </div>
-                  <div className="trust-badge">
-                    <div className="badge-icon">📦</div>
+                  <div className="OrderSection-trust-badge">
+                    <div className="OrderSection-badge-icon">📦</div>
                     <span>Качествена опаковка</span>
                   </div>
-                  <div className="trust-badge">
-                    <div className="badge-icon">↩️</div>
+                  <div className="OrderSection-trust-badge">
+                    <div className="OrderSection-badge-icon">↩️</div>
                     <span>Връщане на средства</span>
                   </div>
                 </div>

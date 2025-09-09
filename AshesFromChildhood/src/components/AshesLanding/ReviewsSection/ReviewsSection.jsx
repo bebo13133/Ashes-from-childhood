@@ -14,6 +14,7 @@ const ReviewsSection = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showThankYou, setShowThankYou] = useState(false);
+  const [hoveredRating, setHoveredRating] = useState(0);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -42,7 +43,23 @@ const ReviewsSection = () => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === 'checkbox' ? checked : 
+              name === 'rating' ? parseInt(value) : value
+    }));
+  };
+
+  const handleStarHover = (rating) => {
+    setHoveredRating(rating);
+  };
+
+  const handleStarLeave = () => {
+    setHoveredRating(0);
+  };
+
+  const handleStarClick = (rating) => {
+    setFormData(prev => ({
+      ...prev,
+      rating: rating
     }));
   };
 
@@ -177,8 +194,16 @@ const ReviewsSection = () => {
                     <div className="rating-section">
                       <label className="rating-label">Оценка</label>
                       <div className="rating-input">
-                        {[5, 4, 3, 2, 1].map(star => (
-                          <label key={star} className="star-label">
+                        {[1, 2, 3, 4, 5].map(star => (
+                          <label 
+                            key={star} 
+                            className={`star-label ${
+                              star <= (hoveredRating || formData.rating) ? 'selected' : ''
+                            }`}
+                            onMouseEnter={() => handleStarHover(star)}
+                            onMouseLeave={handleStarLeave}
+                            onClick={() => handleStarClick(star)}
+                          >
                             <input
                               type="radio"
                               name="rating"

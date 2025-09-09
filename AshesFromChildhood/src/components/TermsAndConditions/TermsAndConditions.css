@@ -1,0 +1,284 @@
+.TermsAndConditions-container {
+  min-height: 100vh;
+  padding: 120px 0 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.TermsAndConditions-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.TermsAndConditions-pattern {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 25% 25%, rgba(106, 127, 219, 0.1) 0%, transparent 2%),
+    radial-gradient(circle at 75% 75%, rgba(143, 163, 232, 0.1) 0%, transparent 2%);
+  background-size: 100px 100px;
+  animation: TermsAndConditions-patternFloat 20s infinite linear;
+}
+
+@keyframes TermsAndConditions-patternFloat {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(100px, 100px); }
+}
+
+.TermsAndConditions-content {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: all 1s ease-out;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.TermsAndConditions-content.TermsAndConditions-fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.TermsAndConditions-header {
+  text-align: center;
+  margin-bottom: 60px;
+  padding: 40px;
+  background: linear-gradient(135deg, 
+    rgba(30, 30, 50, 0.8), 
+    rgba(20, 40, 80, 0.7)
+  );
+  border-radius: 25px;
+  border: 2px solid rgba(106, 127, 219, 0.3);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+}
+
+.TermsAndConditions-title {
+  font-size: clamp(2.5rem, 6vw, 3.5rem);
+  color: #ffffff;
+  margin-bottom: 15px;
+  font-weight: 700;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
+}
+
+.TermsAndConditions-title-accent {
+  background: linear-gradient(135deg, #6a7fdb, #8fa3e8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.8));
+}
+
+.TermsAndConditions-subtitle {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.TermsAndConditions-date {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.95rem;
+  background: rgba(106, 127, 219, 0.2);
+  padding: 8px 16px;
+  border-radius: 15px;
+  display: inline-block;
+}
+
+.TermsAndConditions-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin-bottom: 50px;
+}
+
+.TermsAndConditions-section {
+  background: linear-gradient(135deg, 
+    rgba(30, 30, 50, 0.7), 
+    rgba(20, 40, 80, 0.6)
+  );
+  border-radius: 20px;
+  padding: 30px;
+  border: 1px solid rgba(106, 127, 219, 0.2);
+  backdrop-filter: blur(15px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.TermsAndConditions-section:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+  border-color: rgba(106, 127, 219, 0.4);
+}
+
+.TermsAndConditions-section-title {
+  color: #8fa3e8;
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+  border-bottom: 2px solid rgba(143, 163, 232, 0.3);
+  padding-bottom: 10px;
+}
+
+.TermsAndConditions-section-content {
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.7;
+}
+
+.TermsAndConditions-section-content p {
+  margin-bottom: 12px;
+  font-size: 1rem;
+}
+
+.TermsAndConditions-section-content strong {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.TermsAndConditions-footer {
+  text-align: center;
+  padding: 30px;
+  background: linear-gradient(135deg, 
+    rgba(106, 127, 219, 0.2), 
+    rgba(143, 163, 232, 0.1)
+  );
+  border-radius: 20px;
+  border: 2px solid rgba(106, 127, 219, 0.3);
+  backdrop-filter: blur(15px);
+}
+
+.TermsAndConditions-footer-note {
+  color: black;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.TermsAndConditions-contact {
+  color: black;
+  font-size: 1rem;
+}
+
+.TermsAndConditions-contact-link {
+  color: #8fa3e8;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.TermsAndConditions-contact-link:hover {
+  color: #ffffff;
+  text-shadow: 0 0 8px rgba(143, 163, 232, 0.6);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .TermsAndConditions-container {
+    padding: 80px 0 60px;
+  }
+  
+  .TermsAndConditions-content {
+    padding: 0 15px;
+  }
+  
+  .TermsAndConditions-header {
+    padding: 30px 20px;
+    margin-bottom: 40px;
+  }
+  
+  .TermsAndConditions-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .TermsAndConditions-section {
+    padding: 25px 20px;
+  }
+  
+  .TermsAndConditions-section-title {
+    font-size: 1.2rem;
+  }
+  
+  .TermsAndConditions-sections {
+    gap: 25px;
+  }
+}
+
+@media (max-width: 480px) {
+  .TermsAndConditions-container {
+    padding: 60px 0 40px;
+  }
+  
+  .TermsAndConditions-header {
+    padding: 25px 15px;
+  }
+  
+  .TermsAndConditions-section {
+    padding: 20px 15px;
+  }
+  
+  .TermsAndConditions-section-content p {
+    font-size: 0.95rem;
+  }
+  
+  .TermsAndConditions-footer {
+    padding: 25px 15px;
+  }
+  
+  .TermsAndConditions-footer-note {
+    font-size: 1rem;
+  }
+}
+
+/* Performance */
+@media (prefers-reduced-motion: reduce) {
+  .TermsAndConditions-pattern {
+    animation: none;
+  }
+  
+  .TermsAndConditions-content {
+    transition: opacity 0.3s ease;
+  }
+  
+  .TermsAndConditions-section {
+    transition: none;
+  }
+}
+.TermsAndConditions-price-info {
+  margin: 15px 0;
+}
+
+.TermsAndConditions-price-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-left: 20px;
+  margin-top: 8px;
+}
+
+.TermsAndConditions-price-item {
+  background: rgba(106, 127, 219, 0.1);
+  padding: 8px 15px;
+  border-radius: 8px;
+  border-left: 3px solid #8fa3e8;
+  color: #ffffff;
+  font-weight: 500;
+  display: inline-block;
+}
+
+@media (max-width: 480px) {
+  .TermsAndConditions-price-list {
+    margin-left: 10px;
+  }
+  
+  .TermsAndConditions-price-item {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
+}

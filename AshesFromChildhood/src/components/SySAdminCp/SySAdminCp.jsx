@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -45,7 +46,7 @@ const SySAdminCp = () => {
     // Load book price on mount
     useEffect(() => {
         fetchBookPrice();
-    }, [fetchBookPrice]);
+    }, []);
 
     // Close dropdown when clicking outside
     useEffect(() => {
@@ -312,29 +313,62 @@ const SySAdminCp = () => {
 };
 
 // Book Price Manager Component
+// Book Price Manager Component
 const BookPriceManager = ({ currentPrice, onPriceUpdate }) => {
     const [isEditing, setIsEditing] = useState(false);
-    const [newPrice, setNewPrice] = useState('');
+    const [prices, setPrices] = useState({
+        bgn: '',
+        eur: ''
+    });
     const [isLoading, setIsLoading] = useState(false);
+    const [lastChangedField, setLastChangedField] = useState('bgn');
+
+    const exchangeRate = 1.95583;
 
     useEffect(() => {
         if (currentPrice) {
-            setNewPrice(currentPrice.toString());
+            const bgnPrice = Number(currentPrice);
+            const eurPrice = bgnPrice / exchangeRate;
+            setPrices({
+                bgn: bgnPrice.toFixed(2),
+                eur: eurPrice.toFixed(2)
+            });
         }
     }, [currentPrice]);
+
+    const handlePriceChange = (field, value) => {
+        const numValue = parseFloat(value) || 0;
+        
+        if (field === 'bgn') {
+            const eurValue = numValue / exchangeRate;
+            setPrices({
+                bgn: value,
+                eur: eurValue.toFixed(2)
+            });
+        } else if (field === 'eur') {
+            const bgnValue = numValue * exchangeRate;
+            setPrices({
+                bgn: bgnValue.toFixed(2),
+                eur: value
+            });
+        }
+        
+        setLastChangedField(field);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        const price = parseFloat(newPrice);
-        if (isNaN(price) || price <= 0) {
+        const bgnPrice = parseFloat(prices.bgn);
+        if (isNaN(bgnPrice) || bgnPrice <= 0) {
             alert('Моля, въведете валидна цена');
             return;
         }
 
         setIsLoading(true);
         try {
-            await onPriceUpdate(price);
+            // Винаги изпращаме BGN цената на сървъра
+            await onPriceUpdate(bgnPrice);
             setIsEditing(false);
             alert('Цената е обновена успешно!');
         } catch (error) {
@@ -345,7 +379,14 @@ const BookPriceManager = ({ currentPrice, onPriceUpdate }) => {
     };
 
     const handleCancel = () => {
-        setNewPrice(currentPrice?.toString() || '');
+        if (currentPrice) {
+            const bgnPrice = Number(currentPrice);
+            const eurPrice = bgnPrice / exchangeRate;
+            setPrices({
+                bgn: bgnPrice.toFixed(2),
+                eur: eurPrice.toFixed(2)
+            });
+        }
         setIsEditing(false);
     };
 
@@ -353,20 +394,42 @@ const BookPriceManager = ({ currentPrice, onPriceUpdate }) => {
         return (
             <div className="book-price-manager editing">
                 <form onSubmit={handleSubmit} className="price-edit-form">
-                    <div className="price-input-group">
-                        <input
-                            type="number"
-                            step="0.01"
-                            min="0"
-                            value={newPrice}
-                            onChange={(e) => setNewPrice(e.target.value)}
-                            className="price-input"
-                            placeholder="0.00"
-                            disabled={isLoading}
-                            autoFocus
-                        />
-                        <span className="currency">лв</span>
+                    <div className="dual-price-inputs">
+                        <div className="price-input-group">
+                            <label className="price-label-small">BGN:</label>
+                            <input
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                value={prices.bgn}
+                                onChange={(e) => handlePriceChange('bgn', e.target.value)}
+                                className="price-input"
+                                placeholder="0.00"
+                                disabled={isLoading}
+                                autoFocus={lastChangedField === 'bgn'}
+                            />
+                            <span className="currency">лв</span>
+                        </div>
+                        
+                        <div className="price-separator">/</div>
+                        
+                        <div className="price-input-group">
+                            <label className="price-label-small">EUR:</label>
+                            <input
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                value={prices.eur}
+                                onChange={(e) => handlePriceChange('eur', e.target.value)}
+                                className="price-input"
+                                placeholder="0.00"
+                                disabled={isLoading}
+                                autoFocus={lastChangedField === 'eur'}
+                            />
+                            <span className="currency">€</span>
+                        </div>
                     </div>
+                    
                     <div className="price-actions">
                         <button 
                             type="submit" 
@@ -389,13 +452,21 @@ const BookPriceManager = ({ currentPrice, onPriceUpdate }) => {
         );
     }
 
+    const currentEurPrice = currentPrice ? (Number(currentPrice) / exchangeRate).toFixed(2) : '0.00';
+
     return (
         <div className="book-price-manager">
             <div className="price-display">
                 <span className="price-label">Цена на книгата:</span>
                 <div className="price-value-container">
                     <span className="price-value">
-                        {currentPrice ? `${currentPrice.toFixed(2)} лв` : 'Зареждане...'}
+                        {currentPrice ? (
+                            <span className="dual-price-display">
+                                {Number(currentPrice).toFixed(2)} лв / {currentEurPrice} €
+                            </span>
+                        ) : (
+                            'Зареждане...'
+                        )}
                     </span>
                     <button 
                         className="edit-price-btn"
@@ -409,7 +480,6 @@ const BookPriceManager = ({ currentPrice, onPriceUpdate }) => {
         </div>
     );
 };
-
 // Password Change Modal Component
 const PasswordChangeModal = ({ onClose, changePassword }) => {
     const [passwordData, setPasswordData] = useState({

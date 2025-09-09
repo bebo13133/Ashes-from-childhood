@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useLocalStorage } from '../Hooks/useLocalStorage';
 import { userServiceFactory } from '../Services/userService';
 
@@ -17,7 +17,17 @@ export const AuthProvider = ({ children }) => {
   const [orders, setOrders] = useState([]);
   const [visitorsStats, setVisitorsStats] = useState(null);
   const [ratingsData, setRatingsData] = useState(null);
-  const [bookPrice, setBookPrice] = useState(25.00);
+  const [bookPrice, setBookPrice] = useState({
+    bgn: 25.00,
+    eur: null
+  });
+
+  // Функция за конвертиране
+  const convertToEur = (bgnPrice) => {
+    const exchangeRate = 1.95583;
+    return bgnPrice / exchangeRate;
+  };
+
   // Notifications state
   const [notifications, setNotifications] = useState([
     // Mock initial notifications for demo
@@ -548,13 +558,17 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(false);
     }
   };
-  const updateBookPrice = async (newPrice) => {
+  const updateBookPrice = async (newPriceBgn) => {
     setIsLoading(true);
     setErrorMessage('');
 
     try {
-      const response = await userService.updateBookPrice(newPrice);
-      setBookPrice(newPrice);
+      const response = await userService.updateBookPrice(newPriceBgn);
+      const priceObj = {
+        bgn: newPriceBgn,
+        eur: convertToEur(newPriceBgn)
+      };
+      setBookPrice(priceObj);
 
       return {
         success: true,
@@ -569,16 +583,25 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const fetchBookPrice = async () => {
-    try {
-      const response = await userService.getBookPrice();
-      setBookPrice(response.price || response);
-      return response;
-    } catch (error) {
-      console.error('Error fetching book price:', error);
-      // Запази default цената при грешка
-    }
-  };
+  const fetchBookPrice = useCallback(async () => {
+  try {
+    const response = await userService.getBookPrice();
+    const bgnPrice = response.price || response || 25.00;
+    const priceObj = {
+      bgn: Number(bgnPrice),
+      eur: convertToEur(Number(bgnPrice))
+    };
+    setBookPrice(priceObj);
+    return priceObj;
+  } catch (error) {
+    console.error('Error fetching book price:', error);
+    const defaultPrice = {
+      bgn: 25.00,
+      eur: convertToEur(25.00)
+    };
+    setBookPrice(defaultPrice);
+  }
+}, [userService]);
 
   const contextValue = {
     // Auth state
@@ -625,7 +648,7 @@ export const AuthProvider = ({ children }) => {
     // Public actions (for regular users)
     submitBookOrder,
     submitReview,
-    bookPrice,
+     bookPrice: bookPrice?.bgn || 25.00,
     updateBookPrice,
     fetchBookPrice,
     // UI state
