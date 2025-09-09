@@ -103,7 +103,9 @@
 /* Review Form Container */
 .review-form-container {
   position: sticky;
-  top: 100px;
+  top: 20px;
+  height: fit-content;
+  max-height: calc(100vh - 40px);
 }
 
 .review-form-wrapper {
@@ -232,6 +234,7 @@
   color: #ffffff;
   font-size: 1rem;
   transition: all 0.3s ease;
+  box-sizing: border-box;
 }
 
 .name-input:focus {
@@ -245,7 +248,7 @@
   color: rgba(255, 255, 255, 0.5);
 }
 
-/* Rating Section */
+/* Rating Section - ПОПРАВЕНО */
 .rating-section {
   text-align: center;
 }
@@ -262,7 +265,7 @@
   display: flex;
   justify-content: center;
   gap: 8px;
-  flex-direction: row-reverse;
+  /* Премахнато: flex-direction: row-reverse */
 }
 
 .star-label {
@@ -281,12 +284,18 @@
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-.star-label:hover .star-icon,
-.star-label:hover ~ .star-label .star-icon,
-.star-input:checked ~ .star-label .star-icon {
+/* НОВА логика за избраните звезди */
+.star-label.selected .star-icon {
   color: #ffd700;
   text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
   transform: scale(1.1);
+}
+
+/* Hover ефект */
+.star-label:hover .star-icon {
+  color: #ffd700;
+  text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+  transform: scale(1.05);
 }
 
 /* Comment Section */
@@ -314,6 +323,7 @@
   resize: vertical;
   min-height: 120px;
   transition: all 0.3s ease;
+  box-sizing: border-box;
 }
 
 .comment-textarea:focus {
@@ -457,20 +467,54 @@
 /* Reviews List */
 .reviews-list {
   padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 600px;
 }
 
 .list-title {
   color: #ffffff;
   font-size: 1.8rem;
   font-weight: 600;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+  flex-shrink: 0;
 }
 
 .reviews-container {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 10px;
+  flex: 1;
+}
+
+/* Custom Scrollbar */
+.reviews-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.reviews-container::-webkit-scrollbar-track {
+  background: rgba(106, 127, 219, 0.1);
+  border-radius: 3px;
+}
+
+.reviews-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #6a7fdb, #8fa3e8);
+  border-radius: 3px;
+  transition: background 0.3s ease;
+}
+
+.reviews-container::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #8fa3e8, #6a7fdb);
+}
+
+/* Firefox scrollbar */
+.reviews-container {
+  scrollbar-width: thin;
+  scrollbar-color: #6a7fdb rgba(106, 127, 219, 0.1);
 }
 
 /* Review Cards */
@@ -614,6 +658,12 @@
   .reviews-list {
     padding-left: 0;
     order: 1;
+    height: auto;
+  }
+  
+  .reviews-container {
+    overflow-y: visible;
+    max-height: none;
   }
 }
 
@@ -646,6 +696,15 @@
     width: 40px;
     height: 40px;
     font-size: 1rem;
+  }
+  
+  .reviews-list {
+    height: auto;
+  }
+  
+  .reviews-container {
+    overflow-y: visible;
+    padding-right: 0;
   }
 }
 
@@ -724,103 +783,5 @@
   .submit-button,
   .review-card {
     transition: opacity 0.3s ease;
-  }
-}
-/* Reviews List - ПОПРАВЕН */
-.reviews-list {
-  padding-left: 20px;
-  display: flex;
-  flex-direction: column;
-  height: 600px; /* Фиксирана височина */
-}
-
-.list-title {
-  color: #ffffff;
-  font-size: 1.8rem;
-  font-weight: 600;
-  margin-bottom: 20px; /* Намален margin */
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
-  flex-shrink: 0; /* Заглавието не се свива */
-}
-
-.reviews-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  overflow-y: auto; /* Скролиране само тук */
-  overflow-x: hidden;
-  padding-right: 10px; /* Място за scrollbar */
-  flex: 1; /* Заема останалото място */
-}
-
-/* Custom Scrollbar */
-.reviews-container::-webkit-scrollbar {
-  width: 6px;
-}
-
-.reviews-container::-webkit-scrollbar-track {
-  background: rgba(106, 127, 219, 0.1);
-  border-radius: 3px;
-}
-
-.reviews-container::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #6a7fdb, #8fa3e8);
-  border-radius: 3px;
-  transition: background 0.3s ease;
-}
-
-.reviews-container::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #8fa3e8, #6a7fdb);
-}
-
-/* Firefox scrollbar */
-.reviews-container {
-  scrollbar-width: thin;
-  scrollbar-color: #6a7fdb rgba(106, 127, 219, 0.1);
-}
-
-/* Review Form Container - ПОПРАВЕН */
-.review-form-container {
-  position: sticky;
-  top: 20px; /* Малко отстояние от горе */
-  height: fit-content;
-  max-height: calc(100vh - 40px); /* Не излиза извън екрана */
-}
-/* Responsive Design - ОБНОВЕНИ */
-@media (max-width: 1024px) {
-  .reviews-grid {
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
-  
-  .review-form-container {
-    position: static; /* На таблет не е sticky */
-    order: 2;
-  }
-  
-  .reviews-list {
-    padding-left: 0;
-    order: 1;
-    height: auto; /* Автоматична височина на по-малки екрани */
-  }
-  
-  .reviews-container {
-    overflow-y: visible; /* Премахва скролирането на таблет */
-    max-height: none;
-  }
-}
-
-@media (max-width: 768px) {
-  .reviews-section {
-    padding: 80px 0;
-  }
-  
-  .reviews-list {
-    height: auto; /* Автоматична височина на мобилен */
-  }
-  
-  .reviews-container {
-    overflow-y: visible;
-    padding-right: 0;
   }
 }
