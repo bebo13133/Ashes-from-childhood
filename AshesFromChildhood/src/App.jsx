@@ -10,6 +10,7 @@ import SySAdminCp from './components/SySAdminCp/SySAdminCp'
 import Unauthorized from './components/Unauthorized/Unauthorized'
 import NotFound from './components/NotFound/NotFound'
 import ResetPassword from './components/ResetPassword/ResetPassword'
+import TermsAndConditions from './components/TermsAndConditions/TermsAndConditions'
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
 
         <Route path="/login-admin-sys" element={<SySAdminLogin />} />
         <Route path="/register-admin-sys" element={<SySAdminRegister />} />
+        <Route path="//terms" element={<TermsAndConditions />} />
         <Route path="unauthorized" element={<Unauthorized />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="404/*" element={<NotFound />} />
