@@ -249,7 +249,8 @@
 
 .hero-section-quote-content {
   font-size: clamp(1.1rem, 3.2vw, 2rem);
-  color: rgba(255, 215, 0, 0.85);
+  /* color: rgba(255, 215, 0, 0.85); */
+  color: #e26020;
   font-style: italic;
   font-weight: 600;
   text-shadow:

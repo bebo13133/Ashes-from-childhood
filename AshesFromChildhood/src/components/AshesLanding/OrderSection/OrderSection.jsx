@@ -11,7 +11,7 @@ const OrderSection = () => {
     bookPrice,
     fetchBookPrice 
   } = useAuthContext();
-  
+  console.log('bookPrice:', bookPrice);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -19,12 +19,20 @@ const OrderSection = () => {
     quantity: 1,
     address: '',
     city: '',
-    phone: ''
+    phone: '',
+    acceptTerms: false // НОВИ state
   });
   const [isVisible, setIsVisible] = useState(false);
   const [focusedField, setFocusedField] = useState('');
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [priceLoading, setPriceLoading] = useState(true);
+
+  // Конвертиране на цената локално
+  const exchangeRate = 1.95583;
+  const priceBgn = bookPrice ? Number(bookPrice) : 25.00;
+  const priceEur = priceBgn / exchangeRate;
+  const totalPriceBgn = priceBgn * formData.quantity;
+  const totalPriceEur = priceEur * formData.quantity;
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -54,16 +62,21 @@ const OrderSection = () => {
     };
 
     loadPrice();
-  }, [fetchBookPrice]);
+  }, []);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     
     if (name === 'quantity') {
       const numValue = parseInt(value) || 1;
       setFormData(prev => ({
         ...prev,
         [name]: Math.max(1, Math.min(10, numValue))
+      }));
+    } else if (type === 'checkbox') {
+      setFormData(prev => ({
+        ...prev,
+        [name]: checked
       }));
     } else {
       setFormData(prev => ({
@@ -94,10 +107,16 @@ const OrderSection = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    // ВАЛИДАЦИЯ за условията
+    if (!formData.acceptTerms) {
+      alert('Моля, съгласете се с общите условия за да продължите.');
+      return;
+    }
+    
     try {
       const orderData = {
         ...formData,
-        totalPrice: totalPrice,
+        totalPrice: totalPriceBgn,
         paymentMethod: 'cash_on_delivery',
         bookTitle: 'Пепел от детството',
         orderDate: new Date().toISOString()
@@ -114,7 +133,8 @@ const OrderSection = () => {
           quantity: 1,
           address: '',
           city: '',
-          phone: ''
+          phone: '',
+          acceptTerms: false
         });
         
         setTimeout(() => {
@@ -125,9 +145,6 @@ const OrderSection = () => {
       console.error('Order submission error:', error);
     }
   };
-
-  // Calculate total price using bookPrice from context
-  const totalPrice = bookPrice ? Number(formData.quantity) * Number(bookPrice) : 0;
 
   if (orderSuccess) {
     return (
@@ -180,7 +197,9 @@ const OrderSection = () => {
                 {priceLoading ? (
                   <span className="OrderSection-price-loading">Зареждане...</span>
                 ) : bookPrice ? (
-                  `${Number(bookPrice).toFixed(2)} лв`
+                  <span className="OrderSection-dual-price">
+                    {priceBgn.toFixed(2)} лв. / {priceEur.toFixed(2)} €
+                  </span>
                 ) : (
                   <span className="OrderSection-price-error">Грешка при зареждане</span>
                 )}
@@ -346,7 +365,9 @@ const OrderSection = () => {
                         {priceLoading ? (
                           <span className="OrderSection-total-loading">...</span>
                         ) : bookPrice ? (
-                          `${totalPrice.toFixed(2)} лв`
+                          <span className="OrderSection-dual-total">
+                            {totalPriceBgn.toFixed(2)} лв. / {totalPriceEur.toFixed(2)} €
+                          </span>
                         ) : (
                           <span className="OrderSection-total-error">Грешка</span>
                         )}
@@ -362,15 +383,45 @@ const OrderSection = () => {
                     </div>
                   </div>
 
+                  {/* НОВА СЕКЦИЯ - Съгласие с условията */}
+                  <div className="OrderSection-terms-section">
+                    <div className="OrderSection-terms-checkbox">
+                      <label className="OrderSection-terms-label">
+                        <input
+                          type="checkbox"
+                          name="acceptTerms"
+                          checked={formData.acceptTerms}
+                          onChange={handleInputChange}
+                          className="OrderSection-terms-input"
+                          required
+                        />
+                        <span className="OrderSection-terms-checkmark"></span>
+                        <span className="OrderSection-terms-text">
+                          Съгласявам се с{' '}
+                          <a 
+                            href="/terms" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="OrderSection-terms-link"
+                          >
+                            общите условия за продажба
+                          </a>{' '}
+                          и политиката за поверителност
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+
                   <button 
                     type="submit" 
-                    className={`OrderSection-submit-btn ${isLoading ? 'OrderSection-submitting' : ''} ${priceLoading || !bookPrice ? 'OrderSection-disabled' : ''}`}
-                    disabled={isLoading || priceLoading || !bookPrice}
+                    className={`OrderSection-submit-btn ${isLoading ? 'OrderSection-submitting' : ''} ${priceLoading || !bookPrice || !formData.acceptTerms ? 'OrderSection-disabled' : ''}`}
+                    disabled={isLoading || priceLoading || !bookPrice || !formData.acceptTerms}
                   >
                     <span className="OrderSection-btn-content">
                       {isLoading ? 'Изпращане...' : 
                        priceLoading ? 'Зареждане...' : 
                        !bookPrice ? 'Грешка при зареждане' :
+                       !formData.acceptTerms ? 'Съгласете се с условията' :
                        'Поръчай сега'}
                     </span>
                     <div className="OrderSection-btn-glow"></div>

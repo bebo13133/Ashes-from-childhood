@@ -784,3 +784,151 @@
     transition: opacity 0.3s ease;
   }
 }
+/* Добави в края на файла */
+.OrderSection-dual-price,
+.OrderSection-dual-total {
+  white-space: nowrap;
+  font-weight: bold;
+}
+
+.OrderSection-dual-price {
+  color: var(--accent-gold);
+  font-size: 1.4rem;
+  text-shadow: 2px 2px 4px var(--shadow-deep);
+}
+
+.OrderSection-dual-total {
+  color: #40b3ff;
+  font-size: 1.6rem;
+  text-shadow: 2px 2px 4px var(--shadow-deep);
+}
+
+@media (max-width: 768px) {
+  .OrderSection-dual-price {
+    font-size: 1.2rem;
+  }
+  
+  .OrderSection-dual-total {
+    font-size: 1.4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .OrderSection-dual-price {
+    font-size: 1.1rem;
+  }
+  
+  .OrderSection-dual-total {
+    font-size: 1.2rem;
+  }
+}
+/* Terms and Conditions Section */
+.OrderSection-terms-section {
+  margin-bottom: 30px;
+  padding: 20px;
+  background: rgba(15, 52, 96, 0.2);
+  border-radius: 12px;
+  border: 1px solid rgba(64, 179, 255, 0.3);
+}
+
+.OrderSection-terms-checkbox {
+  display: flex;
+  align-items: flex-start;
+}
+
+.OrderSection-terms-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+  line-height: 1.5;
+}
+
+.OrderSection-terms-input {
+  display: none;
+}
+
+.OrderSection-terms-checkmark {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  background: rgba(10, 10, 20, 0.8);
+  border: 2px solid rgba(106, 127, 219, 0.3);
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.OrderSection-terms-checkmark::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.OrderSection-terms-input:checked + .OrderSection-terms-checkmark {
+  background: #6a7fdb;
+  border-color: #6a7fdb;
+  box-shadow: 0 0 15px rgba(106, 127, 219, 0.4);
+}
+
+.OrderSection-terms-input:checked + .OrderSection-terms-checkmark::after {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.OrderSection-terms-text {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.OrderSection-terms-link {
+  color: #8fa3e8;
+  text-decoration: underline;
+  transition: all 0.3s ease;
+}
+
+.OrderSection-terms-link:hover {
+  color: #ffffff;
+  text-shadow: 0 0 8px rgba(143, 163, 232, 0.6);
+}
+
+/* Button state when terms not accepted */
+.OrderSection-submit-btn.OrderSection-disabled {
+  background: linear-gradient(135deg, #666, #888, #666);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Responsive design for terms section */
+@media (max-width: 768px) {
+  .OrderSection-terms-section {
+    padding: 15px;
+  }
+  
+  .OrderSection-terms-text {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .OrderSection-terms-section {
+    padding: 12px;
+  }
+  
+  .OrderSection-terms-text {
+    font-size: 0.85rem;
+  }
+  
+  .OrderSection-terms-checkmark {
+    width: 18px;
+    height: 18px;
+  }
+}
