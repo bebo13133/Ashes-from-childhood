@@ -585,7 +585,7 @@
     text-align: center;
     letter-spacing: clamp(2px, 1.2vw, 6px);
   }
-  
+ 
   .hero-section-title-sub {
     text-align: center;
     letter-spacing: clamp(1px, 0.8vw, 3px);
@@ -632,6 +632,13 @@
 @media (max-width: 1024px) and (min-width: 769px) {
   .hero-section-main {
     min-height: 100vh;
+  }
+   .hero-section-quote-content{
+    color: white;
+  /* background: linear-gradient(135deg, #e8e8e8, #b0c4de);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text; */
   }
   .hero-section-hero-content.hero-section-animate-in {
     margin-top: 5rem;
@@ -711,6 +718,13 @@
     gap: 2rem;
     flex-direction: column;
   }
+  .hero-section-quote-content{
+    color: white;
+  /* background: linear-gradient(135deg, #e8e8e8, #b0c4de);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text; */
+  }
     .hero-section-background {
   background-image: url('/images/book/bird-responsive.png')!important;
   /* background-size: cover; */
@@ -771,6 +785,21 @@
   .hero-section-scroll-section {
     bottom: 30px;
   }
+  .hero-section-emotional-quote {
+    margin-top: 55px;
+  }
+  .hero-section-quote-content{
+        margin-bottom: 25px;
+        letter-spacing: clamp(1px, 1.5vw, 6px);
+         font-size: 1.9rem;
+        line-height: 0.85;
+        background: linear-gradient(135deg, #f8f8f8, #fdfeff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.8));
+        font-weight: 800;
+  }
 }
 
 /* Средни телефони 481px-640px */
@@ -779,6 +808,13 @@
     padding: 45px 25px;
     gap: 0.5rem;
     flex-direction: column;
+  }
+  .hero-section-quote-content{
+    color: white;
+  /* background: linear-gradient(135deg, #e8e8e8, #b0c4de);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text; */
   }
   .hero-section-background {
   background-image: url('/images/book/bird-responsive.png')!important;
@@ -847,6 +883,21 @@
   .hero-section-content-side {
     padding: 0;
   }
+   .hero-section-emotional-quote {
+    margin-top: 55px;
+  }
+  .hero-section-quote-content{
+        margin-bottom: 25px;
+         font-size: 1.7rem;
+        letter-spacing: clamp(2px, 1.5vw, 10px);
+        line-height: 0.85;
+        background: linear-gradient(102deg, #f8f8f8, #f9fcff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.8));
+        font-weight: 800;
+  }
 }
 
 /* Най-малки телефони 320px-480px */
@@ -854,6 +905,21 @@
   .hero-section-main {
     min-height: 100vh;
     padding: 0;
+  }
+   .hero-section-emotional-quote {
+    margin-top: 55px;
+  }
+  .hero-section-quote-content{
+        margin-bottom: 25px;
+        letter-spacing: clamp(2px, 1.5vw, 10px);
+        line-height: 0.85;
+        font-size: 1.5rem;
+        background: linear-gradient(102deg, #f8f8f8, #f9fcff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.8));
+        font-weight: 800;
   }
     .hero-section-background {
   background-image: url('/images/book/bird-responsive.png')!important;
@@ -931,7 +997,7 @@
   
   .hero-section-emotional-quote {
     margin-bottom: 5px;
-    margin-top: 25px;
+    margin-top: 55px;
 
   }
   
@@ -958,7 +1024,20 @@
     padding: 15px 10px;
     gap: 1.5rem;
   }
-  
+  .hero-section-emotional-quote {
+    margin-top: 45px;
+  }
+  .hero-section-quote-content{
+        margin-bottom: 25px;
+        margin-top: 52px;
+        letter-spacing: clamp(2px, 1.5vw, 10px);
+        line-height: 0.85;
+        background: linear-gradient(102deg, #f8f8f8, #f9fcff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.8));
+  }
   .hero-section-story-quote {
     padding: 12px;
   }
