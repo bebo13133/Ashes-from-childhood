@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useLocalStorage } from '../Hooks/useLocalStorage';
 import { userServiceFactory } from '../Services/userService';
 
@@ -583,26 +583,25 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const fetchBookPrice = async () => {
-    try {
-      const response = await userService.getBookPrice();
-      const bgnPrice = response.price || response || 25.00;
-      const priceObj = {
-        bgn: Number(bgnPrice),
-        eur: convertToEur(Number(bgnPrice))
-      };
-      setBookPrice(priceObj);
-      return priceObj;
-    } catch (error) {
-      console.error('Error fetching book price:', error);
-      // Запази default цената при грешка
-      const defaultPrice = {
-        bgn: 25.00,
-        eur: convertToEur(25.00)
-      };
-      setBookPrice(defaultPrice);
-    }
-  };
+  const fetchBookPrice = useCallback(async () => {
+  try {
+    const response = await userService.getBookPrice();
+    const bgnPrice = response.price || response || 25.00;
+    const priceObj = {
+      bgn: Number(bgnPrice),
+      eur: convertToEur(Number(bgnPrice))
+    };
+    setBookPrice(priceObj);
+    return priceObj;
+  } catch (error) {
+    console.error('Error fetching book price:', error);
+    const defaultPrice = {
+      bgn: 25.00,
+      eur: convertToEur(25.00)
+    };
+    setBookPrice(defaultPrice);
+  }
+}, [userService]);
 
   const contextValue = {
     // Auth state
