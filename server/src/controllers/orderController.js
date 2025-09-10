@@ -2,7 +2,6 @@ const orderController = require('express').Router();
 const { Order, Book } = require('../config/modelsConfig');
 const { Op } = require('sequelize');
 const isAuth = require('../middlewares/isAuth');
-const { transformOrderData, transformOrdersData } = require('../utils/transformUtils');
 
 orderController.post('/create', async (req, res, next) => {
     try {
@@ -31,7 +30,11 @@ orderController.post('/create', async (req, res, next) => {
             priceAtOrder: book.price,
         });
 
-        return res.status(201).json(transformOrderData(order));
+        const { bookId, priceAtOrder, ...orderData } = order.toJSON();
+        return res.status(201).json({
+            ...orderData,
+            totalPrice: order.totalPrice,
+        });
     } catch (error) {
         next(error);
     }
@@ -58,11 +61,14 @@ orderController.get('/all', isAuth, async (req, res, next) => {
             whereClause[Op.or] = [
                 { customerName: { [Op.iLike]: `%${search}%` } },
                 { email: { [Op.iLike]: `%${search}%` } },
+                { phone: { [Op.iLike]: `%${search}%` } },
+                { address: { [Op.iLike]: `%${search}%` } },
+                { city: { [Op.iLike]: `%${search}%` } },
                 { orderNumber: { [Op.iLike]: `%${search}%` } },
+                { bookTitle: { [Op.iLike]: `%${search}%` } },
             ];
         }
 
-        // Calculate pagination
         const offset = (parseInt(page) - 1) * parseInt(limit);
 
         const { count, rows: orders } = await Order.findAndCountAll({
@@ -73,7 +79,13 @@ orderController.get('/all', isAuth, async (req, res, next) => {
         });
 
         return res.status(200).json({
-            orders: transformOrdersData(orders),
+            orders: orders.map((order) => {
+                const { bookId, priceAtOrder, ...orderData } = order.toJSON();
+                return {
+                    ...orderData,
+                    totalPrice: order.totalPrice,
+                };
+            }),
             pagination: {
                 total: count,
                 page: parseInt(page),
@@ -99,7 +111,11 @@ orderController.get('/single/:id', isAuth, async (req, res, next) => {
             });
         }
 
-        return res.status(200).json(transformOrderData(order));
+        const { bookId, priceAtOrder, ...orderData } = order.toJSON();
+        return res.status(200).json({
+            ...orderData,
+            totalPrice: order.totalPrice,
+        });
     } catch (error) {
         next(error);
     }
@@ -136,7 +152,11 @@ orderController.put('/update-status/:id', isAuth, async (req, res, next) => {
             });
         }
 
-        return res.status(200).json(transformOrderData(order));
+        const { bookId, priceAtOrder, ...orderData } = order.toJSON();
+        return res.status(200).json({
+            ...orderData,
+            totalPrice: order.totalPrice,
+        });
     } catch (error) {
         next(error);
     }
@@ -150,16 +170,17 @@ orderController.delete('/single/:id', isAuth, async (req, res, next) => {
 
         if (!order) {
             return res.status(404).json({
-                success: false,
-                message: 'Order not found',
+                message: `Order with id ${id} does not exist`,
             });
         }
+
+        const orderNumber = order.orderNumber;
+        const customerName = order.customerName;
 
         await order.destroy();
 
         return res.status(200).json({
-            success: true,
-            message: 'Order deleted successfully',
+            message: `${orderNumber} with id ${id} by ${customerName} was deleted successfully`,
         });
     } catch (error) {
         next(error);
