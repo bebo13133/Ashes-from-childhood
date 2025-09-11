@@ -1,0 +1,191 @@
+const reviewController = require('express').Router();
+const { Review } = require('../config/modelsConfig');
+
+reviewController.post('/create', async (req, res, next) => {
+    try {
+        const { name, isAnonymous, rating, comment } = req.body;
+
+        if (rating !== null && rating !== undefined) {
+            if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
+                return res.status(400).json({
+                    message: 'Rating must be an integer between 1 and 5',
+                });
+            }
+        }
+
+        if (!isAnonymous && (!name || name.trim().length === 0)) {
+            return res.status(400).json({
+                message: 'Name is required for non-anonymous reviews',
+            });
+        }
+
+        if ((!comment || comment.trim().length === 0) && (rating === null || rating === undefined)) {
+            return res.status(400).json({
+                message: 'Either comment or rating must be provided',
+            });
+        }
+
+        const review = await Review.create({
+            name: isAnonymous ? null : name.trim(),
+            isAnonymous: isAnonymous || false,
+            rating: rating || null,
+            comment: comment ? comment.trim() : null,
+        });
+
+        return res.status(201).json({
+            id: review.id,
+            displayName: review.displayName,
+            rating: review.rating,
+            comment: review.comment,
+            status: review.status,
+            helpful: review.helpful,
+            createdAt: review.createdAt,
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
+reviewController.get('/all', async (req, res, next) => {
+    try {
+        const { status, page = 1, limit = 10 } = req.query;
+        const result = await getReviews(status, page, limit);
+        return res.status(200).json(result);
+    } catch (error) {
+        next(error);
+    }
+});
+
+reviewController.get('/approved', async (req, res, next) => {
+    try {
+        const { page = 1, limit = 10 } = req.query;
+        const result = await getReviews('approved', page, limit);
+        return res.status(200).json(result);
+    } catch (error) {
+        next(error);
+    }
+});
+
+reviewController.put('/update-status/:id', async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+
+        if (!['pending', 'approved', 'rejected'].includes(status)) {
+            return res.status(400).json({
+                message: 'Invalid status. Must be: pending, approved, or rejected',
+            });
+        }
+
+        const review = await Review.findByPk(id);
+
+        if (!review) {
+            return res.status(404).json({
+                message: `Review with id ${id} does not exist`,
+            });
+        }
+
+        await review.update({ status });
+
+        return res.status(200).json({
+            id: review.id,
+            displayName: review.displayName,
+            rating: review.rating,
+            comment: review.comment,
+            status: review.status,
+            helpful: review.helpful,
+            createdAt: review.createdAt,
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
+reviewController.delete('/single/:id', async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        const review = await Review.findByPk(id);
+
+        if (!review) {
+            return res.status(404).json({
+                message: `Review with id ${id} does not exist`,
+            });
+        }
+
+        const displayName = review.displayName;
+
+        await review.destroy();
+
+        return res.status(200).json({
+            message: `Review with id ${id} by ${displayName} was deleted successfully`,
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
+reviewController.put('/helpful/:id', async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        const review = await Review.findByPk(id);
+
+        if (!review) {
+            return res.status(404).json({
+                message: `Review with id ${id} does not exist`,
+            });
+        }
+
+        await review.incrementHelpful();
+        await review.reload();
+
+        return res.status(200).json({
+            id: review.id,
+            displayName: review.displayName,
+            rating: review.rating,
+            comment: review.comment,
+            status: review.status,
+            helpful: review.helpful,
+            createdAt: review.createdAt,
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
+const getReviews = async (status = null, page = 1, limit = 10) => {
+    const whereClause = {};
+    if (status) {
+        whereClause.status = status;
+    }
+
+    const reviews = await Review.findAll({
+        where: whereClause,
+        order: [['createdAt', 'DESC']],
+        limit: parseInt(limit),
+        offset: (parseInt(page) - 1) * parseInt(limit),
+    });
+
+    const totalCount = await Review.count({ where: whereClause });
+
+    return {
+        reviews: reviews.map((review) => ({
+            id: review.id,
+            displayName: review.displayName,
+            rating: review.rating,
+            comment: review.comment,
+            status: review.status,
+            helpful: review.helpful,
+            createdAt: review.createdAt,
+        })),
+        pagination: {
+            total: totalCount,
+            page: parseInt(page),
+            limit: parseInt(limit),
+            totalPages: Math.ceil(totalCount / parseInt(limit)),
+        },
+    };
+};
+
+module.exports = reviewController;
