@@ -1,7 +1,7 @@
 const authController = require('express').Router();
 const bcrypt = require('bcrypt');
 const uuid = require('uuid');
-const { sendResetEmail } = require('../utils/zohoEmails');
+const { sendEmail } = require('../utils/emailTemplates');
 
 const { User } = require('../config/modelsConfig');
 const isAuth = require('../middlewares/isAuth');
@@ -89,7 +89,7 @@ authController.post('/forgot-password', async (req, res, next) => {
         });
 
         try {
-            await sendResetEmail(email, resetToken);
+            await sendEmail('reset', { email, resetToken });
             return res.status(200).json({ message: `A reset password link has been sent to ${email}.` });
         } catch (emailError) {
             next(new Error(`Error sending email: ${emailError}`));
