@@ -1,5 +1,6 @@
 const reviewController = require('express').Router();
-const { Review } = require('../config/modelsConfig');
+const { Review, Notification } = require('../config/modelsConfig');
+const { sendEmail } = require('../utils/emailTemplates');
 
 reviewController.post('/create', async (req, res, next) => {
     try {
@@ -30,6 +31,22 @@ reviewController.post('/create', async (req, res, next) => {
             isAnonymous: isAnonymous || false,
             rating: rating || null,
             comment: comment ? comment.trim() : null,
+        });
+
+        const reviewMessage = rating ? `Нов отзив с ${rating} звезди от ${review.displayName}` : `Нов отзив от ${review.displayName}`;
+
+        await Notification.create({
+            type: 'review',
+            message: reviewMessage,
+            related_id: review.id,
+        });
+
+        sendEmail('personalTemplate', {
+            to: process.env.admin_email,
+            subject: `Нов отзив #${review.id}`,
+            content: reviewMessage,
+        }).catch((error) => {
+            console.error('Failed to send review notification email:', error);
         });
 
         return res.status(201).json({
