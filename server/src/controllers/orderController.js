@@ -1,7 +1,8 @@
 const orderController = require('express').Router();
-const { Order, Book } = require('../config/modelsConfig');
+const { Order, Book, Notification } = require('../config/modelsConfig');
 const { Op } = require('sequelize');
 const isAuth = require('../middlewares/isAuth');
+const { sendEmail } = require('../utils/emailTemplates');
 
 orderController.post('/create', async (req, res, next) => {
     try {
@@ -28,6 +29,20 @@ orderController.post('/create', async (req, res, next) => {
             paymentMethod: paymentMethod || 'cash_on_delivery',
             orderDate: orderDate ? new Date(orderDate) : new Date(),
             priceAtOrder: book.price,
+        });
+
+        await Notification.create({
+            type: 'order',
+            message: `Нова поръчка от ${order.customerName} за "${order.bookTitle}" (${order.quantity} бр.) - ${order.totalPrice} лв.`,
+            related_id: order.id,
+        });
+
+        sendEmail('personalTemplate', {
+            to: process.env.admin_email,
+            subject: `Нова поръчка #${order.id}`,
+            content: `Нова поръчка от ${order.customerName} за "${order.bookTitle}" (${order.quantity} бр.) - ${order.totalPrice} лв.`,
+        }).catch((error) => {
+            console.error('Failed to send order notification email:', error);
         });
 
         const { bookId, priceAtOrder, ...orderData } = order.toJSON();
