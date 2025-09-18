@@ -62,8 +62,8 @@ class AnalyticsService {
                             endDate: endDate,
                         },
                     ],
-                    metrics: [{ name: 'activeUsers' }, { name: 'screenPageViews' }],
-                    dimensions: [{ name: 'country' }, { name: 'city' }],
+                    metrics: [{ name: 'totalUsers' }, { name: 'sessions' }, { name: 'screenPageViews' }],
+                    // Remove dimensions to get overall totals
                 },
             });
 
