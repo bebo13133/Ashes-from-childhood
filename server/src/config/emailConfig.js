@@ -9,7 +9,7 @@ module.exports = {
     },
 
     email: {
-        fromAddress: 'info@pensa.club',
+        fromAddress: 'mejduredowete@zohomail.eu',
         frontendUrl: process.env.FRONTEND_SERVER,
     },
 };
