@@ -68,15 +68,26 @@ statisticsController.get('/stats', async (req, res, next) => {
         const totalReviews = parseInt(reviewsData?.totalReviews || 0);
         const averageRating = parseFloat(reviewsData?.averageRating || 0);
 
-        let uniqueVisitors = 0;
-        let todayVisitors = 0;
+        let uniqueVisitorsForPeriod = 0;
+        let visitorsForPeriod = 0;
 
         try {
             const realtimeData = await analyticsService.getRealtimeData();
-            todayVisitors = parseInt(realtimeData.rows?.[0]?.metricValues?.[1]?.value || 0);
-
             const visitorsData = await analyticsService.getVisitorsData(dateRange.startDate, dateRange.endDate);
-            uniqueVisitors = parseInt(visitorsData.rows?.[0]?.metricValues?.[1]?.value || 0);
+
+            // Historical: unique users for the period (metricValues[0] = totalUsers)
+            uniqueVisitorsForPeriod = visitorsData.rows && visitorsData.rows.length > 0 ? parseInt(visitorsData.rows[0]?.metricValues?.[0]?.value || 0) : 0;
+            // Historical: total sessions for the period (metricValues[1] = sessions)
+            visitorsForPeriod = visitorsData.rows && visitorsData.rows.length > 0 ? parseInt(visitorsData.rows[0]?.metricValues?.[1]?.value || 0) : 0;
+
+            // If no historical data, use realtime data as fallback
+            if (uniqueVisitorsForPeriod === 0 && visitorsForPeriod === 0) {
+                console.log('No historical data available, using realtime data as fallback');
+                uniqueVisitorsForPeriod = realtimeData.rows && realtimeData.rows.length > 0 ? parseInt(realtimeData.rows[0]?.metricValues?.[0]?.value || 0) : 0;
+                visitorsForPeriod = realtimeData.rows && realtimeData.rows.length > 0 ? parseInt(realtimeData.rows[0]?.metricValues?.[1]?.value || 0) : 0;
+            }
+
+            console.log('Final values - Unique visitors:', uniqueVisitorsForPeriod, 'Total sessions:', visitorsForPeriod);
         } catch (err) {
             console.warn(err.message);
         }
@@ -89,8 +100,8 @@ statisticsController.get('/stats', async (req, res, next) => {
             totalRevenue,
             averageRating: Math.round(averageRating * 10) / 10,
             totalReviews,
-            uniqueVisitors,
-            todayVisitors,
+            uniqueVisitors: uniqueVisitorsForPeriod,
+            todayVisitors: visitorsForPeriod,
         };
 
         return res.status(200).json(stats);
