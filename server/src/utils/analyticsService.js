@@ -62,14 +62,189 @@ class AnalyticsService {
                             endDate: endDate,
                         },
                     ],
-                    metrics: [{ name: 'totalUsers' }, { name: 'sessions' }, { name: 'screenPageViews' }],
-                    // Remove dimensions to get overall totals
+                    metrics: [
+                        { name: 'totalUsers' },
+                        { name: 'sessions' },
+                        { name: 'screenPageViews' },
+                        { name: 'bounceRate' },
+                        { name: 'averageSessionDuration' },
+                    ],
                 },
             });
 
             return response.data;
         } catch (error) {
             console.error('Error fetching visitors data:', error);
+            throw error;
+        }
+    }
+
+    async getDailyVisitorsData(startDate, endDate) {
+        if (!this.analytics) {
+            await this.initialize();
+        }
+
+        try {
+            const response = await this.analytics.properties.runReport({
+                property: `properties/${this.propertyId}`,
+                requestBody: {
+                    dateRanges: [
+                        {
+                            startDate: startDate,
+                            endDate: endDate,
+                        },
+                    ],
+                    metrics: [{ name: 'sessions' }, { name: 'totalUsers' }, { name: 'screenPageViews' }],
+                    dimensions: [{ name: 'date' }],
+                    orderBys: [{ dimension: { dimensionName: 'date' } }],
+                },
+            });
+
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching daily visitors data:', error);
+            throw error;
+        }
+    }
+
+    async getHourlyVisitorsData(startDate, endDate) {
+        if (!this.analytics) {
+            await this.initialize();
+        }
+
+        try {
+            const response = await this.analytics.properties.runReport({
+                property: `properties/${this.propertyId}`,
+                requestBody: {
+                    dateRanges: [
+                        {
+                            startDate: startDate,
+                            endDate: endDate,
+                        },
+                    ],
+                    metrics: [{ name: 'sessions' }],
+                    dimensions: [{ name: 'hour' }],
+                    orderBys: [{ dimension: { dimensionName: 'hour' } }],
+                },
+            });
+
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching hourly visitors data:', error);
+            throw error;
+        }
+    }
+
+    async getDeviceData(startDate, endDate) {
+        if (!this.analytics) {
+            await this.initialize();
+        }
+
+        try {
+            const response = await this.analytics.properties.runReport({
+                property: `properties/${this.propertyId}`,
+                requestBody: {
+                    dateRanges: [
+                        {
+                            startDate: startDate,
+                            endDate: endDate,
+                        },
+                    ],
+                    metrics: [{ name: 'sessions' }],
+                    dimensions: [{ name: 'deviceCategory' }],
+                },
+            });
+
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching device data:', error);
+            throw error;
+        }
+    }
+
+    async getTrafficSourcesData(startDate, endDate) {
+        if (!this.analytics) {
+            await this.initialize();
+        }
+
+        try {
+            const response = await this.analytics.properties.runReport({
+                property: `properties/${this.propertyId}`,
+                requestBody: {
+                    dateRanges: [
+                        {
+                            startDate: startDate,
+                            endDate: endDate,
+                        },
+                    ],
+                    metrics: [{ name: 'sessions' }],
+                    dimensions: [{ name: 'sessionSource' }],
+                    orderBys: [{ metric: { metricName: 'sessions' }, desc: true }],
+                    limit: 10,
+                },
+            });
+
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching traffic sources data:', error);
+            throw error;
+        }
+    }
+
+    async getTopPagesData(startDate, endDate) {
+        if (!this.analytics) {
+            await this.initialize();
+        }
+
+        try {
+            const response = await this.analytics.properties.runReport({
+                property: `properties/${this.propertyId}`,
+                requestBody: {
+                    dateRanges: [
+                        {
+                            startDate: startDate,
+                            endDate: endDate,
+                        },
+                    ],
+                    metrics: [{ name: 'screenPageViews' }],
+                    dimensions: [{ name: 'pagePath' }],
+                    orderBys: [{ metric: { metricName: 'screenPageViews' }, desc: true }],
+                    limit: 10,
+                },
+            });
+
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching top pages data:', error);
+            throw error;
+        }
+    }
+
+    async getCountriesData(startDate, endDate) {
+        if (!this.analytics) {
+            await this.initialize();
+        }
+
+        try {
+            const response = await this.analytics.properties.runReport({
+                property: `properties/${this.propertyId}`,
+                requestBody: {
+                    dateRanges: [
+                        {
+                            startDate: startDate,
+                            endDate: endDate,
+                        },
+                    ],
+                    metrics: [{ name: 'sessions' }],
+                    dimensions: [{ name: 'country' }],
+                    orderBys: [{ metric: { metricName: 'sessions' }, desc: true }],
+                    limit: 10,
+                },
+            });
+
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching countries data:', error);
             throw error;
         }
     }
