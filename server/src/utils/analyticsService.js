@@ -36,13 +36,11 @@ class AnalyticsService {
                 property: `properties/${this.propertyId}`,
                 requestBody: {
                     metrics: [{ name: 'activeUsers' }, { name: 'screenPageViews' }],
-                    dimensions: [{ name: 'country' }, { name: 'city' }],
                 },
             });
 
             return response.data;
         } catch (error) {
-            // console.error('Error fetching realtime data:', error);
             throw error;
         }
     }
@@ -56,20 +54,67 @@ class AnalyticsService {
             const response = await this.analytics.properties.runReport({
                 property: `properties/${this.propertyId}`,
                 requestBody: {
-                    dateRanges: [
-                        {
-                            startDate: startDate,
-                            endDate: endDate,
-                        },
+                    dateRanges: [{ startDate, endDate }],
+                    metrics: [
+                        { name: 'totalUsers' },
+                        { name: 'sessions' },
+                        { name: 'screenPageViews' },
+                        { name: 'bounceRate' },
+                        { name: 'averageSessionDuration' },
                     ],
-                    metrics: [{ name: 'activeUsers' }, { name: 'screenPageViews' }],
-                    dimensions: [{ name: 'country' }, { name: 'city' }],
                 },
             });
 
             return response.data;
         } catch (error) {
             console.error('Error fetching visitors data:', error);
+            throw error;
+        }
+    }
+
+    async getDailyVisitorsData(startDate, endDate) {
+        if (!this.analytics) {
+            await this.initialize();
+        }
+
+        try {
+            const response = await this.analytics.properties.runReport({
+                property: `properties/${this.propertyId}`,
+                requestBody: {
+                    dateRanges: [{ startDate, endDate }],
+                    metrics: [{ name: 'sessions' }, { name: 'totalUsers' }, { name: 'screenPageViews' }],
+                    dimensions: [{ name: 'date' }],
+                    orderBys: [{ dimension: { dimensionName: 'date' } }],
+                },
+            });
+
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching daily visitors data:', error);
+            throw error;
+        }
+    }
+
+    async getTopPagesData(startDate, endDate) {
+        if (!this.analytics) {
+            await this.initialize();
+        }
+
+        try {
+            const response = await this.analytics.properties.runReport({
+                property: `properties/${this.propertyId}`,
+                requestBody: {
+                    dateRanges: [{ startDate, endDate }],
+                    metrics: [{ name: 'screenPageViews' }],
+                    dimensions: [{ name: 'pagePath' }],
+                    orderBys: [{ metric: { metricName: 'screenPageViews' }, desc: true }],
+                    limit: 10,
+                },
+            });
+
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching top pages data:', error);
             throw error;
         }
     }
