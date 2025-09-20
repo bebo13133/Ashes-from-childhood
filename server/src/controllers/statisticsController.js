@@ -6,7 +6,6 @@ const analyticsService = require('../utils/analyticsService');
 statisticsController.get('/stats', async (req, res, next) => {
     try {
         const { period = '30d' } = req.query;
-
         const dateRange = analyticsService.getDateRange(period);
         const startDate = new Date(dateRange.startDate);
         const endDate = new Date(dateRange.endDate);
@@ -15,7 +14,6 @@ statisticsController.get('/stats', async (req, res, next) => {
             where: {
                 createdAt: { [Op.between]: [startDate, endDate] },
             },
-
             attributes: [
                 'status',
                 [sequelize.fn('COUNT', sequelize.col('id')), 'count'],
@@ -43,7 +41,7 @@ statisticsController.get('/stats', async (req, res, next) => {
                     break;
                 case 'completed':
                     completedOrders = count;
-                    totalRevenue = revenue;
+                    totalRevenue += revenue;
                     break;
                 case 'cancelled':
                     cancelledOrders = count;
@@ -58,9 +56,7 @@ statisticsController.get('/stats', async (req, res, next) => {
             ],
             where: {
                 status: 'approved',
-                rating: {
-                    [Op.ne]: null,
-                },
+                rating: { [Op.ne]: null },
             },
             raw: true,
         });
@@ -68,29 +64,25 @@ statisticsController.get('/stats', async (req, res, next) => {
         const totalReviews = parseInt(reviewsData?.totalReviews || 0);
         const averageRating = parseFloat(reviewsData?.averageRating || 0);
 
-        let uniqueVisitorsForPeriod = 0;
-        let visitorsForPeriod = 0;
+        let uniqueVisitors = 0;
+        let todayVisitors = 0;
 
         try {
             const realtimeData = await analyticsService.getRealtimeData();
             const visitorsData = await analyticsService.getVisitorsData(dateRange.startDate, dateRange.endDate);
 
-            // Historical: unique users for the period (metricValues[0] = totalUsers)
-            uniqueVisitorsForPeriod = visitorsData.rows && visitorsData.rows.length > 0 ? parseInt(visitorsData.rows[0]?.metricValues?.[0]?.value || 0) : 0;
-            // Historical: total sessions for the period (metricValues[1] = sessions)
-            visitorsForPeriod = visitorsData.rows && visitorsData.rows.length > 0 ? parseInt(visitorsData.rows[0]?.metricValues?.[1]?.value || 0) : 0;
+            uniqueVisitors = visitorsData.rows && visitorsData.rows.length > 0 ? parseInt(visitorsData.rows[0]?.metricValues?.[0]?.value || 0) : 0;
+            todayVisitors = visitorsData.rows && visitorsData.rows.length > 0 ? parseInt(visitorsData.rows[0]?.metricValues?.[1]?.value || 0) : 0;
 
-            // If no historical data, use realtime data as fallback
-            if (uniqueVisitorsForPeriod === 0 && visitorsForPeriod === 0) {
-                console.log('No historical data available, using realtime data as fallback');
-                uniqueVisitorsForPeriod = realtimeData.rows && realtimeData.rows.length > 0 ? parseInt(realtimeData.rows[0]?.metricValues?.[0]?.value || 0) : 0;
-                visitorsForPeriod = realtimeData.rows && realtimeData.rows.length > 0 ? parseInt(realtimeData.rows[0]?.metricValues?.[1]?.value || 0) : 0;
+            if (uniqueVisitors === 0 && todayVisitors === 0) {
+                uniqueVisitors = realtimeData.rows && realtimeData.rows.length > 0 ? parseInt(realtimeData.rows[0]?.metricValues?.[0]?.value || 0) : 0;
+                todayVisitors = realtimeData.rows && realtimeData.rows.length > 0 ? parseInt(realtimeData.rows[0]?.metricValues?.[1]?.value || 0) : 0;
             }
-
-            console.log('Final values - Unique visitors:', uniqueVisitorsForPeriod, 'Total sessions:', visitorsForPeriod);
         } catch (err) {
-            console.warn(err.message);
+            console.warn('GA data unavailable:', err.message);
         }
+
+        const conversionRate = uniqueVisitors > 0 ? (totalOrders / uniqueVisitors) * 100 : 0;
 
         const stats = {
             totalOrders,
@@ -100,8 +92,9 @@ statisticsController.get('/stats', async (req, res, next) => {
             totalRevenue,
             averageRating: Math.round(averageRating * 10) / 10,
             totalReviews,
-            uniqueVisitors: uniqueVisitorsForPeriod,
-            todayVisitors: visitorsForPeriod,
+            uniqueVisitors,
+            todayVisitors,
+            conversionRate: Math.round(conversionRate * 100) / 100,
         };
 
         return res.status(200).json(stats);
@@ -125,32 +118,27 @@ statisticsController.get('/visitors', async (req, res, next) => {
         let returningVisitors = 0;
 
         try {
-            // Get realtime data for today's visitors
             const realtimeData = await analyticsService.getRealtimeData();
             todayVisitors = parseInt(realtimeData.rows?.[0]?.metricValues?.[0]?.value || 0);
 
-            // Get historical data for the period
             const visitorsData = await analyticsService.getVisitorsData(dateRange.startDate, dateRange.endDate);
 
             if (visitorsData.rows && visitorsData.rows.length > 0) {
                 const row = visitorsData.rows[0];
                 const metrics = row.metricValues || [];
 
-                totalVisitors = parseInt(metrics[1]?.value || 0); // sessions
-                uniqueVisitors = parseInt(metrics[0]?.value || 0); // totalUsers
-                pageViews = parseInt(metrics[2]?.value || 0); // screenPageViews
+                totalVisitors = parseInt(metrics[1]?.value || 0);
+                uniqueVisitors = parseInt(metrics[0]?.value || 0);
+                pageViews = parseInt(metrics[2]?.value || 0);
 
-                // Get bounce rate (metric index 3)
                 const bounceRateValue = parseFloat(metrics[3]?.value || 0);
                 bounceRate = Math.round(bounceRateValue * 100) / 100;
 
-                // Get average session duration (metric index 4)
                 const sessionTimeSeconds = parseFloat(metrics[4]?.value || 0);
                 const minutes = Math.floor(sessionTimeSeconds / 60);
                 const seconds = Math.floor(sessionTimeSeconds % 60);
                 averageSessionTime = `${minutes}:${seconds.toString().padStart(2, '0')}`;
 
-                // Calculate new vs returning visitors (approximate)
                 newVisitors = Math.floor(uniqueVisitors * 0.6);
                 returningVisitors = uniqueVisitors - newVisitors;
             }
@@ -182,12 +170,11 @@ statisticsController.get('/reviews', async (req, res, next) => {
         const startDate = new Date(dateRange.startDate);
         const endDate = new Date(dateRange.endDate);
 
-        // Get all reviews with full details
+        // Get all reviews - no need for attributes since we want all fields
         const reviews = await Review.findAll({
             where: {
                 createdAt: { [Op.between]: [startDate, endDate] },
             },
-            attributes: ['id', 'name', 'rating', 'comment', 'status', 'createdAt', 'updatedAt', 'isAnonymous', 'helpful'],
             order: [['createdAt', 'DESC']],
         });
 
@@ -333,11 +320,11 @@ statisticsController.get('/reports/:reportType', async (req, res, next) => {
 
         switch (reportType) {
             case 'overview':
-                return await generateOverviewReport(req, res, startDate, endDate);
+                return await generateOverviewReport(req, res, startDate, endDate, dateRange);
             case 'sales':
                 return await generateSalesReport(req, res, startDate, endDate);
             case 'traffic':
-                return await generateTrafficReport(req, res, startDate, endDate);
+                return await generateTrafficReport(req, res, startDate, endDate, dateRange);
             case 'reviews':
                 return await generateReviewsReport(req, res, startDate, endDate);
             default:
@@ -348,10 +335,12 @@ statisticsController.get('/reports/:reportType', async (req, res, next) => {
     }
 });
 
-async function generateOverviewReport(req, res, startDate, endDate) {
-    // Get orders data
-    const ordersData = await Order.findAll({
-        where: { createdAt: { [Op.between]: [startDate, endDate] } },
+async function generateOverviewReport(req, res, startDate, endDate, dateRange) {
+    const ordersData = await Order.findOne({
+        where: {
+            createdAt: { [Op.between]: [startDate, endDate] },
+            status: 'completed',
+        },
         attributes: [
             [sequelize.fn('COUNT', sequelize.col('id')), 'totalOrders'],
             [sequelize.fn('SUM', sequelize.literal('quantity * price_at_order')), 'totalRevenue'],
@@ -359,7 +348,6 @@ async function generateOverviewReport(req, res, startDate, endDate) {
         raw: true,
     });
 
-    // Get reviews data
     const reviewsData = await Review.findOne({
         where: {
             status: 'approved',
@@ -372,7 +360,6 @@ async function generateOverviewReport(req, res, startDate, endDate) {
         raw: true,
     });
 
-    // Get visitors data
     let totalVisitors = 0;
     try {
         const visitorsData = await analyticsService.getVisitorsData(dateRange.startDate, dateRange.endDate);
@@ -381,28 +368,32 @@ async function generateOverviewReport(req, res, startDate, endDate) {
         console.warn('GA data unavailable:', err.message);
     }
 
-    const totalOrders = parseInt(ordersData[0]?.totalOrders || 0);
-    const totalRevenue = parseFloat(ordersData[0]?.totalRevenue || 0);
+    const totalOrders = parseInt(ordersData?.totalOrders || 0);
+    const totalRevenue = parseFloat(ordersData?.totalRevenue || 0);
     const totalReviews = parseInt(reviewsData?.totalReviews || 0);
     const averageRating = parseFloat(reviewsData?.averageRating || 0);
     const conversionRate = totalVisitors > 0 ? (totalOrders / totalVisitors) * 100 : 0;
 
     const report = {
-        totalOrders,
-        totalRevenue,
-        totalVisitors: parseInt(totalVisitors),
-        totalReviews,
-        averageRating: Math.round(averageRating * 10) / 10,
-        conversionRate: Math.round(conversionRate * 100) / 100,
+        overview: {
+            totalOrders,
+            totalRevenue,
+            totalVisitors: parseInt(totalVisitors),
+            totalReviews,
+            averageRating: Math.round(averageRating * 10) / 10,
+            conversionRate: Math.round(conversionRate * 100) / 100,
+        },
     };
 
     return res.status(200).json(report);
 }
 
 async function generateSalesReport(req, res, startDate, endDate) {
-    // Get monthly sales data
     const monthlyData = await Order.findAll({
-        where: { createdAt: { [Op.between]: [startDate, endDate] } },
+        where: {
+            createdAt: { [Op.between]: [startDate, endDate] },
+            status: 'completed',
+        },
         attributes: [
             [sequelize.fn('TO_CHAR', sequelize.col('created_at'), 'YYYY-MM'), 'month'],
             [sequelize.fn('COUNT', sequelize.col('id')), 'orders'],
@@ -436,26 +427,57 @@ async function generateSalesReport(req, res, startDate, endDate) {
             month: monthName,
             orders: parseInt(month.orders),
             revenue: parseFloat(month.revenue || 0),
-            target: Math.round(parseFloat(month.revenue || 0) * 1.1), // 10% above actual
+            target: Math.round(parseFloat(month.revenue || 0) * 1.1),
         };
     });
 
     return res.status(200).json({ salesData });
 }
 
-async function generateTrafficReport(req, res, startDate, endDate) {
-    // This would need daily analytics data - for now return mock structure
-    const trafficData = [
-        { date: '01.11', visitors: 234, pageviews: 567, sessions: 198 },
-        { date: '02.11', visitors: 189, pageviews: 445, sessions: 156 },
-        // ... more data would come from analytics
-    ];
+async function generateTrafficReport(req, res, startDate, endDate, dateRange) {
+    let trafficData = [];
+    let topPages = [];
 
-    return res.status(200).json({ trafficData });
+    try {
+        const dailyData = await analyticsService.getDailyVisitorsData(dateRange.startDate, dateRange.endDate);
+        const topPagesData = await analyticsService.getTopPagesData(dateRange.startDate, dateRange.endDate);
+
+        trafficData =
+            dailyData.rows?.map((row) => {
+                const dateValue = row.dimensionValues?.[0]?.value || '';
+                const day = dateValue.substring(6, 8);
+                const month = dateValue.substring(4, 6);
+                const formattedDate = `${day}.${month}`;
+
+                return {
+                    date: formattedDate,
+                    visitors: parseInt(row.metricValues?.[1]?.value || 0),
+                    pageviews: parseInt(row.metricValues?.[2]?.value || 0),
+                    sessions: parseInt(row.metricValues?.[1]?.value || 0),
+                };
+            }) || [];
+
+        const totalViews = topPagesData.rows?.reduce((sum, row) => sum + parseInt(row.metricValues?.[0]?.value || 0), 0) || 0;
+
+        topPages =
+            topPagesData.rows?.map((row) => {
+                const views = parseInt(row.metricValues?.[0]?.value || 0);
+                const percentage = totalViews > 0 ? Math.round((views / totalViews) * 100 * 10) / 10 : 0;
+
+                return {
+                    page: row.dimensionValues?.[0]?.value || '',
+                    views: views,
+                    percentage: percentage,
+                };
+            }) || [];
+    } catch (err) {
+        console.warn('GA data unavailable for traffic report:', err.message);
+    }
+
+    return res.status(200).json({ trafficData, topPages });
 }
 
 async function generateReviewsReport(req, res, startDate, endDate) {
-    // Get rating distribution
     const ratingDistribution = await Review.findAll({
         where: {
             createdAt: { [Op.between]: [startDate, endDate] },
@@ -469,25 +491,24 @@ async function generateReviewsReport(req, res, startDate, endDate) {
 
     const totalReviews = ratingDistribution.reduce((sum, dist) => sum + parseInt(dist.count), 0);
 
-    const ratingDist = ratingDistribution.map((dist) => {
-        const count = parseInt(dist.count);
-        const percentage = totalReviews > 0 ? (count / totalReviews) * 100 : 0;
-
-        return {
-            rating: parseInt(dist.rating),
-            count,
-            percentage: Math.round(percentage * 10) / 10,
-        };
+    const ratingMap = {};
+    ratingDistribution.forEach((dist) => {
+        ratingMap[parseInt(dist.rating)] = parseInt(dist.count);
     });
 
-    // Mock top pages data (would come from analytics)
-    const topPages = [
-        { page: '/', views: 5432, percentage: 31.2 },
-        { page: '/order', views: 3456, percentage: 19.8 },
-        { page: '/reviews', views: 2567, percentage: 14.7 },
-    ];
+    const reviewsData = [];
+    for (let rating = 5; rating >= 1; rating--) {
+        const count = ratingMap[rating] || 0;
+        const percentage = totalReviews > 0 ? (count / totalReviews) * 100 : 0;
 
-    return res.status(200).json({ ratingDistribution: ratingDist, topPages });
+        reviewsData.push({
+            rating: rating,
+            count: count,
+            percentage: Math.round(percentage * 10) / 10,
+        });
+    }
+
+    return res.status(200).json({ reviewsData });
 }
 
 module.exports = statisticsController;
