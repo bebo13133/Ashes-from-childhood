@@ -1,29 +1,26 @@
+const jwt = require('../utils/jwt');
 const { User } = require('../config/modelsConfig');
 
 const isAuth = async (req, res, next) => {
     try {
-        const sessionToken = req.cookies.adminSession;
+        const authHeader = req.headers.authorization;
 
-        if (!sessionToken) {
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
             return res.status(401).json({ message: 'Unauthorized' });
         }
 
-        const users = await User.findAll();
-        const user = users.find((u) => {
-            const tokens = u.sessionTokens || [];
-            return tokens.some((t) => t.token === sessionToken);
-        });
+        const token = authHeader.split(' ')[1];
 
-        if (!user) {
-            return res.status(401).json({ message: 'Unauthorized' });
+        const decodedToken = jwt.tokenVerification('access', token);
+
+        if (!decodedToken) {
+            return res.status(401).json({ message: 'Invalid token' });
         }
 
-        const tokens = user.sessionTokens || [];
-        const tokenData = tokens.find((t) => t.token === sessionToken);
+        const user = await User.findOne({ where: { email: decodedToken.email } });
 
-        if (!tokenData || new Date(tokenData.expiresAt) < new Date()) {
-            await user.removeSessionToken(sessionToken);
-            return res.status(401).json({ message: 'Session expired' });
+        if (!user || user.role !== 'admin') {
+            return res.status(403).json({ message: 'Access denied' });
         }
 
         req.user = user;
