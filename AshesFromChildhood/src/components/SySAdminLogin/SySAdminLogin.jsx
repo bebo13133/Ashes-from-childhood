@@ -20,7 +20,7 @@ const SySAdminLogin = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      const from = location.state?.from?.pathname || '/users-statistic';
+      const from = location.state?.from?.pathname || '/sys-panel';
       navigate(from, { replace: true });
     }
   }, [isAuthenticated, navigate, location]);

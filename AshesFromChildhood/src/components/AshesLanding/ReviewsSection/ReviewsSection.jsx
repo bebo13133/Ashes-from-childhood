@@ -1,10 +1,11 @@
+/* eslint-disable no-unused-vars */
 import { useState, useEffect } from 'react';
 import './ReviewsSection.css';
-import reviewsData from './data/reviews.json';
+import { useAuthContext } from '../../contexts/userContext';
 
 const ReviewsSection = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [reviews, setReviews] = useState(reviewsData.reviews);
+  const [reviews, setReviews] = useState([]);
   const [showForm, setShowForm] = useState(true);
   const [formData, setFormData] = useState({
     name: '',
@@ -15,6 +16,16 @@ const ReviewsSection = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showThankYou, setShowThankYou] = useState(false);
   const [hoveredRating, setHoveredRating] = useState(0);
+  const [reviewsLoading, setReviewsLoading] = useState(true);
+  const [averageRating, setAverageRating] = useState(0);
+  const [totalReviews, setTotalReviews] = useState(0);
+
+  const {
+    submitReview,
+    fetchPublicReviews,
+    markReviewAsHelpful,
+    isLoading
+  } = useAuthContext();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -31,6 +42,38 @@ const ReviewsSection = () => {
     return () => observer.disconnect();
   }, []);
 
+  // Зареждане на одобрените отзиви
+  useEffect(() => {
+    const loadReviews = async () => {
+      setReviewsLoading(true);
+      try {
+        const response = await fetchPublicReviews({ limit: 1000 });
+
+        if (response && response.reviews) {
+          setReviews(response.reviews);
+          setTotalReviews(response.totalReviews || response.reviews.length);
+
+          // Изчисляване на средната оценка
+          if (response.reviews.length > 0) {
+            const sum = response.reviews.reduce((acc, review) => acc + review.rating, 0);
+            setAverageRating(sum / response.reviews.length);
+          } else {
+            setAverageRating(0);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading reviews:', error);
+        setReviews([]);
+        setTotalReviews(0);
+        setAverageRating(0);
+      } finally {
+        setReviewsLoading(false);
+      }
+    };
+
+    loadReviews();
+  }, [fetchPublicReviews]);
+
   // Проверка за anti-spam flag
   useEffect(() => {
     const hasReviewed = localStorage.getItem('hasReviewedBook');
@@ -43,8 +86,8 @@ const ReviewsSection = () => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : 
-              name === 'rating' ? parseInt(value) : value
+      [name]: type === 'checkbox' ? checked :
+        name === 'rating' ? parseInt(value) : value
     }));
   };
 
@@ -67,33 +110,33 @@ const ReviewsSection = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Симулация на API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    try {
+      const reviewData = {
+        name: formData.isAnonymous ? 'Анонимен читател' : formData.name,
+        isAnonymous: formData.isAnonymous,
+        rating: parseInt(formData.rating),
+        comment: formData.comment
+      };
 
-    const newReview = {
-      id: Date.now(),
-      name: formData.isAnonymous ? 'Анонимен читател' : formData.name,
-      isAnonymous: formData.isAnonymous,
-      rating: parseInt(formData.rating),
-      comment: formData.comment,
-      date: new Date().toISOString().split('T')[0],
-      helpful: 0
-    };
+      await submitReview(reviewData);
 
-    // Добавя новия отзив в началото
-    setReviews(prev => [newReview, ...prev]);
+      // Запазва flag в localStorage
+      localStorage.setItem('hasReviewedBook', 'true');
 
-    // Запазва flag в localStorage
-    localStorage.setItem('hasReviewedBook', 'true');
-    
-    setIsSubmitting(false);
-    setShowForm(false);
-    setShowThankYou(true);
+      setShowForm(false);
+      setShowThankYou(true);
 
-    // Скрива благодарствена msg след 5 сек
-    setTimeout(() => {
-      setShowThankYou(false);
-    }, 5000);
+      // Скрива благодарствена msg след 5 сек
+      setTimeout(() => {
+        setShowThankYou(false);
+      }, 5000);
+
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      // Можете да добавите error toast notification тук
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const renderStars = (rating) => {
@@ -104,22 +147,34 @@ const ReviewsSection = () => {
     ));
   };
 
-  const handleHelpfulClick = (reviewId) => {
-    setReviews(prev => prev.map(review => 
-      review.id === reviewId 
-        ? { ...review, helpful: review.helpful + 1 }
-        : review
-    ));
+  const handleHelpfulClick = async (reviewId) => {
+    try {
+      await markReviewAsHelpful(reviewId);
+
+      // Обновява локалното състояние
+      setReviews(prev => prev.map(review =>
+        review.id === reviewId
+          ? { ...review, helpful: (review.helpful || 0) + 1 }
+          : review
+      ));
+    } catch (error) {
+      console.error('Error marking review as helpful:', error);
+    }
   };
 
-  const averageRating = reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
-  const totalReviews = reviews.length;
+  const formatDate = (dateString) => {
+    try {
+      return new Date(dateString).toLocaleDateString('bg-BG');
+    } catch (error) {
+      return dateString;
+    }
+  };
 
   return (
     <section className="reviews-section">
       <div className="container">
         <div className={`reviews-content ${isVisible ? 'fade-in-up' : ''}`}>
-          
+
           {/* Section Header */}
           <div className="reviews-header">
             <h2 className="reviews-title">
@@ -127,26 +182,30 @@ const ReviewsSection = () => {
             </h2>
             <div className="reviews-summary">
               <div className="rating-overview">
-                <div className="average-rating">
-                  <span className="rating-number">{averageRating.toFixed(1)}</span>
-                  <div className="rating-stars">
-                    {renderStars(Math.round(averageRating))}
+                {reviewsLoading ? (
+                  <div className="loading-placeholder">Зареждане...</div>
+                ) : (
+                  <div className="average-rating">
+                    <span className="rating-number">{averageRating.toFixed(1)}</span>
+                    <div className="rating-stars">
+                      {renderStars(Math.round(averageRating))}
+                    </div>
                   </div>
-                </div>
+                )}
                 <p className="total-reviews">Базирано на {totalReviews} отзива</p>
               </div>
             </div>
           </div>
 
           <div className="reviews-grid">
-            
+
             {/* Review Form */}
             <div className="review-form-container">
               {showThankYou && (
                 <div className="thank-you-message">
                   <div className="thank-you-icon">🙏</div>
                   <h3>Благодарим за отзива!</h3>
-                  <p>Вашето мнение е важно за нас и за бъдещите читатели.</p>
+                  <p>Вашето мнение е важно за нас и за бъдещите читатели. Отзивът ще бъде публикуван след одобрение.</p>
                 </div>
               )}
 
@@ -158,7 +217,7 @@ const ReviewsSection = () => {
                   </div>
 
                   <form onSubmit={handleSubmit} className="review-form">
-                    
+
                     {/* Name/Anonymous Toggle */}
                     <div className="name-section">
                       <div className="anonymous-toggle">
@@ -195,11 +254,10 @@ const ReviewsSection = () => {
                       <label className="rating-label">Оценка</label>
                       <div className="rating-input">
                         {[1, 2, 3, 4, 5].map(star => (
-                          <label 
-                            key={star} 
-                            className={`star-label ${
-                              star <= (hoveredRating || formData.rating) ? 'selected' : ''
-                            }`}
+                          <label
+                            key={star}
+                            className={`star-label ${star <= (hoveredRating || formData.rating) ? 'selected' : ''
+                              }`}
                             onMouseEnter={() => handleStarHover(star)}
                             onMouseLeave={handleStarLeave}
                             onClick={() => handleStarClick(star)}
@@ -237,10 +295,10 @@ const ReviewsSection = () => {
                     </div>
 
                     {/* Submit Button */}
-                    <button 
-                      type="submit" 
+                    <button
+                      type="submit"
                       className={`submit-button ${isSubmitting ? 'submitting' : ''}`}
-                      disabled={isSubmitting}
+                      disabled={isSubmitting || isLoading}
                     >
                       <span className="button-text">
                         {isSubmitting ? 'Изпращане...' : 'Публикувай отзив'}
@@ -264,44 +322,55 @@ const ReviewsSection = () => {
             <div className="reviews-list">
               <h3 className="list-title">Последни отзиви</h3>
               <div className="reviews-container">
-                {reviews.slice(0, 8).map((review, index) => (
-                  <div 
-                    key={review.id}
-                    className={`review-card ${isVisible ? 'slide-in' : ''}`}
-                    style={{ animationDelay: `${index * 0.1}s` }}
-                  >
-                    <div className="review-header">
-                      <div className="reviewer-info">
-                        <div className="reviewer-avatar">
-                          {review.isAnonymous ? '?' : review.name.charAt(0).toUpperCase()}
-                        </div>
-                        <div className="reviewer-details">
-                          <h4 className="reviewer-name">{review.name}</h4>
-                          <div className="review-rating">
-                            {renderStars(review.rating)}
+                {reviewsLoading ? (
+                  <div className="reviews-loading">
+                    <div className="loading-spinner"></div>
+                    <p>Зареждане на отзивите...</p>
+                  </div>
+                ) : reviews.length > 0 ? (
+                  reviews.map((review, index) => (
+                    <div
+                      key={review.id}
+                      className={`review-card ${isVisible ? 'slide-in' : ''}`}
+                      style={{ animationDelay: `${index * 0.1}s` }}
+                    >
+                      <div className="review-header">
+                        <div className="reviewer-info">
+                          <div className="reviewer-avatar">
+                            {review.isAnonymous ? '?' : (review.name?.charAt(0)?.toUpperCase() || 'N')}
+                          </div>
+                          <div className="reviewer-details">
+                            <h4 className="reviewer-name">{review.name}</h4>
+                            <div className="review-rating">
+                              {renderStars(review.rating)}
+                            </div>
                           </div>
                         </div>
+                        <div className="review-date">
+                          {formatDate(review.date || review.createdAt)}
+                        </div>
                       </div>
-                      <div className="review-date">
-                        {new Date(review.date).toLocaleDateString('bg-BG')}
+
+                      <div className="review-content">
+                        <p className="review-text">{review.comment}</p>
+                      </div>
+
+                      <div className="review-footer">
+                        <button
+                          className="helpful-button"
+                          onClick={() => handleHelpfulClick(review.id)}
+                        >
+                          <span className="helpful-icon">👍</span>
+                          <span className="helpful-text">Полезно ({review.helpful || 0})</span>
+                        </button>
                       </div>
                     </div>
-                    
-                    <div className="review-content">
-                      <p className="review-text">{review.comment}</p>
-                    </div>
-                    
-                    <div className="review-footer">
-                      <button 
-                        className="helpful-button"
-                        onClick={() => handleHelpfulClick(review.id)}
-                      >
-                        <span className="helpful-icon">👍</span>
-                        <span className="helpful-text">Полезно ({review.helpful})</span>
-                      </button>
-                    </div>
+                  ))
+                ) : (
+                  <div className="no-reviews">
+                    <p>Все още няма отзиви. Бъдете първият, който ще сподели мнение!</p>
                   </div>
-                ))}
+                )}
               </div>
             </div>
           </div>

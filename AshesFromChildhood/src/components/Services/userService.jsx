@@ -7,7 +7,7 @@ export const userServiceFactory = (token) => {
   return {
     // ===== AUTHENTICATION =====
     login: (data) => {
-      return requester.post(`${apiUrl}/sys/login`, data);
+      return requester.post(`${apiUrl}/auth/login`, data);
     },
 
     logout: () => {
@@ -15,32 +15,32 @@ export const userServiceFactory = (token) => {
     },
 
     forgotPassword: (data) => {
-      return requester.post(`${apiUrl}/sys/forgot-password`, data);
+      return requester.post(`${apiUrl}/auth/forgot-password`, data);
     },
 
     resetPassword: (data) => {
-      return requester.post(`${apiUrl}/sys/reset-password`, data);
+      return requester.post(`${apiUrl}/auth/reset-password`, data);
     },
     changePassword: (passwordData) => {
       return requester.put(`${apiUrl}/auth/change-password`, {
         currentPassword: passwordData.currentPassword,
-        newPassword: passwordData.newPassword
+        newPassword: passwordData.newPassword,
       });
     },
     updateBookPrice: (price) => {
-  return requester.put(`${apiUrl}/sys/book-price`, { price });
-},
-
-getBookPrice: () => {
-  return requester.get(`${apiUrl}/sys/book-price`);
-},
-    // ===== DASHBOARD & STATISTICS =====
-    getDashboardStats: () => {
-      return requester.get(`${apiUrl}/sys/dashboard/stats`);
+      return requester.put(`${apiUrl}/books/book-price`, { price });
     },
 
+
+    getBookPrice: () => {
+      return requester.get(`${apiUrl}/books/book-price`);
+    },
+    // ===== DASHBOARD & STATISTICS =====
+    getDashboardStats: (period = '30d') => {
+      return requester.get(`${apiUrl}/dashboard/stats?period=${period}`);
+    },
     getVisitorsStatistics: (period = '30d') => {
-      return requester.get(`${apiUrl}/sys/statistics/visitors?period=${period}`);
+      return requester.get(`${apiUrl}/dashboard/visitors?period=${period}`);
     },
 
     getOrdersStatistics: (period = '30d') => {
@@ -63,40 +63,69 @@ getBookPrice: () => {
       if (filters.limit) queryParams.append('limit', filters.limit);
 
       const queryString = queryParams.toString();
-      return requester.get(`${apiUrl}/sys/orders${queryString ? `?${queryString}` : ''}`);
+      return requester.get(`${apiUrl}/orders/all${queryString ? `?${queryString}` : ''}`);
     },
 
     getOrderById: (orderId) => {
-      return requester.get(`${apiUrl}/sys/orders/${orderId}`);
+      return requester.get(`${apiUrl}/orders/${orderId}`);
     },
 
     updateOrderStatus: (orderId, status) => {
-      return requester.put(`${apiUrl}/sys/orders/${orderId}/status`, {
-        status,
-        updatedAt: new Date().toISOString()
-      });
+      return requester.put(`${apiUrl}/orders/update-status/${orderId}`, { status });
     },
 
+
     deleteOrder: (orderId) => {
-      return requester.delete(`${apiUrl}/sys/orders/${orderId}`);
+      return requester.del(`${apiUrl}/orders/${orderId}`);
     },
 
     // ===== REVIEWS MANAGEMENT =====
-    getRatingsAndReviews: () => {
-      return requester.get(`${apiUrl}/sys/reviews`);
+    getRatingsAndReviews: (filters = {}) => {
+      const queryParams = new URLSearchParams();
+
+      if (filters.status) queryParams.append('status', filters.status);
+      if (filters.page) queryParams.append('page', filters.page);
+      if (filters.limit) queryParams.append('limit', filters.limit);
+
+      const queryString = queryParams.toString();
+      return requester.get(`${apiUrl}/reviews/all${queryString ? `?${queryString}` : ''}`);
     },
 
     updateReviewStatus: (reviewId, status) => {
-      return requester.put(`${apiUrl}/sys/reviews/${reviewId}/status`, { status });
+      return requester.put(`${apiUrl}/reviews/update-status/${reviewId}`, { status });
     },
+    getApprovedReviews: (filters = {}) => {
+      const queryParams = new URLSearchParams();
 
+      if (filters.page) queryParams.append('page', filters.page);
+      if (filters.limit) queryParams.append('limit', filters.limit);
+
+      const queryString = queryParams.toString();
+      return requester.get(`${apiUrl}/reviews/approved${queryString ? `?${queryString}` : ''}`);
+    },
     deleteReview: (reviewId) => {
-      return requester.delete(`${apiUrl}/sys/reviews/${reviewId}`);
+      return requester.del(`${apiUrl}/reviews/single/${reviewId}`);
+    },
+    markReviewAsHelpful: (reviewId) => {
+      return requester.put(`${apiUrl}/reviews/helpful/${reviewId}`);
     },
 
+    submitReview: (reviewData) => {
+      return requester.post(`${apiUrl}/reviews/create`, reviewData);
+    },
+
+    getPublicReviews: (filters = {}) => {
+      const queryParams = new URLSearchParams();
+
+      if (filters.page) queryParams.append('page', filters.page);
+      if (filters.limit) queryParams.append('limit', filters.limit);
+
+      const queryString = queryParams.toString();
+      return requester.get(`${apiUrl}/reviews/approved${queryString ? `?${queryString}` : ''}`);
+    },
     // ===== EMAIL MANAGEMENT =====
     sendEmail: (emailData) => {
-      return requester.post(`${apiUrl}/sys/emails/send`, emailData);
+      return requester.post(`${apiUrl}/emails/send`, emailData);
     },
 
     sendBulkEmail: (emailData) => {
@@ -113,9 +142,10 @@ getBookPrice: () => {
     // },
 
     // ===== REPORTS & ANALYTICS =====
-    generateReport: (reportType, period = '30d') => {
-      return requester.get(`${apiUrl}/sys/reports/${reportType}?period=${period}`);
-    },
+    // Endpoints за генериране на различни типове отчети
+   generateReport: (reportType, period = '30d') => {
+            return requester.get(`${apiUrl}/dashboard/reports/${reportType}?period=${period}`);
+        },
 
     exportData: (dataType, format = 'xlsx') => {
       return requester.get(`${apiUrl}/sys/export/${dataType}?format=${format}`, {
@@ -125,27 +155,20 @@ getBookPrice: () => {
 
     // ===== PUBLIC ENDPOINTS =====
     submitOrder: (orderData) => {
-      return requester.post(`${apiUrl}/orders/book`, orderData);
+      return requester.post(`${apiUrl}/orders/create`, orderData);
     },
 
-    submitReview: (reviewData) => {
-      return requester.post(`${apiUrl}/reviews/submit`, reviewData);
-    },
-
-    getPublicReviews: () => {
-      return requester.get(`${apiUrl}/reviews/approved`);
-    },
     // Notifications endpoints
     getNotifications: () => {
-      return requester.get(`${apiUrl}/sys/notifications`);
+      return requester.get(`${apiUrl}/notifications/all`);
     },
 
     markNotificationAsRead: (notificationId) => {
-      return requester.put(`${apiUrl}/sys/notifications/${notificationId}/read`);
+      return requester.put(`${apiUrl}/notifications/single/${notificationId}`);
     },
 
     markAllNotificationsAsRead: () => {
-      return requester.put(`${apiUrl}/sys/notifications/mark-all-read`);
-    }
+      return requester.put(`${apiUrl}/notifications/mark-all-read`);
+    },
   };
 };

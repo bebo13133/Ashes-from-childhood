@@ -66,19 +66,37 @@ const NotificationDropdown = ({
     }
   };
 
-  const formatTime = (timestamp) => {
-    const now = new Date();
-    const notificationTime = new Date(timestamp);
-    const diffInMinutes = Math.floor((now - notificationTime) / (1000 * 60));
+  // Поправена функция за форматиране на времето
+  const formatTime = (dateString) => {
+    if (!dateString) return 'сега';
     
-    if (diffInMinutes < 1) return 'сега';
-    if (diffInMinutes < 60) return `${diffInMinutes} мин`;
-    
-    const diffInHours = Math.floor(diffInMinutes / 60);
-    if (diffInHours < 24) return `${diffInHours} час${diffInHours > 1 ? 'а' : ''}`;
-    
-    const diffInDays = Math.floor(diffInHours / 24);
-    return `${diffInDays} ден${diffInDays > 1 ? 'и' : ''}`;
+    try {
+      const now = new Date();
+      const notificationTime = new Date(dateString);
+      const diffInMinutes = Math.floor((now - notificationTime) / (1000 * 60));
+      
+      if (diffInMinutes < 1) return 'сега';
+      if (diffInMinutes < 60) return `${diffInMinutes} мин`;
+      
+      const diffInHours = Math.floor(diffInMinutes / 60);
+      if (diffInHours < 24) return `${diffInHours} час${diffInHours > 1 ? 'а' : ''}`;
+      
+      const diffInDays = Math.floor(diffInHours / 24);
+      return `${diffInDays} ден${diffInDays > 1 ? 'и' : ''}`;
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return 'сега';
+    }
+  };
+
+  // Функция за генериране на title от message
+  const getNotificationTitle = (notification) => {
+    if (notification.type === 'order') {
+      return 'Нова поръчка';
+    } else if (notification.type === 'review') {
+      return 'Нов отзив';
+    }
+    return 'Нотификация';
   };
 
   return (
@@ -138,10 +156,10 @@ const NotificationDropdown = ({
                   <div className="notification-dropdown-item-content">
                     <div className="notification-dropdown-item-header">
                       <h4 className="notification-dropdown-item-title">
-                        {notification.title}
+                        {getNotificationTitle(notification)}
                       </h4>
                       <span className="notification-dropdown-item-time">
-                        {formatTime(notification.timestamp)}
+                        {formatTime(notification.createdAt || notification.timestamp)}
                       </span>
                     </div>
                     <p className="notification-dropdown-item-message">
