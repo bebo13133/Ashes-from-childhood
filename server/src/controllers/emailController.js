@@ -4,7 +4,7 @@ const { sendEmail } = require('../utils/emailTemplates');
 
 emailController.post('/send', async (req, res, next) => {
     try {
-        const { templateId, to } = req.body;
+        const { templateId, to, subject, message } = req.body;
 
         if (!to) {
             return res.status(400).json({
@@ -12,28 +12,36 @@ emailController.post('/send', async (req, res, next) => {
             });
         }
 
-        if (!templateId) {
+        if (templateId) {
+            const template = await EmailTemplate.findByPk(templateId);
+
+            if (template) {
+                await sendEmail('template', {
+                    to,
+                    subject: template.subject,
+                    content: template.content,
+                });
+
+                return res.status(200).json({
+                    message: `Email sent successfully to ${to} using template "${template.name}"`,
+                });
+            }
+        }
+
+        if (!subject || !message) {
             return res.status(400).json({
-                message: 'Template ID is required',
+                message: 'Subject and message are required',
             });
         }
 
-        const template = await EmailTemplate.findByPk(templateId);
-
-        if (!template) {
-            return res.status(404).json({
-                message: 'Email template not found',
-            });
-        }
-
-        await sendEmail('template', {
+        await sendEmail('personalTemplate', {
             to,
-            subject: template.subject,
-            content: template.content,
+            subject,
+            content: message,
         });
 
         return res.status(200).json({
-            message: `Email sent successfully to ${to} using template "${template.name}"`,
+            message: `Email sent successfully to ${to}`,
         });
     } catch (error) {
         next(error);
