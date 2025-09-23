@@ -40,12 +40,12 @@ export const userServiceFactory = (token) => {
       return requester.get(`${apiUrl}/dashboard/stats?period=${period}`);
     },
     getVisitorsStatistics: (period = '30d') => {
-      return requester.get(`${apiUrl}/dashboard/visitors?period=${period}`);
-    },
+            return requester.get(`${apiUrl}/dashboard/visitors?period=${period}`);
+        },
 
-    getOrdersStatistics: (period = '30d') => {
-      return requester.get(`${apiUrl}/sys/statistics/orders?period=${period}`);
-    },
+    // getOrdersStatistics: (period = '30d') => {
+    //   return requester.get(`${apiUrl}/sys/statistics/orders?period=${period}`);
+    // },
 
     getSystemStatistics: () => {
       return requester.get(`${apiUrl}/sys/statistics/system`);

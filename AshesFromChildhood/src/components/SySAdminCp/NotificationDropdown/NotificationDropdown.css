@@ -59,6 +59,7 @@
 /* Dropdown Menu - mobile-first подход */
 .notification-dropdown-menu {
   position: absolute;
+  max-height: 600px;
   top: 100%;
   right: 0;
   width: 100vw; /* пълна ширина на мобилни */
@@ -69,7 +70,7 @@
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
   z-index: 1000;
   margin-top: 8px;
-  overflow: hidden;
+  overflow: scroll;
   animation: notification-dropdown-fadeIn 0.2s ease;
   transform: translateX(0); /* за мобилни */
 }
