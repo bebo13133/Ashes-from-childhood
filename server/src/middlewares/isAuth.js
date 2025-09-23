@@ -19,7 +19,7 @@ const isAuth = async (req, res, next) => {
 
         const user = await User.findOne({ where: { email: decodedToken.email } });
 
-        if (!user || user.role !== 'admin') {
+        if (!user) {
             return res.status(403).json({ message: 'Access denied' });
         }
 
