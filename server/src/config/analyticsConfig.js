@@ -1,6 +1,7 @@
 module.exports = {
     googleAnalytics: {
         propertyId: process.env.GA4_PROPERTY_ID,
+        duration: process.env.GA4_CACHE_DURATION,
         credentials: {
             type: 'service_account',
             project_id: process.env.GA4_PROJECT_ID,
