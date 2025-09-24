@@ -68,16 +68,12 @@ statisticsController.get('/stats', async (req, res, next) => {
         let todayVisitors = 0;
 
         try {
-            const realtimeData = await analyticsService.getRealtimeData();
-            const visitorsData = await analyticsService.getVisitorsData(dateRange.startDateGA, dateRange.endDateGA);
+            const allData = await analyticsService.getAllAnalyticsData(dateRange.startDateGA, dateRange.endDateGA);
+            const realtimeData = allData.realtime;
+            const visitorsData = allData.visitors;
 
-            uniqueVisitors = visitorsData.rows && visitorsData.rows.length > 0 ? parseInt(visitorsData.rows[0]?.metricValues?.[0]?.value || 0) : 0;
-            todayVisitors = visitorsData.rows && visitorsData.rows.length > 0 ? parseInt(visitorsData.rows[0]?.metricValues?.[1]?.value || 0) : 0;
-
-            if (uniqueVisitors === 0 && todayVisitors === 0) {
-                uniqueVisitors = realtimeData.rows && realtimeData.rows.length > 0 ? parseInt(realtimeData.rows[0]?.metricValues?.[0]?.value || 0) : 0;
-                todayVisitors = realtimeData.rows && realtimeData.rows.length > 0 ? parseInt(realtimeData.rows[0]?.metricValues?.[1]?.value || 0) : 0;
-            }
+            uniqueVisitors = visitorsData.totalUsers || 0;
+            todayVisitors = realtimeData.activeUsers || 0;
         } catch (err) {
             console.warn('GA data unavailable:', err.message);
         }
@@ -116,8 +112,6 @@ statisticsController.get('/visitors', async (req, res, next) => {
         let pageViews = 0;
         let newVisitors = 0;
         let returningVisitors = 0;
-
-        // Additional data arrays
         let dailyData = [];
         let hourlyData = [];
         let deviceData = [];
@@ -126,70 +120,61 @@ statisticsController.get('/visitors', async (req, res, next) => {
         let countries = [];
 
         try {
-            const realtimeData = await analyticsService.getRealtimeData();
-            todayVisitors = parseInt(realtimeData.rows?.[0]?.metricValues?.[0]?.value || 0);
+            const allData = await analyticsService.getAllAnalyticsData(dateRange.startDateGA, dateRange.endDateGA);
+            const realtimeData = allData.realtime;
+            const visitorsData = allData.visitors;
+            const dailyDataRaw = allData.daily;
+            const hourlyDataRaw = allData.hourly;
+            const deviceDataRaw = allData.device;
+            const trafficDataRaw = allData.traffic;
+            const topPagesDataRaw = allData.topPages;
+            const countriesDataRaw = allData.geographic;
 
-            const visitorsData = await analyticsService.getVisitorsData(dateRange.startDateGA, dateRange.endDateGA);
+            // Use clean transformed data
+            totalVisitors = visitorsData.sessions || 0;
+            uniqueVisitors = visitorsData.totalUsers || 0;
+            pageViews = visitorsData.screenPageViews || 0;
+            todayVisitors = realtimeData.activeUsers || 0;
+            bounceRate = visitorsData.bounceRate || 0;
 
-            if (visitorsData.rows && visitorsData.rows.length > 0) {
-                const row = visitorsData.rows[0];
-                const metrics = row.metricValues || [];
+            const sessionTimeSeconds = visitorsData.averageSessionDuration || 0;
+            const minutes = Math.floor(sessionTimeSeconds / 60);
+            const seconds = Math.floor(sessionTimeSeconds % 60);
+            averageSessionTime = `${minutes}:${seconds.toString().padStart(2, '0')}`;
 
-                totalVisitors = parseInt(metrics[1]?.value || 0);
-                uniqueVisitors = parseInt(metrics[0]?.value || 0);
-                pageViews = parseInt(metrics[2]?.value || 0);
+            newVisitors = Math.floor(uniqueVisitors * 0.6);
+            returningVisitors = uniqueVisitors - newVisitors;
 
-                const bounceRateValue = parseFloat(metrics[3]?.value || 0);
-                bounceRate = Math.round(bounceRateValue * 100) / 100;
-
-                const sessionTimeSeconds = parseFloat(metrics[4]?.value || 0);
-                const minutes = Math.floor(sessionTimeSeconds / 60);
-                const seconds = Math.floor(sessionTimeSeconds % 60);
-                averageSessionTime = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-
-                newVisitors = Math.floor(uniqueVisitors * 0.6);
-                returningVisitors = uniqueVisitors - newVisitors;
-            }
-
-            // Fetch additional data
-            const [dailyResponse, hourlyResponse, deviceResponse, trafficResponse, topPagesResponse, countriesResponse] = await Promise.all([
-                analyticsService.getDailyVisitorsData(dateRange.startDateGA, dateRange.endDateGA),
-                analyticsService.getHourlyVisitorsData(dateRange.startDateGA, dateRange.endDateGA),
-                analyticsService.getDeviceData(dateRange.startDateGA, dateRange.endDateGA),
-                analyticsService.getTrafficSourcesData(dateRange.startDateGA, dateRange.endDateGA),
-                analyticsService.getTopPagesData(dateRange.startDateGA, dateRange.endDateGA),
-                analyticsService.getGeographicData(dateRange.startDateGA, dateRange.endDateGA),
-            ]);
-
-            // Format daily data
-            if (dailyResponse.rows) {
-                dailyData = dailyResponse.rows.map((row) => {
-                    const dateValue = row.dimensionValues?.[0]?.value || '';
+            // Process daily data
+            if (dailyDataRaw && dailyDataRaw.length > 0) {
+                dailyData = dailyDataRaw.map((row) => {
+                    const dateValue = row.date || '';
                     const day = dateValue.substring(6, 8);
                     const month = dateValue.substring(4, 6);
                     const formattedDate = `${day}.${month}`;
 
                     return {
                         date: formattedDate,
-                        visitors: parseInt(row.metricValues?.[1]?.value || 0),
-                        unique: parseInt(row.metricValues?.[0]?.value || 0),
-                        pageViews: parseInt(row.metricValues?.[2]?.value || 0),
+                        visitors: row.sessions || 0,
+                        unique: row.totalUsers || 0,
+                        pageViews: row.screenPageViews || 0,
                     };
                 });
             }
 
-            // Format additional data
-            hourlyData = analyticsService.formatHourlyData(hourlyResponse);
-            deviceData = analyticsService.formatDeviceData(deviceResponse);
-            trafficSources = analyticsService.formatTrafficSources(trafficResponse);
+            // Use the already formatted data from analytics service
+            hourlyData = hourlyDataRaw || [];
+            deviceData = deviceDataRaw || [];
+            trafficSources = trafficDataRaw || [];
+            countries = countriesDataRaw || [];
 
-            // Format top pages
-            if (topPagesResponse.rows) {
-                const totalViews = topPagesResponse.rows.reduce((sum, row) => sum + parseInt(row.metricValues?.[0]?.value || 0), 0);
+            // Process top pages
+            if (topPagesDataRaw && topPagesDataRaw.length > 0) {
+                const totalViews = topPagesDataRaw.reduce((sum, row) => sum + (row.pageViews || 0), 0);
 
-                topPages = topPagesResponse.rows.map((row) => {
-                    const page = row.dimensionValues?.[0]?.value || '';
-                    const views = parseInt(row.metricValues?.[0]?.value || 0);
+                topPages = topPagesDataRaw.map((row) => {
+                    const page = row.page || '';
+                    const views = row.pageViews || 0;
                     const percentage = totalViews > 0 ? Math.round((views / totalViews) * 100 * 10) / 10 : 0;
 
                     return {
@@ -199,8 +184,6 @@ statisticsController.get('/visitors', async (req, res, next) => {
                     };
                 });
             }
-
-            countries = analyticsService.formatGeographicData(countriesResponse);
         } catch (err) {
             console.warn('GA data unavailable:', err.message);
         }
@@ -214,7 +197,6 @@ statisticsController.get('/visitors', async (req, res, next) => {
             pageViews,
             newVisitors,
             returningVisitors,
-            // Additional data
             dailyData,
             hourlyData,
             deviceData,
@@ -424,8 +406,8 @@ async function generateOverviewReport(req, res, dateRange) {
 
     let uniqueVisitors = 0;
     try {
-        const visitorsData = await analyticsService.getVisitorsData(dateRange.startDateGA, dateRange.endDateGA);
-        uniqueVisitors = visitorsData.rows?.[0]?.metricValues?.[0]?.value || 0;
+        const allData = await analyticsService.getAllAnalyticsData(dateRange.startDateGA, dateRange.endDateGA);
+        uniqueVisitors = allData.visitors.totalUsers || 0;
     } catch (err) {
         console.warn('GA data unavailable:', err.message);
     }
@@ -501,37 +483,42 @@ async function generateTrafficReport(req, res, dateRange) {
     let topPages = [];
 
     try {
-        const dailyData = await analyticsService.getDailyVisitorsData(dateRange.startDateGA, dateRange.endDateGA);
-        const topPagesData = await analyticsService.getTopPagesData(dateRange.startDateGA, dateRange.endDateGA);
+        const allData = await analyticsService.getAllAnalyticsData(dateRange.startDateGA, dateRange.endDateGA);
+        const dailyDataRaw = allData.daily;
+        const topPagesDataRaw = allData.topPages;
 
-        trafficData =
-            dailyData.rows?.map((row) => {
-                const dateValue = row.dimensionValues?.[0]?.value || '';
+        // Process daily data
+        if (dailyDataRaw && dailyDataRaw.length > 0) {
+            trafficData = dailyDataRaw.map((row) => {
+                const dateValue = row.date || '';
                 const day = dateValue.substring(6, 8);
                 const month = dateValue.substring(4, 6);
                 const formattedDate = `${day}.${month}`;
 
                 return {
                     date: formattedDate,
-                    visitors: parseInt(row.metricValues?.[1]?.value || 0),
-                    pageviews: parseInt(row.metricValues?.[2]?.value || 0),
-                    sessions: parseInt(row.metricValues?.[1]?.value || 0),
+                    visitors: row.sessions || 0,
+                    pageviews: row.screenPageViews || 0,
+                    sessions: row.sessions || 0,
                 };
-            }) || [];
+            });
+        }
 
-        const totalViews = topPagesData.rows?.reduce((sum, row) => sum + parseInt(row.metricValues?.[0]?.value || 0), 0) || 0;
+        // Process top pages
+        if (topPagesDataRaw && topPagesDataRaw.length > 0) {
+            const totalViews = topPagesDataRaw.reduce((sum, row) => sum + (row.pageViews || 0), 0);
 
-        topPages =
-            topPagesData.rows?.map((row) => {
-                const views = parseInt(row.metricValues?.[0]?.value || 0);
+            topPages = topPagesDataRaw.map((row) => {
+                const views = row.pageViews || 0;
                 const percentage = totalViews > 0 ? Math.round((views / totalViews) * 100 * 10) / 10 : 0;
 
                 return {
-                    page: row.dimensionValues?.[0]?.value || '',
+                    page: row.page || '',
                     views: views,
                     percentage: percentage,
                 };
-            }) || [];
+            });
+        }
     } catch (err) {
         console.warn('GA data unavailable for traffic report:', err.message);
     }
@@ -572,5 +559,24 @@ async function generateReviewsReport(req, res, dateRange) {
 
     return res.status(200).json({ reviewsData });
 }
+
+// TESTING - WILL BE REMOVED !!!
+statisticsController.get('/cache-status', async (req, res, next) => {
+    try {
+        const cacheStatus = analyticsService.getCacheStatus();
+        return res.status(200).json(cacheStatus);
+    } catch (err) {
+        next(err);
+    }
+});
+
+statisticsController.get('/cache-data', async (req, res, next) => {
+    try {
+        const cacheData = analyticsService.getCacheData();
+        return res.status(200).json(cacheData);
+    } catch (err) {
+        next(err);
+    }
+});
 
 module.exports = statisticsController;
