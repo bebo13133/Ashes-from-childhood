@@ -4,6 +4,7 @@ import { Canvas, useFrame, useLoader } from '@react-three/fiber';
 import { OrbitControls, Text, Environment, ContactShadows, Float } from '@react-three/drei';
 import * as THREE from 'three';
 import './BookPresentation3D.css';
+import { useAuthContext } from '../../contexts/userContext';
 
 // 3D Book компонент
 function Book3D({ bookImages, ...props }) {
@@ -289,8 +290,8 @@ function BookScene() {
     );
 }
 
-// Book Rating компонент
-function BookRating({ rating = 4.8, viewers }) {
+// Book Rating компонент с динамичен рейтинг
+function BookRating({ rating = 4.8, viewers, isLoading = false, totalReviews = 0 }) {
     const renderStars = () => {
         const stars = [];
         const fullStars = Math.floor(rating);
@@ -312,10 +313,24 @@ function BookRating({ rating = 4.8, viewers }) {
         <div className="book-presentation-3d-rating-container">
             <div className="book-presentation-3d-rating-section">
                 <div className="book-presentation-3d-stars-container">
-                    {renderStars()}
+                    {isLoading ? (
+                        <div className="book-presentation-3d-loading-stars">
+                            {/* Можете да добавите loading анимация тук */}
+                            <span style={{ color: '#999', fontSize: '14px' }}>Зареждане...</span>
+                        </div>
+                    ) : (
+                        renderStars()
+                    )}
                 </div>
-                <span className="book-presentation-3d-rating-number">{rating}/5</span>
+                <span className="book-presentation-3d-rating-number">
+                    {isLoading ? '...' : `${rating}/5`}
+                </span>
             </div>
+            {/* {totalReviews > 0 && !isLoading && (
+                <div className="book-presentation-3d-reviews-count" style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
+                    Базирано на {totalReviews} {totalReviews === 1 ? 'отзив' : 'отзива'}
+                </div>
+            )} */}
             <div className="book-presentation-3d-viewers-section">
                 <div className="book-presentation-3d-live-indicator"></div>
                 <span className="book-presentation-3d-viewers-count">{viewers} души наблюдават</span>
@@ -422,6 +437,13 @@ const BookPresentation3D = () => {
     const [currentImageSrc, setCurrentImageSrc] = useState('');
     const [currentImageAlt, setCurrentImageAlt] = useState('');
     const [liveViewers, setLiveViewers] = useState(Math.floor(Math.random() * 40) + 25);
+    
+    // Нови state-ове за динамичен рейтинг
+    const [bookRating, setBookRating] = useState(4.8);
+    const [ratingLoading, setRatingLoading] = useState(true);
+    const [totalReviews, setTotalReviews] = useState(0);
+
+    const { fetchPublicReviews } = useAuthContext();
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -437,6 +459,40 @@ const BookPresentation3D = () => {
         if (element) observer.observe(element);
         return () => observer.disconnect();
     }, []);
+
+    // Зареждане на рейтинга от API
+    useEffect(() => {
+        const loadBookRating = async () => {
+            setRatingLoading(true);
+            try {
+                const response = await fetchPublicReviews({ limit: 1000 });
+                
+                if (response && response.reviews && response.reviews.length > 0) {
+                    const reviews = response.reviews;
+                    
+                    // Изчисляваме средния рейтинг
+                    const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+                    const averageRating = totalRating / reviews.length;
+                    
+                    setBookRating(Number(averageRating.toFixed(1)));
+                    setTotalReviews(reviews.length);
+                } else {
+                    // Fallback към default стойностите
+                    setBookRating(4.8);
+                    setTotalReviews(0);
+                }
+            } catch (error) {
+                console.error('Error loading book rating:', error);
+                // При грешка използваме fallback стойности
+                setBookRating(4.8);
+                setTotalReviews(0);
+            } finally {
+                setRatingLoading(false);
+            }
+        };
+
+        loadBookRating();
+    }, [fetchPublicReviews]);
 
     // Live viewers animation
     useEffect(() => {
@@ -481,13 +537,18 @@ const BookPresentation3D = () => {
                             Чуйте мислите на детето
                         </h2>
                         <p className="book-presentation-3d-section-subtitle">
-                            "Пепел от детството" – една история, която може да промени начина, по който гледаш на родителството, на болката и на любовта."
+                            "Пепел от детството" – една история, която може да промени начина, по който гледаш на родителството, на болката и на любовта.
                         </p>
                     </div>
 
                     <div className="book-presentation-3d-presentation-grid">
                         <div className="book-presentation-3d-book-showcase">
-                            <BookRating rating={4.8} viewers={liveViewers} />
+                            <BookRating 
+                                rating={bookRating} 
+                                viewers={liveViewers} 
+                                isLoading={ratingLoading}
+                                totalReviews={totalReviews}
+                            />
 
                             {currentView === '3d' ? (
                                 <>

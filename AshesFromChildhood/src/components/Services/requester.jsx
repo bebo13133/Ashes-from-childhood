@@ -1,60 +1,71 @@
+import { refreshToken } from '../../utils/refreshToken.js';
+
 const requester = async (method, url, data) => {
-  const options = {
-    method,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
+    const options = {
+        credentials: 'include',
+    };
 
-  // Add auth token if available (for future admin functionality)
-  const token = localStorage.getItem('adminToken');
-  if (token) {
-    options.headers.Authorization = `Bearer ${token}`;
-  }
+    if (method !== 'GET') {
+        options.method = method;
 
-  // Add body for non-GET requests
-  if (method !== 'GET' && data) {
-    options.body = JSON.stringify(data);
-  }
+        if (data) {
+            options.headers = {
+                'content-type': 'application/json',
+            };
 
-  try {
-    const response = await fetch(url, options);
-    
-    // Handle different status codes
-    if (response.status === 401) {
-      localStorage.removeItem('adminToken');
-      throw new Error('Unauthorized access');
+            options.body = JSON.stringify(data);
+        }
     }
 
-    if (response.status === 404) {
-      throw new Error('Resource not found');
-    }
+    try {
+        const authData = localStorage.getItem('adminAuth');
+        if (authData) {
+            const auth = JSON.parse(authData);
+            if (auth.token) {
+                const accessToken = await refreshToken(auth);
+                if (!accessToken) return window.location.replace('/');
+                options.headers = {
+                    ...options.headers,
+                    Authorization: `Bearer ${accessToken.token}`,
+                };
+            }
+        }
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `HTTP Error: ${response.status}`);
-    }
+        const response = await fetch(url, options);
 
-    // Handle empty responses
-    const contentType = response.headers.get('content-type');
-    if (contentType && contentType.includes('application/json')) {
-      return await response.json();
-    }
-    
-    return await response.text();
+        if (response.status === 401) {
+            localStorage.removeItem('adminAuth');
+            localStorage.removeItem('isAdmin');
+            throw new Error('Unauthorized access');
+        }
 
-  } catch (error) {
-    console.error('Request failed:', error);
-    throw error;
-  }
+        if (response.status === 404) {
+            throw new Error('Resource not found');
+        }
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.message || `HTTP Error: ${response.status}`);
+        }
+
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await response.json();
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Request failed:', error);
+        throw error;
+    }
 };
 
 export const requestFactory = () => {
-  return {
-    get: (url) => requester('GET', url),
-    post: (url, data) => requester('POST', url, data),
-    put: (url, data) => requester('PUT', url, data),
-    patch: (url, data) => requester('PATCH', url, data),
-    del: (url) => requester('DELETE', url),
-  };
+    return {
+        get: (url) => requester('GET', url),
+        post: (url, data) => requester('POST', url, data),
+        put: (url, data) => requester('PUT', url, data),
+        patch: (url, data) => requester('PATCH', url, data),
+        del: (url) => requester('DELETE', url),
+    };
 };

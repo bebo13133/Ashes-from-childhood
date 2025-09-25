@@ -1,8 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useLocalStorage } from '../Hooks/useLocalStorage';
 import { userServiceFactory } from '../Services/userService';
+import { useNavigate } from 'react-router-dom';
 
 export const AuthContext = createContext();
 
@@ -11,7 +13,8 @@ export const AuthProvider = ({ children }) => {
   const [isAdmin, setIsAdmin] = useLocalStorage('isAdmin', false);
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
+  const [publicReviewsCache, setPublicReviewsCache] = useState(null);
+  const [publicReviewsCacheTime, setPublicReviewsCacheTime] = useState(null);
   // Admin specific states
   const [dashboardData, setDashboardData] = useState(null);
   const [orders, setOrders] = useState([]);
@@ -21,43 +24,24 @@ export const AuthProvider = ({ children }) => {
     bgn: 25.00,
     eur: null
   });
-
+  const navigate = useNavigate();
   // Функция за конвертиране
   const convertToEur = (bgnPrice) => {
     const exchangeRate = 1.95583;
     return bgnPrice / exchangeRate;
   };
 
-  // Notifications state
-  const [notifications, setNotifications] = useState([
-    // Mock initial notifications for demo
-    {
-      id: 1,
-      type: 'order',
-      title: 'Нова поръчка',
-      message: 'Поръчка от Мария Петрова за "Пепел от детството"',
-      timestamp: new Date().toISOString(),
-      read: false
-    },
-    {
-      id: 2,
-      type: 'review',
-      title: 'Нов отзив',
-      message: 'Нов отзив с 5 звезди чака одобрение',
-      timestamp: new Date(Date.now() - 10 * 60 * 1000).toISOString(), // 10 minutes ago
-      read: false
-    },
-    {
-      id: 3,
-      type: 'order',
-      title: 'Поръчка завършена',
-      message: 'Поръчка #ORD-001 е успешно доставена',
-      timestamp: new Date(Date.now() - 60 * 60 * 1000).toISOString(), // 1 hour ago
-      read: true
-    }
-  ]);
+  const [notifications, setNotifications] = useState([]);
+  const [notificationsLoading, setNotificationsLoading] = useState(false);
 
   const userService = userServiceFactory(isAuth.token);
+useEffect(() => {
+  if (isAuth.token && isAuth.role === 'admin') {
+    setIsAdmin(true);
+    // Зареждайте нотификациите при успешен login
+    fetchNotifications().catch(console.error);
+  }
+}, [isAuth]);
 
   useEffect(() => {
     if (isAuth.token && isAuth.role === 'admin') {
@@ -69,7 +53,7 @@ export const AuthProvider = ({ children }) => {
     setErrorMessage(error);
     setTimeout(() => {
       setErrorMessage('');
-    }, 3000);
+    }, 300);
   };
 
   // ===== NOTIFICATIONS FUNCTIONS =====
@@ -87,21 +71,51 @@ export const AuthProvider = ({ children }) => {
       return updated.slice(0, 50);
     });
   };
-
-  const markNotificationAsRead = (notificationId) => {
-    setNotifications(prev =>
-      prev.map(notification =>
-        notification.id === notificationId
-          ? { ...notification, read: true }
-          : notification
-      )
-    );
+  // Добавете тази функция в userContext.jsx:
+  const fetchNotifications = async () => {
+    setNotificationsLoading(true);
+    try {
+      const response = await userService.getNotifications();
+      setNotifications(response.notifications || response || []);
+      return response;
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+      setNotifications([]);
+      throw error;
+    } finally {
+      setNotificationsLoading(false);
+    }
   };
 
-  const markAllNotificationsAsRead = () => {
-    setNotifications(prev =>
-      prev.map(notification => ({ ...notification, read: true }))
-    );
+  const markNotificationAsRead = async (notificationId) => {
+    try {
+      await userService.markNotificationAsRead(notificationId);
+
+      setNotifications(prev =>
+        prev.map(notification =>
+          notification.id === notificationId
+            ? { ...notification, read: true }
+            : notification
+        )
+      );
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
+      throw error;
+    }
+  };
+
+
+  const markAllNotificationsAsRead = async () => {
+    try {
+      await userService.markAllNotificationsAsRead();
+
+      setNotifications(prev =>
+        prev.map(notification => ({ ...notification, read: true }))
+      );
+    } catch (error) {
+      console.error('Error marking all notifications as read:', error);
+      throw error;
+    }
   };
 
   const removeNotification = (notificationId) => {
@@ -122,9 +136,9 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await userService.login(data);
 
-      if (response.user.role !== 'admin') {
-        throw new Error('Access denied. Admin privileges required.');
-      }
+      // if (response.user.role !== 'admin') {
+      //   throw new Error('Access denied. Admin privileges required.');
+      // }
 
       const authData = {
         token: response.token,
@@ -324,7 +338,21 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(false);
     }
   };
+  const fetchOrderById = async (orderId) => {
+    setIsLoading(true);
+    setErrorMessage('');
 
+    try {
+      const response = await userService.getOrderById(orderId);
+      return response;
+    } catch (error) {
+      const errorMsg = error.message || 'Грешка при зареждане на поръчката.';
+      showErrorAndSetTimeout(errorMsg);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
   const deleteOrder = async (orderId) => {
     setIsLoading(true);
     setErrorMessage('');
@@ -364,12 +392,12 @@ export const AuthProvider = ({ children }) => {
   };
 
   // ===== RATINGS AND REVIEWS =====
-  const fetchRatingsData = async () => {
+  const fetchRatingsData = async (filters = {}) => {
     setIsLoading(true);
     setErrorMessage('');
 
     try {
-      const response = await userService.getRatingsAndReviews();
+      const response = await userService.getRatingsAndReviews(filters);
       setRatingsData(response);
       return response;
     } catch (error) {
@@ -380,7 +408,53 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(false);
     }
   };
+  const fetchPublicReviews = async (filters = {}) => {
+    // Кеш за 5 минути
+    const CACHE_DURATION = 5 * 60 * 1000;
+    const now = Date.now();
 
+    // Ако имаме кеширани данни и не са изтекли
+    if (publicReviewsCache &&
+      publicReviewsCacheTime &&
+      (now - publicReviewsCacheTime) < CACHE_DURATION) {
+
+      // Филтрираме от кеша според limit
+      if (filters.limit && publicReviewsCache.reviews) {
+        return {
+          ...publicReviewsCache,
+          reviews: publicReviewsCache.reviews.slice(0, filters.limit)
+        };
+      }
+      return publicReviewsCache;
+    }
+
+    setIsLoading(true);
+    setErrorMessage('');
+
+    try {
+      // Винаги зареждаме повече данни за кеша
+      const response = await userService.getPublicReviews({ limit: 1000 });
+
+      // Кешираме пълните данни
+      setPublicReviewsCache(response);
+      setPublicReviewsCacheTime(now);
+
+      // Връщаме филтрираните данни
+      if (filters.limit && response.reviews) {
+        return {
+          ...response,
+          reviews: response.reviews.slice(0, filters.limit)
+        };
+      }
+
+      return response;
+    } catch (error) {
+      console.error('Error fetching public reviews:', error);
+      return { reviews: [], totalReviews: 0, averageRating: 0 };
+    } finally {
+      setIsLoading(false);
+    }
+  };
   const updateReviewStatus = async (reviewId, status) => {
     setIsLoading(true);
     setErrorMessage('');
@@ -426,7 +500,7 @@ export const AuthProvider = ({ children }) => {
       return {
         success: true,
         message: 'Отзивът е изпратен успешно! Ще бъде публикуван след одобрение.',
-        reviewId: response.reviewId
+        reviewId: response.reviewId || response.id
       };
     } catch (error) {
       const errorMsg = error.message || 'Грешка при изпращане на отзива. Моля, опитайте отново.';
@@ -436,7 +510,54 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(false);
     }
   };
+  const markReviewAsHelpful = async (reviewId) => {
+    try {
+      const response = await userService.markReviewAsHelpful(reviewId);
+      return response;
+    } catch (error) {
+      console.error('Error marking review as helpful:', error);
+      throw error;
+    }
+  };
+  const fetchReviewsStatistics = async (period = '30d') => {
+    setIsLoading(true);
+    setErrorMessage('');
 
+    try {
+      const response = await userService.getReviewsStatistics(period);
+      return response;
+    } catch (error) {
+      const errorMsg = error.message || 'Грешка при зареждане на статистиките за отзиви.';
+      showErrorAndSetTimeout(errorMsg);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const deleteReview = async (reviewId) => {
+    setIsLoading(true);
+    setErrorMessage('');
+
+    try {
+      await userService.deleteReview(reviewId);
+
+      // Update local state
+      if (ratingsData?.reviews) {
+        setRatingsData(prev => ({
+          ...prev,
+          reviews: prev.reviews.filter(review => review.id !== reviewId)
+        }));
+      }
+
+      return { success: true, message: 'Отзивът е изтрит успешно.' };
+    } catch (error) {
+      const errorMsg = error.message || 'Грешка при изтриване на отзива.';
+      showErrorAndSetTimeout(errorMsg);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
   // ===== EMAIL MANAGEMENT =====
   const sendEmailToCustomer = async (emailData) => {
     setIsLoading(true);
@@ -540,68 +661,50 @@ export const AuthProvider = ({ children }) => {
     }
   };
   const changePassword = async (passwordData) => {
-    setIsLoading(true);
-    setErrorMessage('');
-
     try {
       const response = await userService.changePassword(passwordData);
-
-      return {
-        success: true,
-        message: 'Паролата е сменена успешно!'
-      };
+      return response;
     } catch (error) {
-      const errorMsg = error.message || 'Грешка при смяна на паролата.';
-      showErrorAndSetTimeout(errorMsg);
+      console.error('Error changing password:', error);
       throw error;
-    } finally {
-      setIsLoading(false);
     }
   };
-  const updateBookPrice = async (newPriceBgn) => {
-    setIsLoading(true);
-    setErrorMessage('');
-
+  const updateBookPrice = async (newPrice) => {
     try {
-      const response = await userService.updateBookPrice(newPriceBgn);
+      const response = await userService.updateBookPrice(newPrice);
+
+      // Обновете локалното bookPrice състояние
+      setBookPrice(newPrice);
+
+      return response;
+    } catch (error) {
+      console.error('Error updating book price:', error);
+      throw error;
+    }
+  };
+
+  // Поправете fetchBookPrice функцията:
+  const fetchBookPrice = useCallback(async () => {
+    try {
+      const response = await userService.getBookPrice();
+      // Обработете отговора правилно според структурата от API
+      const bgnPrice = response.price || response.bookPrice || response || 25.00;
       const priceObj = {
-        bgn: newPriceBgn,
-        eur: convertToEur(newPriceBgn)
+        bgn: Number(bgnPrice),
+        eur: convertToEur(Number(bgnPrice))
       };
       setBookPrice(priceObj);
-
-      return {
-        success: true,
-        message: 'Цената е обновена успешно!'
-      };
+      return priceObj;
     } catch (error) {
-      const errorMsg = error.message || 'Грешка при обновяване на цената.';
-      showErrorAndSetTimeout(errorMsg);
-      throw error;
-    } finally {
-      setIsLoading(false);
+      console.error('Error fetching book price:', error);
+      const defaultPrice = {
+        bgn: 25.00,
+        eur: convertToEur(25.00)
+      };
+      setBookPrice(defaultPrice);
+      return defaultPrice;
     }
-  };
-
-  const fetchBookPrice = useCallback(async () => {
-  try {
-    const response = await userService.getBookPrice();
-    const bgnPrice = response.price || response || 25.00;
-    const priceObj = {
-      bgn: Number(bgnPrice),
-      eur: convertToEur(Number(bgnPrice))
-    };
-    setBookPrice(priceObj);
-    return priceObj;
-  } catch (error) {
-    console.error('Error fetching book price:', error);
-    const defaultPrice = {
-      bgn: 25.00,
-      eur: convertToEur(25.00)
-    };
-    setBookPrice(defaultPrice);
-  }
-}, [userService]);
+  }, [userService]);
 
   const contextValue = {
     // Auth state
@@ -631,9 +734,11 @@ export const AuthProvider = ({ children }) => {
     markAllNotificationsAsRead,
     removeNotification,
     clearAllNotifications,
+    fetchNotifications,
 
     // Admin actions
     fetchDashboardData,
+    fetchOrderById,
     fetchOrders,
     updateOrderStatus,
     deleteOrder,
@@ -644,13 +749,16 @@ export const AuthProvider = ({ children }) => {
     sendBulkEmail,
     generateReport,
     exportData,
-
+    deleteReview,
     // Public actions (for regular users)
     submitBookOrder,
     submitReview,
-     bookPrice: bookPrice?.bgn || 25.00,
+    bookPrice: bookPrice?.bgn || 25.00,
     updateBookPrice,
     fetchBookPrice,
+    fetchPublicReviews,     // Добавете това
+    markReviewAsHelpful,
+    fetchReviewsStatistics,
     // UI state
     isLoading,
     errorMessage,

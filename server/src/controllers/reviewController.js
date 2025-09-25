@@ -1,9 +1,17 @@
 const reviewController = require('express').Router();
 const { Review, Notification } = require('../config/modelsConfig');
 const { sendEmail } = require('../utils/emailTemplates');
+const { checkAndSetCookie } = require('../utils/cookieTracker');
 
 reviewController.post('/create', async (req, res, next) => {
     try {
+        if (!checkAndSetCookie(req, res, 'reviewSubmitted')) {
+            return res.status(429).json({
+                message: 'You have already submitted a review.',
+                code: 'REVIEW_ALREADY_SUBMITTED',
+            });
+        }
+
         const { name, isAnonymous, rating, comment } = req.body;
 
         if (rating !== null && rating !== undefined) {
@@ -88,9 +96,9 @@ reviewController.put('/update-status/:id', async (req, res, next) => {
         const { id } = req.params;
         const { status } = req.body;
 
-        if (!['pending', 'approved', 'rejected'].includes(status)) {
+        if (!['pending', 'approved', 'rejected', 'hidden'].includes(status)) {
             return res.status(400).json({
-                message: 'Invalid status. Must be: pending, approved, or rejected',
+                message: 'Invalid status. Must be: pending, approved, rejected, or hidden',
             });
         }
 
@@ -145,6 +153,13 @@ reviewController.delete('/single/:id', async (req, res, next) => {
 reviewController.put('/helpful/:id', async (req, res, next) => {
     try {
         const { id } = req.params;
+
+        if (!checkAndSetCookie(req, res, `reviewLiked_${id}`)) {
+            return res.status(429).json({
+                message: 'You have already liked this review.',
+                code: 'LIKE_ALREADY_SUBMITTED',
+            });
+        }
 
         const review = await Review.findByPk(id);
 

@@ -19,7 +19,7 @@ module.exports = {
                 type: Sequelize.STRING,
                 allowNull: false,
             },
-            session_tokens: {
+            refresh_tokens: {
                 type: Sequelize.JSON,
                 allowNull: true,
                 defaultValue: [],

@@ -10,7 +10,6 @@ const OrdersManagement = () => {
     updateOrderStatus, 
     deleteOrder, 
     sendEmailToCustomer,
-    orders, 
     isLoading 
   } = useAuthContext();
 
@@ -24,101 +23,93 @@ const OrdersManagement = () => {
   const [ordersPerPage] = useState(10);
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [localLoading, setLocalLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  // Mock data - replace with real data
-  const [ordersList, setOrdersList] = useState([
-    {
-      id: 'ORD-001',
-      customerName: 'Мария Петрова',
-      email: 'maria@example.com',
-      phone: '+359 888 123 456',
-      address: 'София, ул. Витоша 15',
-      quantity: 2,
-      totalPrice: 50,
-      status: 'pending',
-      createdAt: '2024-11-15T10:30:00Z',
-      updatedAt: '2024-11-15T10:30:00Z'
-    },
-    {
-      id: 'ORD-002',
-      customerName: 'Иван Димитров',
-      email: 'ivan@example.com',
-      phone: '+359 887 654 321',
-      address: 'Пловдив, бул. Руски 45',
-      quantity: 1,
-      totalPrice: 25,
-      status: 'completed',
-      createdAt: '2024-11-14T16:15:00Z',
-      completedAt: '2024-11-16T14:20:00Z'
-    },
-    {
-      id: 'ORD-003',
-      customerName: 'Елена Георgiева',
-      email: 'elena@example.com',
-      phone: '+359 889 987 654',
-      address: 'Варна, ул. Царевец 8',
-      quantity: 3,
-      totalPrice: 75,
-      status: 'cancelled',
-      createdAt: '2024-11-13T09:45:00Z'
-    },
-    {
-      id: 'ORD-004',
-      customerName: 'Петър Николов',
-      email: 'petar@example.com',
-      phone: '+359 876 543 210',
-      address: 'Бургас, ул. Александровска 22',
-      quantity: 1,
-      totalPrice: 25,
-      status: 'pending',
-      createdAt: '2024-11-12T14:20:00Z'
-    }
-  ]);
+  // Real API data state
+  const [ordersList, setOrdersList] = useState([]);
+  const [totalOrders, setTotalOrders] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
     loadOrders();
-  }, [statusFilter, dateFilter]);
+  }, [statusFilter, dateFilter, currentPage, searchTerm]);
 
   const loadOrders = async () => {
+    setLocalLoading(true);
+    setError('');
+    
     try {
       const filters = {
+        search: searchTerm || undefined,
         status: statusFilter !== 'all' ? statusFilter : undefined,
         dateFrom: getDateFilter(),
-        search: searchTerm,
         page: currentPage,
         limit: ordersPerPage
       };
       
-      // В реално приложение:
-      // await fetchOrders(filters);
+      const response = await fetchOrders(filters);
+      
+      if (response && response.orders) {
+        // Нормализираме данните
+        const normalizedOrders = response.orders.map(order => ({
+          id: order.id,
+          customerName: order.customerName,
+          email: order.email,
+          phone: order.phone,
+          address: `${order.address}, ${order.city}`,
+          quantity: order.quantity,
+          totalPrice: order.totalPrice,
+          status: order.status,
+          createdAt: order.createdAt,
+          updatedAt: order.updatedAt,
+          completedAt: order.completedAt
+        }));
+        
+        setOrdersList(normalizedOrders);
+        setTotalOrders(response.pagination?.total || response.totalOrders || normalizedOrders.length);
+        setTotalPages(response.pagination?.totalPages || Math.ceil((response.pagination?.total || normalizedOrders.length) / ordersPerPage));
+      } else {
+        setOrdersList([]);
+        setTotalOrders(0);
+        setTotalPages(0);
+      }
     } catch (error) {
       console.error('Error loading orders:', error);
+      setError('Грешка при зареждане на поръчките');
+      setOrdersList([]);
+      setTotalOrders(0);
+      setTotalPages(0);
+    } finally {
+      setLocalLoading(false);
     }
   };
 
   const getDateFilter = () => {
-  const now = new Date();
-  switch (dateFilter) {
-    case 'today': {
-      return now.toISOString().split('T')[0];
+    const now = new Date();
+    switch (dateFilter) {
+      case 'today': {
+        return now.toISOString().split('T')[0];
+      }
+      case 'week': {
+        const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        return weekAgo.toISOString().split('T')[0];
+      }
+      case 'month': {
+        const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+        return monthAgo.toISOString().split('T')[0];
+      }
+      default: {
+        return undefined;
+      }
     }
-    case 'week': {
-      const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-      return weekAgo.toISOString().split('T')[0];
-    }
-    case 'month': {
-      const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-      return monthAgo.toISOString().split('T')[0];
-    }
-    default: {
-      return undefined;
-    }
-  }
-};
+  };
 
   const handleStatusChange = async (orderId, newStatus) => {
     try {
       await updateOrderStatus(orderId, newStatus);
+      
+      // Обновяваме локалното състояние
       setOrdersList(prev => 
         prev.map(order => 
           order.id === orderId 
@@ -128,6 +119,7 @@ const OrdersManagement = () => {
       );
     } catch (error) {
       console.error('Error updating order status:', error);
+      setError('Грешка при обновяване на статуса');
     }
   };
 
@@ -135,9 +127,18 @@ const OrdersManagement = () => {
     if (window.confirm('Сигурни ли сте, че искате да изтриете тази поръчка?')) {
       try {
         await deleteOrder(orderId);
+        
+        // Премахваме от локалното състояние
         setOrdersList(prev => prev.filter(order => order.id !== orderId));
+        setTotalOrders(prev => prev - 1);
+        
+        // Презареждаме данните ако страницата остане празна
+        if (ordersList.length === 1 && currentPage > 1) {
+          setCurrentPage(currentPage - 1);
+        }
       } catch (error) {
         console.error('Error deleting order:', error);
+        setError('Грешка при изтриване на поръчката');
       }
     }
   };
@@ -145,8 +146,14 @@ const OrdersManagement = () => {
   const handleBulkAction = async (action) => {
     if (selectedOrders.length === 0) return;
     
-    if (window.confirm(`Сигурни ли сте, че искате да ${action} ${selectedOrders.length} поръчки?`)) {
+    const actionText = action === 'delete' ? 'изтриете' : 
+                     action === 'completed' ? 'отбележите като завършени' : 
+                     'отбележите като отказани';
+    
+    if (window.confirm(`Сигурни ли сте, че искате да ${actionText} ${selectedOrders.length} поръчки?`)) {
       try {
+        setLocalLoading(true);
+        
         for (const orderId of selectedOrders) {
           if (action === 'delete') {
             await deleteOrder(orderId);
@@ -157,6 +164,7 @@ const OrdersManagement = () => {
         
         if (action === 'delete') {
           setOrdersList(prev => prev.filter(order => !selectedOrders.includes(order.id)));
+          setTotalOrders(prev => prev - selectedOrders.length);
         } else {
           setOrdersList(prev => 
             prev.map(order => 
@@ -170,59 +178,29 @@ const OrdersManagement = () => {
         setSelectedOrders([]);
       } catch (error) {
         console.error('Error with bulk action:', error);
+        setError('Грешка при масовото действие');
+      } finally {
+        setLocalLoading(false);
       }
     }
   };
 
   const handleSendEmail = async (emailData) => {
-    try {
-      await sendEmailToCustomer({
-        to: selectedOrder.email,
-        subject: emailData.subject,
-        message: emailData.message,
-        type: 'order_update'
-      });
-      setShowEmailModal(false);
-      setSelectedOrder(null);
-    } catch (error) {
-      console.error('Error sending email:', error);
-    }
-  };
-
-  const filteredOrders = ordersList.filter(order => {
-    const matchesSearch = 
-      order.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.phone.includes(searchTerm) ||
-      order.id.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
-    
-    return matchesSearch && matchesStatus;
-  });
-
-  const sortedOrders = [...filteredOrders].sort((a, b) => {
-    let aValue = a[sortBy];
-    let bValue = b[sortBy];
-    
-    if (sortBy === 'createdAt' || sortBy === 'updatedAt') {
-      aValue = new Date(aValue);
-      bValue = new Date(bValue);
-    }
-    
-    if (sortOrder === 'asc') {
-      return aValue > bValue ? 1 : -1;
-    } else {
-      return aValue < bValue ? 1 : -1;
-    }
-  });
-
-  const paginatedOrders = sortedOrders.slice(
-    (currentPage - 1) * ordersPerPage,
-    currentPage * ordersPerPage
-  );
-
-  const totalPages = Math.ceil(sortedOrders.length / ordersPerPage);
+  try {
+    await sendEmailToCustomer({
+      to: selectedOrder.email,
+      subject: emailData.subject,
+      message: emailData.message,
+      templateId: 4, 
+      type: 'order_update',
+      orderId: selectedOrder.id
+    });
+    // ... rest of code
+  } catch (error) {
+    console.error('Error sending email:', error);
+    setError('Грешка при изпращане на имейла');
+  }
+};
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -243,7 +221,12 @@ const OrdersManagement = () => {
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleString('bg-BG');
+    if (!dateString) return 'Неизвестна дата';
+    try {
+      return new Date(dateString).toLocaleString('bg-BG');
+    } catch (error) {
+      return dateString;
+    }
   };
 
   return (
@@ -253,11 +236,18 @@ const OrdersManagement = () => {
         <div className="OrdersManagement-header-info">
           <h2 className="OrdersManagement-orders-title">Управление на поръчки</h2>
           <p className="OrdersManagement-orders-subtitle">
-            Общо {sortedOrders.length} поръчки
+            {localLoading ? 'Зареждане...' : `Общо ${totalOrders} поръчки`}
           </p>
         </div>
         
         <div className="OrdersManagement-header-actions">
+          <button 
+            className="OrdersManagement-refresh-btn"
+            onClick={loadOrders}
+            disabled={localLoading}
+          >
+            🔄 Обнови
+          </button>
           <button 
             className="OrdersManagement-export-btn"
             onClick={() => window.print()}
@@ -266,6 +256,33 @@ const OrdersManagement = () => {
           </button>
         </div>
       </div>
+
+      {/* Error Message */}
+      {error && (
+        <div className="OrdersManagement-error-message" style={{
+          background: '#fee2e2',
+          border: '1px solid #fecaca',
+          color: '#dc2626',
+          padding: '10px',
+          borderRadius: '6px',
+          margin: '10px 0'
+        }}>
+          {error}
+          <button 
+            onClick={() => setError('')} 
+            style={{
+              marginLeft: '10px',
+              background: 'transparent',
+              color: '#dc2626',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '18px'
+            }}
+          >
+            ×
+          </button>
+        </div>
+      )}
 
       {/* Filters */}
       <div className="OrdersManagement-orders-filters">
@@ -302,23 +319,6 @@ const OrdersManagement = () => {
             <option value="week">Последната седмица</option>
             <option value="month">Последният месец</option>
           </select>
-
-          <select
-            value={`${sortBy}-${sortOrder}`}
-            onChange={(e) => {
-              const [field, order] = e.target.value.split('-');
-              setSortBy(field);
-              setSortOrder(order);
-            }}
-            className="OrdersManagement-filter-select"
-          >
-            <option value="createdAt-desc">Най-нови първо</option>
-            <option value="createdAt-asc">Най-стари първо</option>
-            <option value="customerName-asc">Име А-Я</option>
-            <option value="customerName-desc">Име Я-А</option>
-            <option value="totalPrice-desc">Най-висока цена</option>
-            <option value="totalPrice-asc">Най-ниска цена</option>
-          </select>
         </div>
       </div>
 
@@ -332,18 +332,21 @@ const OrdersManagement = () => {
             <button 
               className="OrdersManagement-bulk-btn OrdersManagement-completed"
               onClick={() => handleBulkAction('completed')}
+              disabled={localLoading}
             >
               Отбележи като завършени
             </button>
             <button 
               className="OrdersManagement-bulk-btn OrdersManagement-cancelled"
               onClick={() => handleBulkAction('cancelled')}
+              disabled={localLoading}
             >
               Отбележи като отказани
             </button>
             <button 
               className="OrdersManagement-bulk-btn OrdersManagement-delete"
               onClick={() => handleBulkAction('delete')}
+              disabled={localLoading}
             >
               Изтрий
             </button>
@@ -353,10 +356,25 @@ const OrdersManagement = () => {
 
       {/* Orders Table */}
       <div className="OrdersManagement-orders-table-container">
-        {isLoading ? (
+        {isLoading || localLoading ? (
           <div className="OrdersManagement-loading-state">
             <div className="OrdersManagement-loading-spinner"></div>
             <p>Зареждане на поръчки...</p>
+          </div>
+        ) : ordersList.length === 0 ? (
+          <div className="OrdersManagement-empty-state" style={{
+            textAlign: 'center',
+            padding: '40px 20px',
+            color: '#6b7280'
+          }}>
+            <div style={{ fontSize: '48px', marginBottom: '16px' }}>📦</div>
+            <h3>Няма намерени поръчки</h3>
+            <p>
+              {searchTerm || statusFilter !== 'all' || dateFilter !== 'all' 
+                ? 'Опитайте с други филтри или критерии за търсене'
+                : 'Все още няма поръчки в системата'
+              }
+            </p>
           </div>
         ) : (
           <table className="OrdersManagement-orders-table">
@@ -365,10 +383,10 @@ const OrdersManagement = () => {
                 <th>
                   <input
                     type="checkbox"
-                    checked={selectedOrders.length === paginatedOrders.length && paginatedOrders.length > 0}
+                    checked={selectedOrders.length === ordersList.length && ordersList.length > 0}
                     onChange={(e) => {
                       if (e.target.checked) {
-                        setSelectedOrders(paginatedOrders.map(order => order.id));
+                        setSelectedOrders(ordersList.map(order => order.id));
                       } else {
                         setSelectedOrders([]);
                       }
@@ -386,7 +404,7 @@ const OrdersManagement = () => {
               </tr>
             </thead>
             <tbody>
-              {paginatedOrders.map(order => (
+              {ordersList.map(order => (
                 <tr key={order.id} className="OrdersManagement-order-row">
                   <td>
                     <input
@@ -419,7 +437,7 @@ const OrdersManagement = () => {
                   <td>
                     <span 
                       className="OrdersManagement-status-badge"
-                      style={{ backgroundColor: getStatusColor(order.status) }}
+                      style={{ backgroundColor: getStatusColor(order.status), color: 'white', padding: '4px 8px', borderRadius: '4px', fontSize: '12px' }}
                     >
                       {getStatusText(order.status)}
                     </span>
@@ -431,6 +449,7 @@ const OrdersManagement = () => {
                         value={order.status}
                         onChange={(e) => handleStatusChange(order.id, e.target.value)}
                         className="OrdersManagement-status-select"
+                        disabled={localLoading}
                       >
                         <option value="pending">В обработка</option>
                         <option value="completed">Завършена</option>
@@ -444,6 +463,7 @@ const OrdersManagement = () => {
                           setShowEmailModal(true);
                         }}
                         title="Изпрати имейл"
+                        disabled={localLoading}
                       >
                         📧
                       </button>
@@ -452,6 +472,7 @@ const OrdersManagement = () => {
                         className="OrdersManagement-action-btn OrdersManagement-delete-btn"
                         onClick={() => handleDeleteOrder(order.id)}
                         title="Изтрий поръчка"
+                        disabled={localLoading}
                       >
                         🗑️
                       </button>
@@ -466,7 +487,7 @@ const OrdersManagement = () => {
 
       {/* Mobile Cards Layout */}
       <div className="OrdersManagement-orders-cards">
-        {paginatedOrders.map(order => (
+        {ordersList.map(order => (
           <div key={order.id} className="OrdersManagement-order-card">
             <div className="OrdersManagement-order-card-header">
               <div className="OrdersManagement-order-card-checkbox">
@@ -485,7 +506,7 @@ const OrdersManagement = () => {
               <div className="OrdersManagement-order-card-id">{order.id}</div>
               <span 
                 className="OrdersManagement-order-card-status"
-                style={{ backgroundColor: getStatusColor(order.status) }}
+                style={{ backgroundColor: getStatusColor(order.status), color: 'white', padding: '4px 8px', borderRadius: '4px', fontSize: '12px' }}
               >
                 {getStatusText(order.status)}
               </span>
@@ -520,6 +541,7 @@ const OrdersManagement = () => {
                 value={order.status}
                 onChange={(e) => handleStatusChange(order.id, e.target.value)}
                 className="OrdersManagement-order-card-status-select"
+                disabled={localLoading}
               >
                 <option value="pending">В обработка</option>
                 <option value="completed">Завършена</option>
@@ -533,6 +555,7 @@ const OrdersManagement = () => {
                   setShowEmailModal(true);
                 }}
                 title="Изпрати имейл"
+                disabled={localLoading}
               >
                 📧
               </button>
@@ -541,6 +564,7 @@ const OrdersManagement = () => {
                 className="OrdersManagement-order-card-action-btn OrdersManagement-delete-btn"
                 onClick={() => handleDeleteOrder(order.id)}
                 title="Изтрий поръчка"
+                disabled={localLoading}
               >
                 🗑️
               </button>
@@ -554,27 +578,41 @@ const OrdersManagement = () => {
         <div className="OrdersManagement-pagination">
           <button
             className="OrdersManagement-page-btn"
-            disabled={currentPage === 1}
+            disabled={currentPage === 1 || localLoading}
             onClick={() => setCurrentPage(currentPage - 1)}
           >
             ← Предишна
           </button>
           
           <div className="OrdersManagement-page-numbers">
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-              <button
-                key={page}
-                className={`OrdersManagement-page-number ${page === currentPage ? 'OrdersManagement-active' : ''}`}
-                onClick={() => setCurrentPage(page)}
-              >
-                {page}
-              </button>
-            ))}
+            {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+              let page;
+              if (totalPages <= 5) {
+                page = i + 1;
+              } else if (currentPage <= 3) {
+                page = i + 1;
+              } else if (currentPage >= totalPages - 2) {
+                page = totalPages - 4 + i;
+              } else {
+                page = currentPage - 2 + i;
+              }
+              
+              return (
+                <button
+                  key={page}
+                  className={`OrdersManagement-page-number ${page === currentPage ? 'OrdersManagement-active' : ''}`}
+                  onClick={() => setCurrentPage(page)}
+                  disabled={localLoading}
+                >
+                  {page}
+                </button>
+              );
+            })}
           </div>
           
           <button
             className="OrdersManagement-page-btn"
-            disabled={currentPage === totalPages}
+            disabled={currentPage === totalPages || localLoading}
             onClick={() => setCurrentPage(currentPage + 1)}
           >
             Следваща →
@@ -601,12 +639,18 @@ const OrdersManagement = () => {
 const EmailModal = ({ order, onSend, onClose }) => {
   const [emailData, setEmailData] = useState({
     subject: `Относно вашата поръчка ${order.id}`,
-    message: `Здравейте ${order.customerName},\n\nПишем ви относно вашата поръчка ${order.id} за книгата "Пепел от детството".\n\nПоздрави,\nЕкипът на...`
+    message: `Здравейте ${order.customerName},\n\nПишем ви относно вашата поръчка ${order.id} за книгата "Пепел от детството".\n\nПоздрави,\nЕкипът`
   });
+  const [sending, setSending] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSend(emailData);
+    setSending(true);
+    try {
+      await onSend(emailData);
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -614,7 +658,7 @@ const EmailModal = ({ order, onSend, onClose }) => {
       <div className="OrdersManagement-email-modal">
         <div className="OrdersManagement-modal-header">
           <h3>Изпрати имейл до {order.customerName}</h3>
-          <button className="OrdersManagement-close-btn" onClick={onClose}>×</button>
+          <button className="OrdersManagement-close-btn" onClick={onClose} disabled={sending}>×</button>
         </div>
         
         <form onSubmit={handleSubmit} className="OrdersManagement-email-form">
@@ -630,6 +674,7 @@ const EmailModal = ({ order, onSend, onClose }) => {
               value={emailData.subject}
               onChange={(e) => setEmailData(prev => ({ ...prev, subject: e.target.value }))}
               required
+              disabled={sending}
             />
           </div>
           
@@ -640,20 +685,20 @@ const EmailModal = ({ order, onSend, onClose }) => {
               value={emailData.message}
               onChange={(e) => setEmailData(prev => ({ ...prev, message: e.target.value }))}
               required
+              disabled={sending}
             />
           </div>
           
           <div className="OrdersManagement-modal-actions">
-            <button type="button" className="OrdersManagement-cancel-btn" onClick={onClose}>
+            <button type="button" className="OrdersManagement-cancel-btn" onClick={onClose} disabled={sending}>
               Отказ
             </button>
-            <button type="submit" className="OrdersManagement-send-btn">
-              📧 Изпрати
+            <button type="submit" className="OrdersManagement-send-btn" disabled={sending}>
+              {sending ? 'Изпращане...' : '📧 Изпрати'}
             </button>
           </div>
         </form>
       </div>
-      
     </div>
   );
 };

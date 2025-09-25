@@ -69,7 +69,13 @@ orderController.get('/all', isAuth, async (req, res, next) => {
         if (dateFrom || dateTo) {
             whereClause.createdAt = {};
             if (dateFrom) whereClause.createdAt[Op.gte] = new Date(dateFrom);
-            if (dateTo) whereClause.createdAt[Op.lte] = new Date(dateTo);
+            if (dateTo) {
+                whereClause.createdAt[Op.lte] = new Date(dateTo);
+            } else if (dateFrom) {
+                const endOfToday = new Date();
+                endOfToday.setHours(23, 59, 59, 999);
+                whereClause.createdAt[Op.lte] = endOfToday;
+            }
         }
 
         if (search) {

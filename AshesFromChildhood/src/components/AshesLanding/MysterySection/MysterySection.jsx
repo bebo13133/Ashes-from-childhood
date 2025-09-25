@@ -1,9 +1,15 @@
 import { useState, useEffect } from 'react';
 import './MysterySection.css';
+import { useAuthContext } from '../../contexts/userContext';
+
 
 const MysterySection = () => {
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+  const [testimonials, setTestimonials] = useState([]); 
+  const [testimonialsLoading, setTestimonialsLoading] = useState(true); 
+
+  const { fetchPublicReviews } = useAuthContext(); 
 
   const bookQuotes = [
     "Домът може да бъде крепост… или клетка....",
@@ -28,6 +34,62 @@ const MysterySection = () => {
     return () => observer.disconnect();
   }, []);
 
+  // Добавете този useEffect за зареждане на отзиви
+  useEffect(() => {
+    const loadTestimonials = async () => {
+      setTestimonialsLoading(true);
+      try {
+        const response = await fetchPublicReviews({ limit: 2 }); // Само 2 отзива
+        
+        if (response && response.reviews && response.reviews.length > 0) {
+          // Филтрираме само позитивните отзиви (4+ звезди) и взимаме първите 2
+          const positiveReviews = response.reviews
+            .filter(review => review.rating >= 4)
+            .slice(0, 2);
+          
+          setTestimonials(positiveReviews);
+        } else {
+          // Fallback към mock данни ако няма отзиви
+          setTestimonials([
+            {
+              id: 'mock-1',
+              comment: "Не можах да спра да чета. Всяка страница ме докосваше все по-дълбоко...",
+              name: "Мария, 34 г.",
+              rating: 5
+            },
+            {
+              id: 'mock-2', 
+              comment: "Като родител, тази книга ми отвори очите за нещо, които никога не бях забелязвал.",
+              name: "Петър, 28 г.",
+              rating: 5
+            }
+          ]);
+        }
+      } catch (error) {
+        console.error('Error loading testimonials:', error);
+        // При грешка използваме mock данни
+        setTestimonials([
+          {
+            id: 'mock-1',
+            comment: "Не можах да спра да чета. Всяка страница ме докосваше все по-дълбоко...",
+            name: "Мария, 34 г.",
+            rating: 5
+          },
+          {
+            id: 'mock-2',
+            comment: "Като родител, тази книга ми отвори очите за нещо, които никога не бях забелязвал.",
+            name: "Петър, 28 г.",
+            rating: 5
+          }
+        ]);
+      } finally {
+        setTestimonialsLoading(false);
+      }
+    };
+
+    loadTestimonials();
+  }, [fetchPublicReviews]);
+
   const nextQuote = () => {
     setCurrentQuoteIndex(prev => (prev + 1) % bookQuotes.length);
   };
@@ -40,6 +102,27 @@ const MysterySection = () => {
         block: 'start'
       });
     }
+  };
+
+  // Добавете helper функция за съкращаване на текста
+  const truncateComment = (text, maxLength = 100) => {
+    if (!text || text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + '...';
+  };
+
+  // Добавете функция за генериране на инициали или възраст
+  const formatAuthorName = (name) => {
+    if (!name || name === 'Неизвестен') {
+      return 'Анонимен читател';
+    }
+    
+    // Ако името вече има формат "Име, възраст г." го връщаме както е
+    if (name.includes(',') && name.includes('г.')) {
+      return name;
+    }
+    
+    // Ако е само име, добавяме "читател" 
+    return `${name}, читател`;
   };
 
   return (
@@ -162,23 +245,33 @@ const MysterySection = () => {
                 </div>
               </div>
 
-              {/* Social Proof */}
+              {/* Social Proof - Заменено с динамични данни */}
               <div className="why-book-social-proof">
                 <h4 className="why-book-social-title">Читателите споделят:</h4>
                 <div className="why-book-testimonials">
-                  <div className="why-book-testimonial">
-                    <div className="why-book-testimonial-text">
-                      "Не можах да спра да чета. Всяка страница ме докосваше все по-дълбоко..."
+                  {testimonialsLoading ? (
+                    <div className="why-book-testimonials-loading">
+                      <p>Зареждане на отзиви...</p>
                     </div>
-                    <div className="why-book-testimonial-author">- Мария, 34 г.</div>
-                  </div>
-                  
-                  <div className="why-book-testimonial">
-                    <div className="why-book-testimonial-text">
-                      "Като родител, тази книга ми отвори очите за нещо, които никога не бях забелязвал."
+                  ) : testimonials.length > 0 ? (
+                    testimonials.map((testimonial) => (
+                      <div key={testimonial.id} className="why-book-testimonial">
+                        <div className="why-book-testimonial-text">
+                          "{truncateComment(testimonial.comment, 120)}"
+                        </div>
+                        <div className="why-book-testimonial-author">
+                          - {formatAuthorName(testimonial.name || testimonial.displayName)}
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="why-book-testimonial">
+                      <div className="why-book-testimonial-text">
+                        "Невероятна книга! Препоръчвам я на всички."
+                      </div>
+                      <div className="why-book-testimonial-author">- Читател</div>
                     </div>
-                    <div className="why-book-testimonial-author">- Петър, 28 г.</div>
-                  </div>
+                  )}
                 </div>
               </div>
 
