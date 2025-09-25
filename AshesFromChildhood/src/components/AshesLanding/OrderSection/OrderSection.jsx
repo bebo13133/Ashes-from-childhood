@@ -33,7 +33,11 @@ const OrderSection = () => {
   const priceEur = priceBgn / exchangeRate;
   const totalPriceBgn = priceBgn * formData.quantity;
   const totalPriceEur = priceEur * formData.quantity;
-
+useEffect(() => {
+  console.log('BookPrice from context:', bookPrice);
+  console.log('Price BGN:', priceBgn);
+  console.log('Price EUR:', priceEur);
+}, [bookPrice]);
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {

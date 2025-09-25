@@ -1,77 +1,146 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import { useState, useEffect } from 'react';
-import { 
+import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  LineChart, Line, PieChart, Pie, Cell, AreaChart, Area 
+  LineChart, Line, PieChart, Pie, Cell, AreaChart, Area
 } from 'recharts';
 import './DashboardOverview.css';
 import { useAuthContext } from '../../contexts/userContext';
 
 const DashboardOverview = () => {
-  const { fetchDashboardData, dashboardData } = useAuthContext();
+  const {
+    fetchDashboardData,
+    fetchVisitorsStats,
+    fetchPublicReviews,
+    generateReport,
+    notifications,
+    fetchRatingsData
+  } = useAuthContext();
+
   const [isLoading, setIsLoading] = useState(true);
   const [timeframe, setTimeframe] = useState('30d');
+  const [error, setError] = useState('');
 
-  // Mock data за демонстрация - заменете с реални данни
-  const [stats, setStats] = useState({
-    totalOrders: 247,
-    pendingOrders: 34,
-    completedOrders: 189,
-    cancelledOrders: 24,
-    totalRevenue: 6175, // 247 * 25 лв
-    averageRating: 4.7,
-    totalReviews: 89,
-    uniqueVisitors: 3456,
-    todayVisitors: 127
-  });
-
-  const monthlyData = [
-    { name: 'Яну', orders: 45, revenue: 1125, visitors: 890 },
-    { name: 'Фев', orders: 52, revenue: 1300, visitors: 1120 },
-    { name: 'Мар', orders: 48, revenue: 1200, visitors: 980 },
-    { name: 'Апр', orders: 61, revenue: 1525, visitors: 1340 },
-    { name: 'Май', orders: 55, revenue: 1375, visitors: 1180 },
-    { name: 'Юни', orders: 67, revenue: 1675, visitors: 1520 },
-    { name: 'Юли', orders: 71, revenue: 1775, visitors: 1680 },
-    { name: 'Авг', orders: 69, revenue: 1725, visitors: 1590 },
-    { name: 'Сеп', orders: 58, revenue: 1450, visitors: 1290 },
-    { name: 'Окт', orders: 63, revenue: 1575, visitors: 1420 },
-    { name: 'Ное', orders: 72, revenue: 1800, visitors: 1750 },
-    { name: 'Дек', orders: 78, revenue: 1950, visitors: 1890 }
-  ];
-
-  const orderStatusData = [
-    { name: 'Завършени', value: stats.completedOrders, color: '#10b981' },
-    { name: 'В обработка', value: stats.pendingOrders, color: '#f59e0b' },
-    { name: 'Отказани', value: stats.cancelledOrders, color: '#ef4444' }
-  ];
-
-  const recentActivity = [
-    { type: 'order', message: 'Нова поръчка от Мария Петрова', time: '5 мин', status: 'pending' },
-    { type: 'review', message: 'Нов отзив с оценка 5 звезди', time: '12 мин', status: 'pending' },
-    { type: 'order', message: 'Поръчка завършена успешно', time: '23 мин', status: 'completed' },
-    { type: 'email', message: 'Изпратен имейл за потвърждение', time: '45 мин', status: 'sent' },
-    { type: 'review', message: 'Отзив одобрен и публикуван', time: '1 час', status: 'approved' }
-  ];
+  // Real data states
+  const [dashboardStats, setDashboardStats] = useState(null);
+  const [visitorsData, setVisitorsData] = useState(null);
+  const [reviewsStats, setReviewsStats] = useState(null);
+  const [revenueData, setRevenueData] = useState(null);
+  const [monthlyData, setMonthlyData] = useState([]);
 
   useEffect(() => {
-    loadDashboardData();
+    loadAllDashboardData();
   }, [timeframe]);
 
-  const loadDashboardData = async () => {
-    setIsLoading(true);
-    try {
-      // В реалното приложение:
-      // const data = await fetchDashboardData();
-      // setStats(data);
+  const loadAllDashboardData = async () => {
+  setIsLoading(true);
+  setError('');
+  
+  try {
+    const [dashboardResponse, visitorsResponse, reviewsData, salesReport, overviewReport] = await Promise.all([
+      fetchDashboardData(timeframe),
+      fetchVisitorsStats(timeframe),
+      fetchRatingsData({ status: 'approved', limit: 1000 }), 
+      generateReport('sales', timeframe),
+      generateReport('overview', timeframe)
+    ]);
+
+    setDashboardStats(dashboardResponse);
+    setVisitorsData(visitorsResponse);
+
+    setRevenueData({ 
+      totalRevenue: overviewReport?.overview?.totalRevenue || dashboardResponse?.totalRevenue || 0,
+      revenueChange: 0
+    });
+
+    // Reviews статистики - както в RatingsReviews
+    if (reviewsData?.reviews && reviewsData.reviews.length > 0) {
+      const reviews = reviewsData.reviews;
+      const totalReviews = reviews.length;
+      const totalRating = reviews.reduce((sum, review) => sum + (review.rating || 0), 0);
+      const averageRating = totalReviews > 0 ? totalRating / totalReviews : 0;
       
-      // Симулация на зареждане
-      await new Promise(resolve => setTimeout(resolve, 1000));
-    } catch (error) {
-      console.error('Error loading dashboard data:', error);
-    } finally {
-      setIsLoading(false);
+      setReviewsStats({
+        totalReviews,
+        averageRating: Number(averageRating.toFixed(1))
+      });
+    } else {
+      setReviewsStats({ totalReviews: 0, averageRating: 0 });
     }
+
+    // Месечни данни...
+    let chartData = [];
+    if (salesReport?.salesData && salesReport.salesData.length > 0) {
+      chartData = salesReport.salesData.map(item => ({
+        name: item.month,
+        orders: item.orders,
+        revenue: item.revenue,
+        visitors: 0
+      }));
+    } else {
+      const monthNames = ['Яну', 'Фев', 'Мар', 'Апр', 'Май', 'Юни', 'Юли', 'Авг', 'Сеп', 'Окт', 'Ное', 'Дек'];
+      const currentMonth = monthNames[new Date().getMonth()];
+      chartData = [{
+        name: currentMonth,
+        orders: dashboardResponse?.totalOrders || 0,
+        revenue: dashboardResponse?.totalRevenue || 0,
+        visitors: visitorsResponse?.totalVisitors || 0
+      }];
+    }
+    setMonthlyData(chartData);
+
+  } catch (error) {
+    console.error('Error loading dashboard data:', error);
+    setError('Грешка при зареждане на данните: ' + error.message);
+    
+    setDashboardStats(null);
+    setVisitorsData(null);
+    setReviewsStats(null);
+    setRevenueData(null);
+    setMonthlyData([]);
+  } finally {
+    setIsLoading(false);
+  }
+};
+  const getOrderStatusData = () => {
+    if (!dashboardStats) return [];
+
+    const data = [];
+    if (dashboardStats.completedOrders > 0) {
+      data.push({ name: 'Завършени', value: dashboardStats.completedOrders, color: '#10b981' });
+    }
+    if (dashboardStats.pendingOrders > 0) {
+      data.push({ name: 'В обработка', value: dashboardStats.pendingOrders, color: '#f59e0b' });
+    }
+    if (dashboardStats.cancelledOrders > 0) {
+      data.push({ name: 'Отказани', value: dashboardStats.cancelledOrders, color: '#ef4444' });
+    }
+
+    return data;
+  };
+
+  const getRecentActivity = () => {
+    if (!notifications || notifications.length === 0) return [];
+
+    return notifications.slice(0, 5).map(notification => {
+      const now = new Date();
+      const notificationTime = new Date(notification.createdAt || notification.timestamp);
+      const diffInMinutes = Math.floor((now - notificationTime) / (1000 * 60));
+
+      let timeText;
+      if (diffInMinutes < 1) timeText = 'сега';
+      else if (diffInMinutes < 60) timeText = `${diffInMinutes} мин`;
+      else if (diffInMinutes < 1440) timeText = `${Math.floor(diffInMinutes / 60)} час`;
+      else timeText = `${Math.floor(diffInMinutes / 1440)} ден`;
+
+      return {
+        type: notification.type,
+        message: notification.message,
+        time: timeText,
+        status: notification.read ? 'completed' : 'pending'
+      };
+    });
   };
 
   const getActivityIcon = (type) => {
@@ -93,6 +162,16 @@ const DashboardOverview = () => {
     }
   };
 
+  const getTotalRevenue = () => {
+    if (revenueData?.totalRevenue) {
+      return revenueData.totalRevenue;
+    }
+    if (dashboardStats?.totalRevenue) {
+      return dashboardStats.totalRevenue;
+    }
+    return 0;
+  };
+
   if (isLoading) {
     return (
       <div className="dashboard-loading">
@@ -101,6 +180,24 @@ const DashboardOverview = () => {
       </div>
     );
   }
+
+  if (error) {
+    return (
+      <div className="dashboard-error">
+        <div className="error-icon">⚠️</div>
+        <h3>Грешка при зареждане</h3>
+        <p>{error}</p>
+        <button
+          className="retry-btn"
+          onClick={loadAllDashboardData}
+        >
+          Опитай отново
+        </button>
+      </div>
+    );
+  }
+
+  const recentActivity = getRecentActivity();
 
   return (
     <div className="dashboard-overview">
@@ -112,12 +209,12 @@ const DashboardOverview = () => {
             Последно обновление: {new Date().toLocaleString('bg-BG')}
           </p>
         </div>
-        
+
         <div className="timeframe-selector">
           <label htmlFor="timeframe">Период:</label>
-          <select 
+          <select
             id="timeframe"
-            value={timeframe} 
+            value={timeframe}
             onChange={(e) => setTimeframe(e.target.value)}
             className="timeframe-select"
           >
@@ -135,8 +232,15 @@ const DashboardOverview = () => {
           <div className="stat-icon">📦</div>
           <div className="stat-content">
             <h3 className="stat-title">Общо поръчки</h3>
-            <p className="stat-number">{stats.totalOrders}</p>
-            <span className="stat-change positive">+12% от миналия месец</span>
+            <p className="stat-number">
+              {dashboardStats?.totalOrders ?? 0}
+            </p>
+            <span className="stat-change">
+              {dashboardStats?.conversionRate
+                ? `${dashboardStats.conversionRate.toFixed(1)}% конверсия`
+                : 'Няма данни'
+              }
+            </span>
           </div>
         </div>
 
@@ -144,8 +248,15 @@ const DashboardOverview = () => {
           <div className="stat-icon">💰</div>
           <div className="stat-content">
             <h3 className="stat-title">Общи приходи</h3>
-            <p className="stat-number">{stats.totalRevenue.toLocaleString()} лв</p>
-            <span className="stat-change positive">+8% от миналия месец</span>
+            <p className="stat-number">
+              {getTotalRevenue().toLocaleString()} лв
+            </p>
+            <span className="stat-change">
+              {revenueData?.revenueChange
+                ? `${revenueData.revenueChange > 0 ? '+' : ''}${revenueData.revenueChange}%`
+                : 'Няма данни'
+              }
+            </span>
           </div>
         </div>
 
@@ -153,8 +264,12 @@ const DashboardOverview = () => {
           <div className="stat-icon">⭐</div>
           <div className="stat-content">
             <h3 className="stat-title">Среден рейтинг</h3>
-            <p className="stat-number">{stats.averageRating}/5</p>
-            <span className="stat-change neutral">{stats.totalReviews} отзива</span>
+            <p className="stat-number">
+              {reviewsStats?.averageRating ?? 0}/5
+            </p>
+            <span className="stat-change neutral">
+              {reviewsStats?.totalReviews ?? 0} отзива
+            </span>
           </div>
         </div>
 
@@ -162,8 +277,15 @@ const DashboardOverview = () => {
           <div className="stat-icon">👥</div>
           <div className="stat-content">
             <h3 className="stat-title">Посетители днес</h3>
-            <p className="stat-number">{stats.todayVisitors}</p>
-            <span className="stat-change positive">+15% от вчера</span>
+            <p className="stat-number">
+              {visitorsData?.todayVisitors ?? dashboardStats?.todayVisitors ?? 0}
+            </p>
+            <span className="stat-change">
+              {visitorsData?.totalVisitors
+                ? `${visitorsData.totalVisitors} общо`
+                : 'Няма данни'
+              }
+            </span>
           </div>
         </div>
       </div>
@@ -180,36 +302,42 @@ const DashboardOverview = () => {
             </div>
           </div>
           <div className="chart-container">
-            <ResponsiveContainer width="100%" height={300}>
-              <AreaChart data={monthlyData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                <XAxis dataKey="name" stroke="#6b7280" />
-                <YAxis stroke="#6b7280" />
-                <Tooltip 
-                  contentStyle={{
-                    backgroundColor: '#f9fafb',
-                    border: '1px solid #e5e7eb',
-                    borderRadius: '8px'
-                  }}
-                />
-                <Area 
-                  type="monotone" 
-                  dataKey="orders" 
-                  stackId="1"
-                  stroke="#667eea" 
-                  fill="#667eea"
-                  fillOpacity={0.3}
-                />
-                <Area 
-                  type="monotone" 
-                  dataKey="revenue" 
-                  stackId="2"
-                  stroke="#764ba2" 
-                  fill="#764ba2"
-                  fillOpacity={0.3}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
+            {monthlyData.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <AreaChart data={monthlyData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <XAxis dataKey="name" stroke="#6b7280" />
+                  <YAxis stroke="#6b7280" />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#f9fafb',
+                      border: '1px solid #e5e7eb',
+                      borderRadius: '8px'
+                    }}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="orders"
+                    stackId="1"
+                    stroke="#667eea"
+                    fill="#667eea"
+                    fillOpacity={0.3}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="revenue"
+                    stackId="2"
+                    stroke="#764ba2"
+                    fill="#764ba2"
+                    fillOpacity={0.3}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="chart-empty">
+                <p>Няма данни за показване</p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -219,29 +347,35 @@ const DashboardOverview = () => {
             <h3 className="chart-title">Статус на поръчките</h3>
           </div>
           <div className="chart-container">
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={orderStatusData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={100}
-                  paddingAngle={5}
-                  dataKey="value"
-                >
-                  {orderStatusData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
+            {getOrderStatusData().length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={getOrderStatusData()}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={100}
+                    paddingAngle={5}
+                    dataKey="value"
+                  >
+                    {getOrderStatusData().map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="chart-empty">
+                <p>Няма поръчки за показване</p>
+              </div>
+            )}
             <div className="pie-legend">
-              {orderStatusData.map((item, index) => (
+              {getOrderStatusData().map((item, index) => (
                 <div key={index} className="pie-legend-item">
-                  <div 
-                    className="legend-color" 
+                  <div
+                    className="legend-color"
                     style={{ backgroundColor: item.color }}
                   ></div>
                   <span className="legend-text">{item.name}: {item.value}</span>
@@ -256,49 +390,37 @@ const DashboardOverview = () => {
       <div className="activity-section">
         <div className="activity-header">
           <h3 className="activity-title">Последна активност</h3>
-          <button className="view-all-btn">Виж всички</button>
+          <button
+            className="refresh-btn"
+            onClick={loadAllDashboardData}
+          >
+            🔄 Обнови
+          </button>
         </div>
         <div className="activity-list">
-          {recentActivity.map((activity, index) => (
-            <div key={index} className="activity-item">
-              <div className="activity-icon" style={{ color: getActivityColor(activity.status) }}>
-                {getActivityIcon(activity.type)}
+          {recentActivity.length > 0 ? (
+            recentActivity.map((activity, index) => (
+              <div key={index} className="activity-item">
+                <div className="activity-icon" style={{ color: getActivityColor(activity.status) }}>
+                  {getActivityIcon(activity.type)}
+                </div>
+                <div className="activity-content">
+                  <p className="activity-message">{activity.message}</p>
+                  <span className="activity-time">{activity.time}</span>
+                </div>
+                <div
+                  className="activity-status"
+                  style={{ backgroundColor: getActivityColor(activity.status) }}
+                ></div>
               </div>
-              <div className="activity-content">
-                <p className="activity-message">{activity.message}</p>
-                <span className="activity-time">{activity.time}</span>
-              </div>
-              <div 
-                className="activity-status"
-                style={{ backgroundColor: getActivityColor(activity.status) }}
-              ></div>
+            ))
+          ) : (
+            <div className="activity-empty">
+              <p>Няма скорошна активност</p>
             </div>
-          ))}
+          )}
         </div>
       </div>
-
-      {/* Quick Actions */}
-      {/* <div className="quick-actions">
-        <h3 className="actions-title">Бързи действия</h3>
-        <div className="actions-grid">
-          <button className="action-btn">
-            <span className="action-icon">📦</span>
-            <span className="action-text">Нова поръчка</span>
-          </button>
-          <button className="action-btn">
-            <span className="action-icon">📧</span>
-            <span className="action-text">Изпрати имейл</span>
-          </button>
-          <button className="action-btn">
-            <span className="action-icon">📊</span>
-            <span className="action-text">Генерирай отчет</span>
-          </button>
-          <button className="action-btn">
-            <span className="action-icon">⚙️</span>
-            <span className="action-text">Настройки</span>
-          </button>
-        </div>
-      </div> */}
     </div>
   );
 };
