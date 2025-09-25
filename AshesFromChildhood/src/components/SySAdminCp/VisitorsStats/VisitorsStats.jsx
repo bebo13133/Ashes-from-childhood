@@ -39,40 +39,118 @@ const VisitorsStats = () => {
   }, [timeframe]);
 
   const loadVisitorsData = async () => {
-    setIsLoading(true);
-    setError('');
+  setIsLoading(true);
+  setError('');
+  
+  try {
+    const response = await fetchVisitorsStats(timeframe);
     
-    try {
-      const response = await fetchVisitorsStats(timeframe);
+    if (response) {
+      // Основни статистики
+      setStats({
+        totalVisitors: response.totalVisitors || 0,
+        uniqueVisitors: response.uniqueVisitors || 0,
+        todayVisitors: response.todayVisitors || 0,
+        averageSessionTime: response.averageSessionTime || '0:00',
+        bounceRate: response.bounceRate || 0,
+        pageViews: response.pageViews || 0,
+        newVisitors: response.newVisitors || 0,
+        returningVisitors: response.returningVisitors || 0
+      });
+
+      // РЕАЛНИ данни от API-то
+      setDailyData(response.dailyData || []);
+      setHourlyData(response.hourlyData || []);
+      setDeviceData(response.deviceData || []);
+      setTrafficSources(response.trafficSources || []);
+      setTopPages(response.topPages || []);
       
-      if (response) {
-        setStats({
-          totalVisitors: response.totalVisitors || 0,
-          uniqueVisitors: response.uniqueVisitors || 0,
-          todayVisitors: response.todayVisitors || 0,
-          averageSessionTime: response.averageSessionTime || '0:00',
-          bounceRate: response.bounceRate || 0,
-          pageViews: response.pageViews || 0,
-          newVisitors: response.newVisitors || 0,
-          returningVisitors: response.returningVisitors || 0
-        });
-      }
+      // За countries добавяме флагчета
+      const countriesWithFlags = (response.countries || []).map(country => ({
+        ...country,
+        flag: getCountryFlag(country.country)
+      }));
+      setCountries(countriesWithFlags);
       
-      // Тези данни няма от API-то, затова остават празни
+    } else {
+      // Празни данни ако API не върне нищо
+      setStats({
+        totalVisitors: 0,
+        uniqueVisitors: 0,
+        todayVisitors: 0,
+        averageSessionTime: '0:00',
+        bounceRate: 0,
+        pageViews: 0,
+        newVisitors: 0,
+        returningVisitors: 0
+      });
       setDailyData([]);
       setHourlyData([]);
       setDeviceData([]);
       setTrafficSources([]);
       setTopPages([]);
       setCountries([]);
-      
-    } catch (error) {
-      console.error('Error loading visitors data:', error);
-      setError('Грешка при зареждане на данните за посетители');
-    } finally {
-      setIsLoading(false);
     }
+    
+  } catch (error) {
+    console.error('Error loading visitors data:', error);
+    setError('Грешка при зареждане на данните за посетители');
+    
+    // Reset при грешка
+    setStats({
+      totalVisitors: 0,
+      uniqueVisitors: 0,
+      todayVisitors: 0,
+      averageSessionTime: '0:00',
+      bounceRate: 0,
+      pageViews: 0,
+      newVisitors: 0,
+      returningVisitors: 0
+    });
+    setDailyData([]);
+    setHourlyData([]);
+    setDeviceData([]);
+    setTrafficSources([]);
+    setTopPages([]);
+    setCountries([]);
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+// Функция за флагчета на държави
+const getCountryFlag = (countryName) => {
+  const flagMap = {
+    'Bulgaria': '🇧🇬',
+    'Germany': '🇩🇪',
+    'USA': '🇺🇸',
+    'United States': '🇺🇸',
+    'Romania': '🇷🇴',
+    'Greece': '🇬🇷',
+    'Turkey': '🇹🇷',
+    'Serbia': '🇷🇸',
+    'North Macedonia': '🇲🇰',
+    'United Kingdom': '🇬🇧',
+    'France': '🇫🇷',
+    'Italy': '🇮🇹',
+    'Spain': '🇪🇸',
+    'Netherlands': '🇳🇱',
+    'Poland': '🇵🇱',
+    'Austria': '🇦🇹',
+    'Switzerland': '🇨🇭',
+    'Belgium': '🇧🇪',
+    'Czech Republic': '🇨🇿',
+    'Hungary': '🇭🇺',
+    'Slovakia': '🇸🇰',
+    'Slovenia': '🇸🇮',
+    'Croatia': '🇭🇷',
+    'Bosnia and Herzegovina': '🇧🇦',
+    'Montenegro': '🇲🇪',
+    'Albania': '🇦🇱'
   };
+  
+  return flagMap[countryName] || '🏳️';
+};
 
   const getMetricData = () => {
     if (dailyData.length === 0) return [];

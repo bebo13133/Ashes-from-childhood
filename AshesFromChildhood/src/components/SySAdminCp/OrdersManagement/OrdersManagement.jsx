@@ -51,7 +51,7 @@ const OrdersManagement = () => {
       const response = await fetchOrders(filters);
       
       if (response && response.orders) {
-        // Нормализираме данните
+
         const normalizedOrders = response.orders.map(order => ({
           id: order.id,
           customerName: order.customerName,
@@ -108,8 +108,7 @@ const OrdersManagement = () => {
   const handleStatusChange = async (orderId, newStatus) => {
     try {
       await updateOrderStatus(orderId, newStatus);
-      
-      // Обновяваме локалното състояние
+
       setOrdersList(prev => 
         prev.map(order => 
           order.id === orderId 
@@ -185,17 +184,19 @@ const OrdersManagement = () => {
     }
   };
 
-  const handleSendEmail = async (emailData) => {
+ const handleSendEmail = async (emailData) => {
   try {
     await sendEmailToCustomer({
       to: selectedOrder.email,
       subject: emailData.subject,
       message: emailData.message,
-      templateId: 4, 
       type: 'order_update',
       orderId: selectedOrder.id
     });
-    // ... rest of code
+
+    setShowEmailModal(false);
+    setSelectedOrder(null);
+    
   } catch (error) {
     console.error('Error sending email:', error);
     setError('Грешка при изпращане на имейла');
@@ -644,14 +645,17 @@ const EmailModal = ({ order, onSend, onClose }) => {
   const [sending, setSending] = useState(false);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSending(true);
-    try {
-      await onSend(emailData);
-    } finally {
-      setSending(false);
-    }
-  };
+  e.preventDefault();
+  setSending(true);
+  try {
+    await onSend(emailData);
+
+  } catch (error) {
+    // Ако има грешка, модалът остава отворен
+  } finally {
+    setSending(false);
+  }
+};
 
   return (
     <div className="OrdersManagement-modal-overlay">

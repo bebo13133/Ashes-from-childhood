@@ -129,7 +129,7 @@ export const userServiceFactory = (token) => {
     },
 
     sendBulkEmail: (emailData) => {
-      return requester.post(`${apiUrl}/sys/emails/bulk-send`, emailData);
+      return requester.post(`${apiUrl}/emails/bulk-send`, emailData);
     },
 
     getEmailTemplates: () => {
