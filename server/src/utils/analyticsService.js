@@ -13,6 +13,7 @@ class AnalyticsService {
         };
 
         this.cacheDuration = parseInt(analyticsConfig.googleAnalytics.duration) || 3600;
+        this.lastCacheLog = null; // Track last cache log to avoid spam
     }
 
     isCacheValid() {
@@ -33,22 +34,43 @@ class AnalyticsService {
     setCacheData(data) {
         this.cache.data = data;
         this.cache.timestamp = Date.now();
-        console.log('Analytics cache updated');
+
+        // Only log cache update once per cache cycle
+        const cacheStart = new Date(this.cache.timestamp);
+        const cacheEnd = new Date(this.cache.timestamp + this.cacheDuration);
+
+        console.log(
+            `📊 Cached GA data from ${cacheStart.toLocaleTimeString('bg-BG', { hour: '2-digit', minute: '2-digit' })} till ${cacheEnd.toLocaleTimeString(
+                'bg-BG',
+                { hour: '2-digit', minute: '2-digit' }
+            )}`
+        );
     }
 
     async getAllAnalyticsData(startDate, endDate) {
         if (this.isCacheValid()) {
-            console.log('Using cached analytics data');
+            // Only log cache usage once per minute to reduce spam
+            const now = Date.now();
+            if (!this.lastCacheLog || now - this.lastCacheLog > 60000) {
+                console.log('📊 Using cached GA data');
+                this.lastCacheLog = now;
+            }
             return this.getCacheData();
         }
 
         if (this.cache.isUpdating) {
-            console.log('Analytics update in progress, returning cached data');
-            return this.getCacheData();
+            // Only log update in progress once per minute
+            const now = Date.now();
+            if (!this.lastCacheLog || now - this.lastCacheLog > 60000) {
+                console.log('📊 Analytics update in progress, returning cached data');
+                this.lastCacheLog = now;
+            }
+            // Return cached data if available, otherwise return empty structure
+            return this.getCacheData() || this.getEmptyDataStructure();
         }
 
         this.cache.isUpdating = true;
-        console.log('Fetching fresh analytics data from GA...');
+        console.log('📊 Fetching fresh analytics data from GA...');
 
         try {
             const [realtime, visitors, daily, hourly, device, traffic, geographic, topPages] = await Promise.all([
@@ -75,18 +97,17 @@ class AnalyticsService {
             };
 
             this.setCacheData(cleanData);
-
-            console.log('Analytics data fetched and cached successfully');
+            console.log('✅ Analytics data fetched and cached successfully');
             return cleanData;
         } catch (err) {
-            console.error('Error fetching analytics data:', err);
+            console.error('❌ Error fetching analytics data:', err);
 
             if (this.cache.data) {
-                console.log('GA failed, returning cached data (may be expired)');
+                console.log('📊 GA failed, returning cached data (may be expired)');
                 return this.getCacheData();
             }
 
-            console.log('No cached data available, returning empty structure');
+            console.log('📊 No cached data available, returning empty structure');
             return this.getEmptyDataStructure();
         } finally {
             this.cache.isUpdating = false;
@@ -141,8 +162,6 @@ class AnalyticsService {
             };
         });
     }
-
-    // Replace the transform functions with these enhanced versions:
 
     transformHourlyData(gaResponse) {
         if (!gaResponse.rows) {
@@ -288,7 +307,7 @@ class AnalyticsService {
             isUpdating: false,
         };
 
-        console.log('Analytics cache cleared');
+        console.log('📊 Analytics cache cleared');
     }
 
     async initialize() {
@@ -303,9 +322,9 @@ class AnalyticsService {
                 auth: auth,
             });
 
-            console.log('Google Analytics service initialized successfully');
+            console.log('✅ Google Analytics service initialized successfully');
         } catch (error) {
-            console.error('Failed to initialize Google Analytics:', error);
+            console.error('❌ Failed to initialize Google Analytics:', error);
             throw error;
         }
     }

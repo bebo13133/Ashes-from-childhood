@@ -7,8 +7,6 @@ module.exports = {
         const reviews = [];
         const now = new Date();
 
-        console.log('Generating reviews with realistic distribution...');
-
         // Customer names (same as orders for consistency)
         const customers = [
             'Иван Петров',
@@ -96,8 +94,6 @@ module.exports = {
 
         // Generate reviews for each period
         for (const period of reviewDistribution) {
-            console.log(`Generating ${period.count} reviews for ${period.description}`);
-
             for (let i = 0; i < period.count; i++) {
                 let reviewDate;
 
@@ -207,25 +203,6 @@ module.exports = {
 
         // Sort reviews by creation date (newest first)
         reviews.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-
-        console.log('Review distribution:');
-        console.log('First review date:', reviews[0]?.created_at);
-        console.log('Last review date:', reviews[reviews.length - 1]?.created_at);
-        console.log('Total reviews generated:', reviews.length);
-
-        // Log rating distribution
-        const ratingCounts = reviews.reduce((acc, review) => {
-            acc[review.rating] = (acc[review.rating] || 0) + 1;
-            return acc;
-        }, {});
-        console.log('Rating distribution:', ratingCounts);
-
-        // Log status distribution
-        const statusCounts = reviews.reduce((acc, review) => {
-            acc[review.status] = (acc[review.status] || 0) + 1;
-            return acc;
-        }, {});
-        console.log('Status distribution:', statusCounts);
 
         await queryInterface.bulkInsert('Reviews', reviews);
     },
