@@ -7,8 +7,6 @@ module.exports = {
         const orders = [];
         const now = new Date();
 
-        console.log('Generating orders with realistic distribution...');
-
         // Price variations over time (simulating price changes)
         const priceHistory = [
             { month: 0, price: 20.0 }, // 8 months ago
@@ -72,8 +70,6 @@ module.exports = {
 
         // Generate orders for each period
         for (const period of orderDistribution) {
-            console.log(`Generating ${period.count} orders for ${period.description}`);
-
             for (let i = 0; i < period.count; i++) {
                 let orderDate;
 
@@ -144,9 +140,8 @@ module.exports = {
                         break;
                 }
 
-                // Determine which month this order belongs to for pricing
                 const monthsDiff = Math.floor((now - orderDate) / (30 * 24 * 60 * 60 * 1000));
-                const monthIndex = Math.min(monthsDiff, priceHistory.length - 1);
+                const monthIndex = Math.max(0, Math.min(monthsDiff, priceHistory.length - 1));
                 const currentPrice = priceHistory[monthIndex].price;
 
                 // Random customer
@@ -200,11 +195,6 @@ module.exports = {
 
         // Sort orders by creation date (newest first)
         orders.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-
-        console.log('Order distribution:');
-        console.log('First order date:', orders[0]?.created_at);
-        console.log('Last order date:', orders[orders.length - 1]?.created_at);
-        console.log('Total orders generated:', orders.length);
 
         await queryInterface.bulkInsert('Orders', orders);
     },
