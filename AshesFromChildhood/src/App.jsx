@@ -20,12 +20,12 @@ function App() {
 
         <Route path="/login-admin-sys" element={<SySAdminLogin />} />
         <Route path="/register-admin-sys" element={<SySAdminRegister />} />
-        <Route path="//terms" element={<TermsAndConditions />} />
-        <Route path="unauthorized" element={<Unauthorized />} />
+        <Route path="/terms" element={<TermsAndConditions />} />
+        <Route path="/unauthorized" element={<Unauthorized />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="404/*" element={<NotFound />} />
         <Route path="*" element={<NotFound />} />
-         <Route path="sys-panel" element={<SySAdminCp />} />
+        <Route path="/sys-panel" element={<AdminGuard><SySAdminCp /></AdminGuard>} />
       </Routes>
 
       <Footer />

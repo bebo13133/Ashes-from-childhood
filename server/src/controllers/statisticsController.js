@@ -2,17 +2,16 @@ const statisticsController = require('express').Router();
 const { Order, Review, sequelize } = require('../config/modelsConfig');
 const { Op } = require('sequelize');
 const analyticsService = require('../utils/analyticsService');
+const getDateRange = require('../utils/getDateRange');
 
 statisticsController.get('/stats', async (req, res, next) => {
     try {
         const { period = '30d' } = req.query;
-        const dateRange = analyticsService.getDateRange(period);
-        const startDate = new Date(dateRange.startDate);
-        const endDate = new Date(dateRange.endDate);
+        const dateRange = getDateRange(period);
 
         const ordersData = await Order.findAll({
             where: {
-                createdAt: { [Op.between]: [startDate, endDate] },
+                createdAt: { [Op.between]: [dateRange.startDate, dateRange.endDate] },
             },
             attributes: [
                 'status',
@@ -57,6 +56,7 @@ statisticsController.get('/stats', async (req, res, next) => {
             where: {
                 status: 'approved',
                 rating: { [Op.ne]: null },
+                createdAt: { [Op.between]: [dateRange.startDate, dateRange.endDate] },
             },
             raw: true,
         });
@@ -69,7 +69,7 @@ statisticsController.get('/stats', async (req, res, next) => {
 
         try {
             const realtimeData = await analyticsService.getRealtimeData();
-            const visitorsData = await analyticsService.getVisitorsData(dateRange.startDate, dateRange.endDate);
+            const visitorsData = await analyticsService.getVisitorsData(dateRange.startDateGA, dateRange.endDateGA);
 
             uniqueVisitors = visitorsData.rows && visitorsData.rows.length > 0 ? parseInt(visitorsData.rows[0]?.metricValues?.[0]?.value || 0) : 0;
             todayVisitors = visitorsData.rows && visitorsData.rows.length > 0 ? parseInt(visitorsData.rows[0]?.metricValues?.[1]?.value || 0) : 0;
@@ -106,7 +106,7 @@ statisticsController.get('/stats', async (req, res, next) => {
 statisticsController.get('/visitors', async (req, res, next) => {
     try {
         const { period = '30d' } = req.query;
-        const dateRange = analyticsService.getDateRange(period);
+        const dateRange = getDateRange(period);
 
         let totalVisitors = 0;
         let uniqueVisitors = 0;
@@ -117,11 +117,19 @@ statisticsController.get('/visitors', async (req, res, next) => {
         let newVisitors = 0;
         let returningVisitors = 0;
 
+        // Additional data arrays
+        let dailyData = [];
+        let hourlyData = [];
+        let deviceData = [];
+        let trafficSources = [];
+        let topPages = [];
+        let countries = [];
+
         try {
             const realtimeData = await analyticsService.getRealtimeData();
             todayVisitors = parseInt(realtimeData.rows?.[0]?.metricValues?.[0]?.value || 0);
 
-            const visitorsData = await analyticsService.getVisitorsData(dateRange.startDate, dateRange.endDate);
+            const visitorsData = await analyticsService.getVisitorsData(dateRange.startDateGA, dateRange.endDateGA);
 
             if (visitorsData.rows && visitorsData.rows.length > 0) {
                 const row = visitorsData.rows[0];
@@ -142,6 +150,57 @@ statisticsController.get('/visitors', async (req, res, next) => {
                 newVisitors = Math.floor(uniqueVisitors * 0.6);
                 returningVisitors = uniqueVisitors - newVisitors;
             }
+
+            // Fetch additional data
+            const [dailyResponse, hourlyResponse, deviceResponse, trafficResponse, topPagesResponse, countriesResponse] = await Promise.all([
+                analyticsService.getDailyVisitorsData(dateRange.startDateGA, dateRange.endDateGA),
+                analyticsService.getHourlyVisitorsData(dateRange.startDateGA, dateRange.endDateGA),
+                analyticsService.getDeviceData(dateRange.startDateGA, dateRange.endDateGA),
+                analyticsService.getTrafficSourcesData(dateRange.startDateGA, dateRange.endDateGA),
+                analyticsService.getTopPagesData(dateRange.startDateGA, dateRange.endDateGA),
+                analyticsService.getGeographicData(dateRange.startDateGA, dateRange.endDateGA),
+            ]);
+
+            // Format daily data
+            if (dailyResponse.rows) {
+                dailyData = dailyResponse.rows.map((row) => {
+                    const dateValue = row.dimensionValues?.[0]?.value || '';
+                    const day = dateValue.substring(6, 8);
+                    const month = dateValue.substring(4, 6);
+                    const formattedDate = `${day}.${month}`;
+
+                    return {
+                        date: formattedDate,
+                        visitors: parseInt(row.metricValues?.[1]?.value || 0),
+                        unique: parseInt(row.metricValues?.[0]?.value || 0),
+                        pageViews: parseInt(row.metricValues?.[2]?.value || 0),
+                    };
+                });
+            }
+
+            // Format additional data
+            hourlyData = analyticsService.formatHourlyData(hourlyResponse);
+            deviceData = analyticsService.formatDeviceData(deviceResponse);
+            trafficSources = analyticsService.formatTrafficSources(trafficResponse);
+
+            // Format top pages
+            if (topPagesResponse.rows) {
+                const totalViews = topPagesResponse.rows.reduce((sum, row) => sum + parseInt(row.metricValues?.[0]?.value || 0), 0);
+
+                topPages = topPagesResponse.rows.map((row) => {
+                    const page = row.dimensionValues?.[0]?.value || '';
+                    const views = parseInt(row.metricValues?.[0]?.value || 0);
+                    const percentage = totalViews > 0 ? Math.round((views / totalViews) * 100 * 10) / 10 : 0;
+
+                    return {
+                        page: page,
+                        views: views,
+                        percentage: percentage,
+                    };
+                });
+            }
+
+            countries = analyticsService.formatGeographicData(countriesResponse);
         } catch (err) {
             console.warn('GA data unavailable:', err.message);
         }
@@ -155,6 +214,13 @@ statisticsController.get('/visitors', async (req, res, next) => {
             pageViews,
             newVisitors,
             returningVisitors,
+            // Additional data
+            dailyData,
+            hourlyData,
+            deviceData,
+            trafficSources,
+            topPages,
+            countries,
         };
 
         return res.status(200).json(stats);
@@ -166,14 +232,12 @@ statisticsController.get('/visitors', async (req, res, next) => {
 statisticsController.get('/reviews', async (req, res, next) => {
     try {
         const { period = '30d' } = req.query;
-        const dateRange = analyticsService.getDateRange(period);
-        const startDate = new Date(dateRange.startDate);
-        const endDate = new Date(dateRange.endDate);
+        const dateRange = getDateRange(period);
 
         // Get all reviews - no need for attributes since we want all fields
         const reviews = await Review.findAll({
             where: {
-                createdAt: { [Op.between]: [startDate, endDate] },
+                createdAt: { [Op.between]: [dateRange.startDate, dateRange.endDate] },
             },
             order: [['createdAt', 'DESC']],
         });
@@ -182,7 +246,7 @@ statisticsController.get('/reviews', async (req, res, next) => {
         const reviewStats = await Review.findAll({
             attributes: ['status', [sequelize.fn('COUNT', sequelize.col('id')), 'count']],
             where: {
-                createdAt: { [Op.between]: [startDate, endDate] },
+                createdAt: { [Op.between]: [dateRange.startDate, dateRange.endDate] },
             },
             group: ['status'],
             raw: true,
@@ -192,7 +256,7 @@ statisticsController.get('/reviews', async (req, res, next) => {
         const ratingDistribution = await Review.findAll({
             attributes: ['rating', [sequelize.fn('COUNT', sequelize.col('id')), 'count']],
             where: {
-                createdAt: { [Op.between]: [startDate, endDate] },
+                createdAt: { [Op.between]: [dateRange.startDate, dateRange.endDate] },
                 rating: { [Op.ne]: null },
             },
             group: ['rating'],
@@ -208,7 +272,7 @@ statisticsController.get('/reviews', async (req, res, next) => {
                 [sequelize.fn('AVG', sequelize.col('rating')), 'avgRating'],
             ],
             where: {
-                createdAt: { [Op.between]: [startDate, endDate] },
+                createdAt: { [Op.between]: [dateRange.startDate, dateRange.endDate] },
             },
             group: [sequelize.fn('TO_CHAR', sequelize.col('created_at'), 'YYYY-MM')],
             order: [[sequelize.fn('TO_CHAR', sequelize.col('created_at'), 'YYYY-MM'), 'ASC']],
@@ -314,19 +378,17 @@ statisticsController.get('/reports/:reportType', async (req, res, next) => {
     try {
         const { reportType } = req.params;
         const { period = '30d' } = req.query;
-        const dateRange = analyticsService.getDateRange(period);
-        const startDate = new Date(dateRange.startDate);
-        const endDate = new Date(dateRange.endDate);
+        const dateRange = getDateRange(period);
 
         switch (reportType) {
             case 'overview':
-                return await generateOverviewReport(req, res, startDate, endDate, dateRange);
+                return await generateOverviewReport(req, res, dateRange);
             case 'sales':
-                return await generateSalesReport(req, res, startDate, endDate);
+                return await generateSalesReport(req, res, dateRange);
             case 'traffic':
-                return await generateTrafficReport(req, res, startDate, endDate, dateRange);
+                return await generateTrafficReport(req, res, dateRange);
             case 'reviews':
-                return await generateReviewsReport(req, res, startDate, endDate);
+                return await generateReviewsReport(req, res, dateRange);
             default:
                 return res.status(400).json({ error: 'Invalid report type' });
         }
@@ -335,10 +397,10 @@ statisticsController.get('/reports/:reportType', async (req, res, next) => {
     }
 });
 
-async function generateOverviewReport(req, res, startDate, endDate, dateRange) {
+async function generateOverviewReport(req, res, dateRange) {
     const ordersData = await Order.findOne({
         where: {
-            createdAt: { [Op.between]: [startDate, endDate] },
+            createdAt: { [Op.between]: [dateRange.startDate, dateRange.endDate] },
             status: 'completed',
         },
         attributes: [
@@ -351,7 +413,7 @@ async function generateOverviewReport(req, res, startDate, endDate, dateRange) {
     const reviewsData = await Review.findOne({
         where: {
             status: 'approved',
-            createdAt: { [Op.between]: [startDate, endDate] },
+            createdAt: { [Op.between]: [dateRange.startDate, dateRange.endDate] },
         },
         attributes: [
             [sequelize.fn('COUNT', sequelize.col('id')), 'totalReviews'],
@@ -360,10 +422,10 @@ async function generateOverviewReport(req, res, startDate, endDate, dateRange) {
         raw: true,
     });
 
-    let totalVisitors = 0;
+    let uniqueVisitors = 0;
     try {
-        const visitorsData = await analyticsService.getVisitorsData(dateRange.startDate, dateRange.endDate);
-        totalVisitors = visitorsData.rows?.[0]?.metricValues?.[0]?.value || 0;
+        const visitorsData = await analyticsService.getVisitorsData(dateRange.startDateGA, dateRange.endDateGA);
+        uniqueVisitors = visitorsData.rows?.[0]?.metricValues?.[0]?.value || 0;
     } catch (err) {
         console.warn('GA data unavailable:', err.message);
     }
@@ -372,13 +434,13 @@ async function generateOverviewReport(req, res, startDate, endDate, dateRange) {
     const totalRevenue = parseFloat(ordersData?.totalRevenue || 0);
     const totalReviews = parseInt(reviewsData?.totalReviews || 0);
     const averageRating = parseFloat(reviewsData?.averageRating || 0);
-    const conversionRate = totalVisitors > 0 ? (totalOrders / totalVisitors) * 100 : 0;
+    const conversionRate = uniqueVisitors > 0 ? (totalOrders / uniqueVisitors) * 100 : 0;
 
     const report = {
         overview: {
             totalOrders,
             totalRevenue,
-            totalVisitors: parseInt(totalVisitors),
+            totalVisitors: parseInt(uniqueVisitors),
             totalReviews,
             averageRating: Math.round(averageRating * 10) / 10,
             conversionRate: Math.round(conversionRate * 100) / 100,
@@ -388,10 +450,10 @@ async function generateOverviewReport(req, res, startDate, endDate, dateRange) {
     return res.status(200).json(report);
 }
 
-async function generateSalesReport(req, res, startDate, endDate) {
+async function generateSalesReport(req, res, dateRange) {
     const monthlyData = await Order.findAll({
         where: {
-            createdAt: { [Op.between]: [startDate, endDate] },
+            createdAt: { [Op.between]: [dateRange.startDate, dateRange.endDate] },
             status: 'completed',
         },
         attributes: [
@@ -434,13 +496,13 @@ async function generateSalesReport(req, res, startDate, endDate) {
     return res.status(200).json({ salesData });
 }
 
-async function generateTrafficReport(req, res, startDate, endDate, dateRange) {
+async function generateTrafficReport(req, res, dateRange) {
     let trafficData = [];
     let topPages = [];
 
     try {
-        const dailyData = await analyticsService.getDailyVisitorsData(dateRange.startDate, dateRange.endDate);
-        const topPagesData = await analyticsService.getTopPagesData(dateRange.startDate, dateRange.endDate);
+        const dailyData = await analyticsService.getDailyVisitorsData(dateRange.startDateGA, dateRange.endDateGA);
+        const topPagesData = await analyticsService.getTopPagesData(dateRange.startDateGA, dateRange.endDateGA);
 
         trafficData =
             dailyData.rows?.map((row) => {
@@ -477,10 +539,10 @@ async function generateTrafficReport(req, res, startDate, endDate, dateRange) {
     return res.status(200).json({ trafficData, topPages });
 }
 
-async function generateReviewsReport(req, res, startDate, endDate) {
+async function generateReviewsReport(req, res, dateRange) {
     const ratingDistribution = await Review.findAll({
         where: {
-            createdAt: { [Op.between]: [startDate, endDate] },
+            createdAt: { [Op.between]: [dateRange.startDate, dateRange.endDate] },
             rating: { [Op.ne]: null },
         },
         attributes: ['rating', [sequelize.fn('COUNT', sequelize.col('id')), 'count']],
