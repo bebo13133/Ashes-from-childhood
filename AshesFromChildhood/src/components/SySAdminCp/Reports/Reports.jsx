@@ -13,61 +13,36 @@ import { useAuthContext } from '../../contexts/userContext';
 
 const Reports = () => {
   const { 
-    generateReport, 
-    isLoading 
+    generateReport,
+    fetchVisitorsStats,
+    fetchRatingsData,
+    isLoading ,
+    fetchDashboardData
   } = useAuthContext();
 
   const [selectedPeriod, setSelectedPeriod] = useState('30d');
   const [selectedReport, setSelectedReport] = useState('overview');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [localLoading, setLocalLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  // Mock data for reports
+  // Real API data state
   const [reportData, setReportData] = useState({
     overview: {
-      totalOrders: 247,
-      totalRevenue: 6175,
-      totalVisitors: 15847,
-      totalReviews: 89,
-      averageRating: 4.6,
-      conversionRate: 1.56
+      totalOrders: 0,
+      totalRevenue: 0,
+      totalVisitors: 0,
+      totalReviews: 0,
+      averageRating: 0,
+      conversionRate: 0
     },
-    salesData: [
-      { month: 'Яну', orders: 18, revenue: 450, target: 500 },
-      { month: 'Фев', orders: 25, revenue: 625, target: 600 },
-      { month: 'Мар', orders: 22, revenue: 550, target: 550 },
-      { month: 'Апр', orders: 31, revenue: 775, target: 700 },
-      { month: 'Май', orders: 28, revenue: 700, target: 750 },
-      { month: 'Юни', orders: 35, revenue: 875, target: 800 },
-      { month: 'Юли', orders: 42, revenue: 1050, target: 900 },
-      { month: 'Авг', orders: 38, revenue: 950, target: 950 },
-      { month: 'Сеп', orders: 33, revenue: 825, target: 800 },
-      { month: 'Окт', orders: 29, revenue: 725, target: 700 },
-      { month: 'Ное', orders: 21, revenue: 525, target: 600 },
-      { month: 'Дек', orders: 25, revenue: 625, target: 650 }
-    ],
-    trafficData: [
-      { date: '01.11', visitors: 234, pageviews: 567, sessions: 198 },
-      { date: '02.11', visitors: 267, pageviews: 634, sessions: 223 },
-      { date: '03.11', visitors: 298, pageviews: 721, sessions: 245 },
-      { date: '04.11', visitors: 223, pageviews: 534, sessions: 189 },
-      { date: '05.11', visitors: 345, pageviews: 823, sessions: 298 },
-      { date: '06.11', visitors: 412, pageviews: 967, sessions: 356 },
-      { date: '07.11', visitors: 387, pageviews: 892, sessions: 334 }
-    ],
-    reviewsData: [
-      { rating: 5, count: 48, percentage: 53.9 },
-      { rating: 4, count: 26, percentage: 29.2 },
-      { rating: 3, count: 11, percentage: 12.4 },
-      { rating: 2, count: 3, percentage: 3.4 },
-      { rating: 1, count: 1, percentage: 1.1 }
-    ],
-    topPages: [
-      { page: '/', views: 5432, percentage: 31.2 },
-      { page: '/order', views: 3456, percentage: 19.8 },
-      { page: '/reviews', views: 2567, percentage: 14.7 },
-      { page: '/about', views: 1789, percentage: 10.3 },
-      { page: '/contact', views: 1234, percentage: 7.1 }
-    ]
+    salesData: [],
+    trafficData: {
+      dailyData: [],
+      hourlyData: [],
+      topPages: []
+    },
+    reviewsData: []
   });
 
   const reportTypes = [
@@ -109,12 +84,103 @@ const Reports = () => {
   }, [selectedPeriod, selectedReport]);
 
   const loadReportData = async () => {
+    setLocalLoading(true);
+    setError('');
+    
     try {
-      // В реалното приложение:
-      // const data = await generateReport(selectedReport, selectedPeriod);
-      // setReportData(data);
+      switch (selectedReport) {
+       case 'overview': {
+  const [dashboardStats, visitorsStats, salesData] = await Promise.all([
+    fetchDashboardData(selectedPeriod),        // /dashboard/stats
+    fetchVisitorsStats(selectedPeriod),        // /dashboard/visitors  
+    generateReport('sales', selectedPeriod)    // /dashboard/reports/sales
+  ]);
+  
+  setReportData(prev => ({
+    ...prev,
+    overview: {
+      totalOrders: dashboardStats?.totalOrders || 0,
+      totalRevenue: dashboardStats?.totalRevenue || 0,
+      totalVisitors: visitorsStats?.totalVisitors || dashboardStats?.uniqueVisitors || 0,
+      totalReviews: dashboardStats?.totalReviews || 0,
+      averageRating: dashboardStats?.averageRating || 0,
+      conversionRate: dashboardStats?.conversionRate || 0
+    },
+    salesData: salesData?.salesData || []
+  }));
+  break;
+}
+        
+        case 'sales': {
+          const salesData = await generateReport('sales', selectedPeriod);
+          setReportData(prev => ({
+            ...prev,
+            salesData: salesData?.salesData || []
+          }));
+          break;
+        }
+        
+        case 'traffic': {
+          const trafficData = await fetchVisitorsStats(selectedPeriod);
+          setReportData(prev => ({
+            ...prev,
+            trafficData: {
+              dailyData: trafficData?.dailyData || [],
+              hourlyData: trafficData?.hourlyData || [],
+              topPages: trafficData?.topPages || []
+            }
+          }));
+          break;
+        }
+        
+        case 'reviews': {
+          const reviewsData = await fetchRatingsData({ status: 'approved', limit: 1000 });
+          
+          if (reviewsData?.reviews) {
+            // Изчисляваме разпределението на рейтингите
+            const distribution = [5, 4, 3, 2, 1].map(rating => {
+              const count = reviewsData.reviews.filter(r => r.rating === rating).length;
+              const percentage = reviewsData.reviews.length > 0 ? (count / reviewsData.reviews.length) * 100 : 0;
+              return { rating, count, percentage };
+            });
+            
+            setReportData(prev => ({
+              ...prev,
+              reviewsData: distribution
+            }));
+          } else {
+            setReportData(prev => ({
+              ...prev,
+              reviewsData: []
+            }));
+          }
+          break;
+        }
+      }
     } catch (error) {
       console.error('Error loading report data:', error);
+      setError('Грешка при зареждане на отчета: ' + error.message);
+      
+      // Reset data при грешка
+      setReportData({
+        overview: {
+          totalOrders: 0,
+          totalRevenue: 0,
+          totalVisitors: 0,
+          totalReviews: 0,
+          averageRating: 0,
+          conversionRate: 0
+        },
+        salesData: [],
+        trafficData: {
+          dailyData: [],
+          hourlyData: [],
+          topPages: []
+        },
+        reviewsData: []
+      });
+    } finally {
+      setLocalLoading(false);
     }
   };
 
@@ -159,78 +225,93 @@ const Reports = () => {
   };
 
   const generateExcel = () => {
-  const wb = XLSX.utils.book_new();
-  
-  switch (selectedReport) {
-    case 'overview': {
-      const overviewData = [
-        ['Показател', 'Стойност'],
-        ['Общо поръчки', reportData.overview.totalOrders],
-        ['Общи приходи (лв)', reportData.overview.totalRevenue],
-        ['Посетители', reportData.overview.totalVisitors],
-        ['Общо отзиви', reportData.overview.totalReviews],
-        ['Среден рейтинг', reportData.overview.averageRating],
-        ['Конверсия (%)', reportData.overview.conversionRate]
-      ];
-      const ws1 = XLSX.utils.aoa_to_sheet(overviewData);
-      XLSX.utils.book_append_sheet(wb, ws1, 'Общ преглед');
-      
-      // Добавяне и на sales data
-      const ws2 = XLSX.utils.json_to_sheet(reportData.salesData);
-      XLSX.utils.book_append_sheet(wb, ws2, 'Продажби по месеци');
-      break;
+    const wb = XLSX.utils.book_new();
+    
+    switch (selectedReport) {
+      case 'overview': {
+        const overviewData = [
+          ['Показател', 'Стойност'],
+          ['Общо поръчки', reportData.overview.totalOrders],
+          ['Общи приходи (лв)', reportData.overview.totalRevenue],
+          ['Посетители', reportData.overview.totalVisitors],
+          ['Общо отзиви', reportData.overview.totalReviews],
+          ['Среден рейтинг', reportData.overview.averageRating],
+          ['Конверсия (%)', reportData.overview.conversionRate]
+        ];
+        const ws1 = XLSX.utils.aoa_to_sheet(overviewData);
+        XLSX.utils.book_append_sheet(wb, ws1, 'Общ преглед');
+        
+        if (reportData.salesData.length > 0) {
+          const ws2 = XLSX.utils.json_to_sheet(reportData.salesData);
+          XLSX.utils.book_append_sheet(wb, ws2, 'Продажби по месеци');
+        }
+        break;
+      }
+        
+      case 'sales': {
+        if (reportData.salesData.length > 0) {
+          const ws3 = XLSX.utils.json_to_sheet(reportData.salesData);
+          XLSX.utils.book_append_sheet(wb, ws3, 'Продажби');
+        }
+        break;
+      }
+        
+      case 'traffic': {
+        if (reportData.trafficData.dailyData.length > 0) {
+          const ws4 = XLSX.utils.json_to_sheet(reportData.trafficData.dailyData);
+          XLSX.utils.book_append_sheet(wb, ws4, 'Дневен трафик');
+        }
+        
+        if (reportData.trafficData.topPages.length > 0) {
+          const ws5 = XLSX.utils.json_to_sheet(reportData.trafficData.topPages);
+          XLSX.utils.book_append_sheet(wb, ws5, 'Топ страници');
+        }
+        break;
+      }
+        
+      case 'reviews': {
+        if (reportData.reviewsData.length > 0) {
+          const ws6 = XLSX.utils.json_to_sheet(reportData.reviewsData);
+          XLSX.utils.book_append_sheet(wb, ws6, 'Отзиви');
+        }
+        break;
+      }
     }
-      
-    case 'sales': {
-      const ws3 = XLSX.utils.json_to_sheet(reportData.salesData);
-      XLSX.utils.book_append_sheet(wb, ws3, 'Продажби');
-      break;
-    }
-      
-    case 'traffic': {
-      const ws4 = XLSX.utils.json_to_sheet(reportData.trafficData);
-      XLSX.utils.book_append_sheet(wb, ws4, 'Трафик');
-      
-      const ws5 = XLSX.utils.json_to_sheet(reportData.topPages);
-      XLSX.utils.book_append_sheet(wb, ws5, 'Топ страници');
-      break;
-    }
-      
-    case 'reviews': {
-      const ws6 = XLSX.utils.json_to_sheet(reportData.reviewsData);
-      XLSX.utils.book_append_sheet(wb, ws6, 'Отзиви');
-      break;
-    }
-  }
-  
-  return new Blob([XLSX.write(wb, { bookType: 'xlsx', type: 'array' })], {
-    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-  });
-};
+    
+    return new Blob([XLSX.write(wb, { bookType: 'xlsx', type: 'array' })], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+  };
 
   const generateCSV = () => {
     let csvContent = '';
     
     switch (selectedReport) {
       case 'sales':
-        csvContent = 'Месец,Поръчки,Приходи (лв),Цел (лв)\n';
-        reportData.salesData.forEach(row => {
-          csvContent += `${row.month},${row.orders},${row.revenue},${row.target}\n`;
-        });
+        if (reportData.salesData.length > 0) {
+          csvContent = 'Месец,Поръчки,Приходи (лв)\n';
+          reportData.salesData.forEach(row => {
+            csvContent += `${row.month},${row.orders},${row.revenue}\n`;
+          });
+        }
         break;
         
       case 'traffic':
-        csvContent = 'Дата,Посетители,Прегледи,Сесии\n';
-        reportData.trafficData.forEach(row => {
-          csvContent += `${row.date},${row.visitors},${row.pageviews},${row.sessions}\n`;
-        });
+        if (reportData.trafficData.dailyData.length > 0) {
+          csvContent = 'Дата,Посетители,Уникални,Прегледи\n';
+          reportData.trafficData.dailyData.forEach(row => {
+            csvContent += `${row.date},${row.visitors},${row.unique},${row.pageViews}\n`;
+          });
+        }
         break;
         
       case 'reviews':
-        csvContent = 'Рейтинг,Брой,Процент\n';
-        reportData.reviewsData.forEach(row => {
-          csvContent += `${row.rating},${row.count},${row.percentage}%\n`;
-        });
+        if (reportData.reviewsData.length > 0) {
+          csvContent = 'Рейтинг,Брой,Процент\n';
+          reportData.reviewsData.forEach(row => {
+            csvContent += `${row.rating},${row.count},${row.percentage.toFixed(1)}%\n`;
+          });
+        }
         break;
         
       default: // overview
@@ -243,7 +324,6 @@ const Reports = () => {
         csvContent += `Конверсия (%),${reportData.overview.conversionRate}\n`;
     }
     
-    // Добавяне на BOM за правилно показване на кирилица
     const BOM = '\uFEFF';
     return new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
   };
@@ -299,7 +379,7 @@ const Reports = () => {
           <div className="reports-kpi-content">
             <h3>Общо поръчки</h3>
             <p className="reports-kpi-value">{reportData.overview.totalOrders}</p>
-            <span className="reports-kpi-change reports-kpi-change--positive">+15% от предишния период</span>
+            <span className="reports-kpi-change reports-kpi-change--neutral">За избрания период</span>
           </div>
         </div>
 
@@ -308,7 +388,7 @@ const Reports = () => {
           <div className="reports-kpi-content">
             <h3>Общи приходи</h3>
             <p className="reports-kpi-value">{formatCurrency(reportData.overview.totalRevenue)}</p>
-            <span className="reports-kpi-change reports-kpi-change--positive">+12% от предишния период</span>
+            <span className="reports-kpi-change reports-kpi-change--neutral">За избрания период</span>
           </div>
         </div>
 
@@ -317,7 +397,7 @@ const Reports = () => {
           <div className="reports-kpi-content">
             <h3>Посетители</h3>
             <p className="reports-kpi-value">{reportData.overview.totalVisitors.toLocaleString()}</p>
-            <span className="reports-kpi-change reports-kpi-change--positive">+8% от предишния период</span>
+            <span className="reports-kpi-change reports-kpi-change--neutral">За избрания период</span>
           </div>
         </div>
 
@@ -335,7 +415,7 @@ const Reports = () => {
           <div className="reports-kpi-content">
             <h3>Конверсия</h3>
             <p className="reports-kpi-value">{formatPercentage(reportData.overview.conversionRate)}</p>
-            <span className="reports-kpi-change reports-kpi-change--positive">+0.3% от предишния период</span>
+            <span className="reports-kpi-change reports-kpi-change--neutral">За избрания период</span>
           </div>
         </div>
 
@@ -343,205 +423,260 @@ const Reports = () => {
           <div className="reports-kpi-icon">📚</div>
           <div className="reports-kpi-content">
             <h3>Средна цена</h3>
-            <p className="reports-kpi-value">25.00 лв</p>
-            <span className="reports-kpi-change reports-kpi-change--neutral">Фиксирана цена</span>
+            <p className="reports-kpi-value">
+              {reportData.overview.totalOrders > 0 
+                ? formatCurrency(reportData.overview.totalRevenue / reportData.overview.totalOrders)
+                : '0 лв'
+              }
+            </p>
+            <span className="reports-kpi-change reports-kpi-change--neutral">На поръчка</span>
           </div>
         </div>
       </div>
 
-      <div className="reports-charts-grid">
-        <div className="reports-chart-card">
-          <h3>Продажби по месеци</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <AreaChart data={reportData.salesData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-              <XAxis dataKey="month" stroke="#6b7280" />
-              <YAxis stroke="#6b7280" />
-              <Tooltip formatter={(value, name) => [
-                name === 'orders' ? value : formatCurrency(value),
-                name === 'orders' ? 'Поръчки' : 'Приходи'
-              ]} />
-              <Area type="monotone" dataKey="orders" stackId="1" stroke="#667eea" fill="#667eea" fillOpacity={0.3} />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
+      {reportData.salesData.length > 0 && (
+        <div className="reports-charts-grid">
+          <div className="reports-chart-card">
+            <h3>Продажби по месеци</h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <AreaChart data={reportData.salesData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <XAxis dataKey="month" stroke="#6b7280" />
+                <YAxis stroke="#6b7280" />
+                <Tooltip formatter={(value, name) => [
+                  name === 'orders' ? value : formatCurrency(value),
+                  name === 'orders' ? 'Поръчки' : 'Приходи'
+                ]} />
+                <Area type="monotone" dataKey="orders" stackId="1" stroke="#667eea" fill="#667eea" fillOpacity={0.3} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
 
-        <div className="reports-chart-card">
-          <h3>Разпределение на рейтингите</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={reportData.reviewsData}
-                cx="50%"
-                cy="50%"
-                innerRadius={60}
-                outerRadius={100}
-                paddingAngle={5}
-                dataKey="count"
-                label={({rating, percentage}) => `${rating}★ (${percentage.toFixed(1)}%)`}
-              >
-                {reportData.reviewsData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={`hsl(${(entry.rating - 1) * 60}, 70%, 50%)`} />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
+          {reportData.reviewsData.length > 0 && (
+            <div className="reports-chart-card">
+              <h3>Разпределение на рейтингите</h3>
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={reportData.reviewsData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={100}
+                    paddingAngle={5}
+                    dataKey="count"
+                    label={({rating, percentage}) => `${rating}★ (${percentage.toFixed(1)}%)`}
+                  >
+                    {reportData.reviewsData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={`hsl(${(entry.rating - 1) * 60}, 70%, 50%)`} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          )}
         </div>
-      </div>
+      )}
     </div>
   );
 
   const renderSalesReport = () => (
     <div className="reports-sales">
-      <div className="reports-sales-summary">
-        <div className="reports-summary-card">
-          <h4>Продажби срещу цели</h4>
-          <ResponsiveContainer width="100%" height={400}>
-            <BarChart data={reportData.salesData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-              <XAxis dataKey="month" stroke="#6b7280" />
-              <YAxis stroke="#6b7280" />
-              <Tooltip formatter={(value) => formatCurrency(value)} />
-              <Bar dataKey="revenue" fill="#667eea" name="Приходи" />
-              <Bar dataKey="target" fill="#e5e7eb" name="Цел" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+      {reportData.salesData.length > 0 ? (
+        <div className="reports-sales-summary">
+          <div className="reports-summary-card">
+            <h4>Продажби по месеци</h4>
+            <ResponsiveContainer width="100%" height={400}>
+              <BarChart data={reportData.salesData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <XAxis dataKey="month" stroke="#6b7280" />
+                <YAxis stroke="#6b7280" />
+                <Tooltip formatter={(value) => formatCurrency(value)} />
+                <Bar dataKey="revenue" fill="#667eea" name="Приходи" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
 
-        <div className="reports-sales-stats">
-          <h4>Ключови показатели</h4>
-          <div className="reports-stats-list">
-            <div className="reports-stat-item">
-              <span className="reports-stat-label">Най-добър месец:</span>
-              <span className="reports-stat-value">Юли (42 поръчки)</span>
-            </div>
-            <div className="reports-stat-item">
-              <span className="reports-stat-label">Средно поръчки/месец:</span>
-              <span className="reports-stat-value">29 поръчки</span>
-            </div>
-            <div className="reports-stat-item">
-              <span className="reports-stat-label">Растеж спрямо миналата година:</span>
-              <span className="reports-stat-value reports-stat-value--positive">+23%</span>
-            </div>
-            <div className="reports-stat-item">
-              <span className="reports-stat-label">Постигнати цели:</span>
-              <span className="reports-stat-value">8 от 12 месеца</span>
+          <div className="reports-sales-stats">
+            <h4>Ключови показатели</h4>
+            <div className="reports-stats-list">
+              <div className="reports-stat-item">
+                <span className="reports-stat-label">Общо месеци с данни:</span>
+                <span className="reports-stat-value">{reportData.salesData.length}</span>
+              </div>
+              <div className="reports-stat-item">
+                <span className="reports-stat-label">Общи поръчки:</span>
+                <span className="reports-stat-value">{reportData.salesData.reduce((sum, item) => sum + item.orders, 0)}</span>
+              </div>
+              <div className="reports-stat-item">
+                <span className="reports-stat-label">Общи приходи:</span>
+                <span className="reports-stat-value">{formatCurrency(reportData.salesData.reduce((sum, item) => sum + item.revenue, 0))}</span>
+              </div>
+              <div className="reports-stat-item">
+                <span className="reports-stat-label">Средно поръчки/месец:</span>
+                <span className="reports-stat-value">
+                  {reportData.salesData.length > 0 
+                    ? Math.round(reportData.salesData.reduce((sum, item) => sum + item.orders, 0) / reportData.salesData.length)
+                    : 0
+                  }
+                </span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div style={{ textAlign: 'center', padding: '50px', color: '#6b7280' }}>
+          <p>Няма данни за продажби за избрания период</p>
+        </div>
+      )}
     </div>
   );
 
   const renderTrafficReport = () => (
     <div className="reports-traffic">
-      <div className="reports-traffic-chart">
-        <h4>Трафик по дни</h4>
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={reportData.trafficData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-            <XAxis dataKey="date" stroke="#6b7280" />
-            <YAxis stroke="#6b7280" />
-            <Tooltip />
-            <Line type="monotone" dataKey="visitors" stroke="#667eea" strokeWidth={2} name="Посетители" />
-            <Line type="monotone" dataKey="pageviews" stroke="#10b981" strokeWidth={2} name="Прегледи" />
-            <Line type="monotone" dataKey="sessions" stroke="#f59e0b" strokeWidth={2} name="Сесии" />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
+      {reportData.trafficData.dailyData.length > 0 && (
+        <div className="reports-traffic-chart">
+          <h4>Трафик по дни</h4>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={reportData.trafficData.dailyData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+              <XAxis dataKey="date" stroke="#6b7280" />
+              <YAxis stroke="#6b7280" />
+              <Tooltip />
+              <Line type="monotone" dataKey="visitors" stroke="#667eea" strokeWidth={2} name="Посетители" />
+              <Line type="monotone" dataKey="pageViews" stroke="#10b981" strokeWidth={2} name="Прегледи" />
+              <Line type="monotone" dataKey="unique" stroke="#f59e0b" strokeWidth={2} name="Уникални" />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      )}
 
-      <div className="reports-top-pages">
-        <h4>Най-посещавани страници</h4>
-        <div className="reports-pages-list">
-          {reportData.topPages.map((page, index) => (
-            <div key={index} className="reports-page-item">
-              <div className="reports-page-rank">{index + 1}</div>
-              <div className="reports-page-info">
-                <span className="reports-page-url">{page.page}</span>
-                <div className="reports-page-bar">
-                  <div 
-                    className="reports-page-fill"
-                    style={{ width: `${page.percentage}%` }}
-                  ></div>
+      {reportData.trafficData.topPages.length > 0 && (
+        <div className="reports-top-pages">
+          <h4>Най-посещавани страници</h4>
+          <div className="reports-pages-list">
+            {reportData.trafficData.topPages.map((page, index) => (
+              <div key={index} className="reports-page-item">
+                <div className="reports-page-rank">{index + 1}</div>
+                <div className="reports-page-info">
+                  <span className="reports-page-url">{page.page}</span>
+                  <div className="reports-page-bar">
+                    <div 
+                      className="reports-page-fill"
+                      style={{ width: `${page.percentage}%` }}
+                    ></div>
+                  </div>
+                </div>
+                <div className="reports-page-stats">
+                  <span className="reports-page-views">{page.views.toLocaleString()}</span>
+                  <span className="reports-page-percentage">{page.percentage}%</span>
                 </div>
               </div>
-              <div className="reports-page-stats">
-                <span className="reports-page-views">{page.views.toLocaleString()}</span>
-                <span className="reports-page-percentage">{page.percentage}%</span>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
+
+      {reportData.trafficData.dailyData.length === 0 && reportData.trafficData.topPages.length === 0 && (
+        <div style={{ textAlign: 'center', padding: '50px', color: '#6b7280' }}>
+          <p>Няма данни за трафик за избрания период</p>
+        </div>
+      )}
     </div>
   );
 
   const renderReviewsReport = () => (
     <div className="reports-reviews">
-      <div className="reports-reviews-overview">
-        <div className="reports-review-card">
-          <h4>Общ рейтинг</h4>
-          <div className="reports-rating-display">
-            <span className="reports-rating-number">{reportData.overview.averageRating}</span>
-            <span className="reports-rating-stars">
-              {Array.from({ length: 5 }, (_, i) => (
-                <span key={i} className={`reports-star ${i < Math.round(reportData.overview.averageRating) ? 'reports-star--filled' : ''}`}>★</span>
-              ))}
-            </span>
+      {reportData.reviewsData.length > 0 ? (
+        <div className="reports-reviews-overview">
+          <div className="reports-review-card">
+            <h4>Общ рейтинг</h4>
+            <div className="reports-rating-display">
+              <span className="reports-rating-number">
+                {reportData.reviewsData.length > 0 
+                  ? (reportData.reviewsData.reduce((sum, item) => sum + (item.rating * item.count), 0) / 
+                     reportData.reviewsData.reduce((sum, item) => sum + item.count, 0)).toFixed(1)
+                  : 0
+                }
+              </span>
+              <span className="reports-rating-stars">
+                {Array.from({ length: 5 }, (_, i) => (
+                  <span key={i} className={`reports-star ${i < Math.round(reportData.reviewsData.reduce((sum, item) => sum + (item.rating * item.count), 0) / reportData.reviewsData.reduce((sum, item) => sum + item.count, 0)) ? 'reports-star--filled' : ''}`}>★</span>
+                ))}
+              </span>
+            </div>
+            <p className="reports-rating-total">
+              Базирано на {reportData.reviewsData.reduce((sum, item) => sum + item.count, 0)} отзива
+            </p>
           </div>
-          <p className="reports-rating-total">Базирано на {reportData.overview.totalReviews} отзива</p>
-        </div>
 
-        <div className="reports-review-card">
-          <h4>Разпределение</h4>
-          <div className="reports-rating-breakdown">
-            {reportData.reviewsData.map((rating, index) => (
-              <div key={index} className="reports-rating-row">
-                <span className="reports-rating-label">{rating.rating}★</span>
-                <div className="reports-rating-bar">
-                  <div 
-                    className="reports-rating-fill"
-                    style={{ width: `${rating.percentage}%` }}
-                  ></div>
+          <div className="reports-review-card">
+            <h4>Разпределение</h4>
+            <div className="reports-rating-breakdown">
+              {reportData.reviewsData.map((rating, index) => (
+                <div key={index} className="reports-rating-row">
+                  <span className="reports-rating-label">{rating.rating}★</span>
+                  <div className="reports-rating-bar">
+                    <div 
+                      className="reports-rating-fill"
+                      style={{ width: `${rating.percentage}%` }}
+                    ></div>
+                  </div>
+                  <span className="reports-rating-count">{rating.count}</span>
                 </div>
-                <span className="reports-rating-count">{rating.count}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="reports-review-insights">
-        <h4>Анализ на отзивите</h4>
-        <div className="reports-insights-grid">
-          <div className="reports-insight-item">
-            <div className="reports-insight-icon">😍</div>
-            <div className="reports-insight-content">
-              <h5>Положителни отзиви</h5>
-              <p>83% от отзивите са с 4 или 5 звезди</p>
-            </div>
-          </div>
-          <div className="reports-insight-item">
-            <div className="reports-insight-icon">💬</div>
-            <div className="reports-insight-content">
-              <h5>Активност</h5>
-              <p>Средно 12 нови отзива месечно</p>
-            </div>
-          </div>
-          <div className="reports-insight-item">
-            <div className="reports-insight-icon">📈</div>
-            <div className="reports-insight-content">
-              <h5>Тенденция</h5>
-              <p>Рейтингът се подобрява с времето</p>
+              ))}
             </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div style={{ textAlign: 'center', padding: '50px', color: '#6b7280' }}>
+          <p>Няма данни за отзиви за избрания период</p>
+        </div>
+      )}
     </div>
   );
 
   const renderSelectedReport = () => {
+    if (localLoading) {
+      return (
+        <div className="reports-loading">
+          <div className="reports-loading-spinner"></div>
+          <p>Зареждане на отчета...</p>
+        </div>
+      );
+    }
+
+    if (error) {
+      return (
+        <div style={{ textAlign: 'center', padding: '50px' }}>
+          <div style={{
+            background: '#fee2e2',
+            border: '1px solid #fecaca',
+            color: '#dc2626',
+            padding: '20px',
+            borderRadius: '8px',
+            marginBottom: '20px'
+          }}>
+            {error}
+          </div>
+          <button 
+            onClick={loadReportData}
+            style={{
+              background: '#3b82f6',
+              color: 'white',
+              border: 'none',
+              padding: '10px 20px',
+              borderRadius: '6px',
+              cursor: 'pointer'
+            }}
+          >
+            Опитай отново
+          </button>
+        </div>
+      );
+    }
+
     switch (selectedReport) {
       case 'overview':
         return renderOverviewReport();
@@ -627,14 +762,7 @@ const Reports = () => {
 
       {/* Report Content */}
       <div className="reports-content">
-        {isLoading ? (
-          <div className="reports-loading">
-            <div className="reports-loading-spinner"></div>
-            <p>Зареждане на отчета...</p>
-          </div>
-        ) : (
-          renderSelectedReport()
-        )}
+        {renderSelectedReport()}
       </div>
 
       {/* Loading Overlay for Export */}
