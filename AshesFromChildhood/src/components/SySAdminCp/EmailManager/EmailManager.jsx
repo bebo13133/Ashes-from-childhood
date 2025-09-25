@@ -160,12 +160,12 @@ const EmailManager = () => {
           >
             📧 Единичен имейл
           </button>
-          <button 
+          {/* <button 
             className={`email-manager-tab-btn ${activeTab === 'bulk' ? 'email-manager-tab-btn--active' : ''}`}
             onClick={() => setActiveTab('bulk')}
           >
             📬 Масов имейл
-          </button>
+          </button> */}
           <button 
             className={`email-manager-tab-btn ${activeTab === 'templates' ? 'email-manager-tab-btn--active' : ''}`}
             onClick={() => setActiveTab('templates')}
