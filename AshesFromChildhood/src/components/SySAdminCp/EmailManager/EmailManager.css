@@ -1,404 +1,608 @@
 .email-manager-container {
-  padding: 0;
-  max-width: 100%;
+    padding: 0;
+    max-width: 100%;
 }
 
 /* Header */
 .email-manager-header {
-  margin-bottom: 30px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e5e7eb;
 }
 
 .email-manager-header-info h2 {
-  margin: 0 0 4px 0;
-  color: #1f2937;
-  font-size: 1.5rem;
-  font-weight: 600;
+    margin: 0 0 4px 0;
+    color: #1f2937;
+    font-size: 1.5rem;
+    font-weight: 600;
 }
 
 .email-manager-subtitle {
-  margin: 0;
-  color: #6b7280;
-  font-size: 0.9rem;
+    margin: 0;
+    color: #6b7280;
+    font-size: 0.9rem;
 }
 
 /* Tabs */
 .email-manager-tabs {
-  background: white;
-  border-radius: 16px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  overflow: hidden;
+    background: white;
+    border-radius: 16px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
 }
 
 .email-manager-tab-nav {
-  display: flex;
-  background: #f9fafb;
-  border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
 }
 
 .email-manager-tab-btn {
-  flex: 1;
-  padding: 16px 20px;
-  border: none;
-  background: none;
-  color: #6b7280;
-  font-size: 0.9rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border-bottom: 3px solid transparent;
+    flex: 1;
+    padding: 16px 20px;
+    border: none;
+    background: none;
+    color: #6b7280;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-bottom: 3px solid transparent;
 }
 
 .email-manager-tab-btn:hover {
-  background: #f3f4f6;
-  color: #374151;
+    background: #f3f4f6;
+    color: #374151;
 }
 
 .email-manager-tab-btn--active {
-  background: white;
-  color: #667eea;
-  border-bottom-color: #667eea;
+    background: white;
+    color: #667eea;
+    border-bottom-color: #667eea;
 }
 
 .email-manager-tab-content {
-  padding: 30px;
+    padding: 30px;
 }
 
 /* Email Forms */
 .email-manager-single-email,
 .email-manager-bulk-email {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 30px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
 }
 
 .email-manager-form-section h3 {
-  margin: 0 0 8px 0;
-  color: #1f2937;
-  font-size: 1.2rem;
-  font-weight: 600;
+    margin: 0 0 8px 0;
+    color: #1f2937;
+    font-size: 1.2rem;
+    font-weight: 600;
 }
 
 .email-manager-form-desc {
-  margin: 0 0 24px 0;
-  color: #6b7280;
-  font-size: 0.9rem;
-  line-height: 1.5;
+    margin: 0 0 24px 0;
+    color: #6b7280;
+    font-size: 0.9rem;
+    line-height: 1.5;
 }
 
 .email-manager-email-form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .email-manager-form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
 .email-manager-form-group label {
-  color: #374151;
-  font-weight: 500;
-  font-size: 0.9rem;
+    color: #374151;
+    font-weight: 500;
+    font-size: 0.9rem;
 }
 
 .email-manager-form-group input,
 .email-manager-form-group select,
 .email-manager-form-group textarea {
-  padding: 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  background: white;
-  transition: all 0.2s ease;
-  font-family: inherit;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: white;
+    transition: all 0.2s ease;
+    font-family: inherit;
 }
 
 .email-manager-form-group input:focus,
 .email-manager-form-group select:focus,
 .email-manager-form-group textarea:focus {
-  outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 .email-manager-form-group textarea {
-  resize: vertical;
-  line-height: 1.5;
+    resize: vertical;
+    line-height: 1.5;
 }
 
 /* Warning Box */
 .email-manager-warning {
-  background: #fef3cd;
-  border: 1px solid #f59e0b;
-  border-radius: 8px;
-  padding: 12px;
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
+    background: #fef3cd;
+    border: 1px solid #f59e0b;
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
 }
 
 .email-manager-warning-icon {
-  font-size: 1.1rem;
-  margin-top: 2px;
+    font-size: 1.1rem;
+    margin-top: 2px;
 }
 
 .email-manager-warning-text {
-  color: #92400e;
-  font-size: 0.85rem;
-  line-height: 1.4;
+    color: #92400e;
+    font-size: 0.85rem;
+    line-height: 1.4;
 }
 
 /* Submit Buttons */
 .email-manager-submit-btn {
-  padding: 12px 24px;
-  background: #667eea;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+    padding: 12px 24px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 .email-manager-submit-btn:hover:not(.email-manager-submit-btn--loading) {
-  background: #5a67d8;
-  transform: translateY(-1px);
+    background: #5a67d8;
+    transform: translateY(-1px);
 }
 
 .email-manager-submit-btn--loading {
-  opacity: 0.7;
-  cursor: not-allowed;
+    opacity: 0.7;
+    cursor: not-allowed;
 }
 
 .email-manager-submit-btn--bulk {
-  background: #10b981;
+    background: #10b981;
 }
 
 .email-manager-submit-btn--bulk:hover:not(.email-manager-submit-btn--loading) {
-  background: #059669;
+    background: #059669;
 }
 
 /* Templates Sidebar */
 .email-manager-templates-sidebar {
-  background: #f9fafb;
-  padding: 20px;
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
+    background: #f9fafb;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
 }
 
 .email-manager-templates-sidebar h4 {
-  margin: 0 0 8px 0;
-  color: #1f2937;
-  font-size: 1rem;
-  font-weight: 600;
+    margin: 0 0 8px 0;
+    color: #1f2937;
+    font-size: 1rem;
+    font-weight: 600;
 }
 
 .email-manager-sidebar-desc {
-  margin: 0 0 16px 0;
-  color: #6b7280;
-  font-size: 0.8rem;
-  line-height: 1.4;
+    margin: 0 0 16px 0;
+    color: #6b7280;
+    font-size: 0.8rem;
+    line-height: 1.4;
 }
 
 .email-manager-template-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .email-manager-template-item {
-  background: white;
-  padding: 16px;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  cursor: pointer;
-  transition: all 0.2s ease;
+    background: white;
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .email-manager-template-item:hover {
-  border-color: #667eea;
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
-  transform: translateY(-1px);
+    border-color: #667eea;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+    transform: translateY(-1px);
 }
 
 .email-manager-template-item h5 {
-  margin: 0 0 4px 0;
-  color: #1f2937;
-  font-size: 0.9rem;
-  font-weight: 600;
+    margin: 0 0 4px 0;
+    color: #1f2937;
+    font-size: 0.9rem;
+    font-weight: 600;
 }
 
 .email-manager-template-item p {
-  margin: 0;
-  color: #6b7280;
-  font-size: 0.8rem;
-  line-height: 1.4;
+    margin: 0;
+    color: #6b7280;
+    font-size: 0.8rem;
+    line-height: 1.4;
 }
 
 /* Templates Tab */
 .email-manager-templates {
-  max-width: 100%;
+    max-width: 100%;
 }
 
 .email-manager-templates-header {
-  margin-bottom: 24px;
+    margin-bottom: 24px;
 }
 
 .email-manager-templates-header h3 {
-  margin: 0 0 8px 0;
-  color: #1f2937;
-  font-size: 1.2rem;
-  font-weight: 600;
+    margin: 0 0 8px 0;
+    color: #1f2937;
+    font-size: 1.2rem;
+    font-weight: 600;
 }
 
 .email-manager-templates-desc {
-  margin: 0;
-  color: #6b7280;
-  font-size: 0.9rem;
-  line-height: 1.5;
+    margin: 0;
+    color: #6b7280;
+    font-size: 0.9rem;
+    line-height: 1.5;
 }
 
 .email-manager-templates-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 20px;
 }
 
 .email-manager-template-card {
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 20px;
-  transition: all 0.2s ease;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Make all cards the same height */
 }
 
 .email-manager-template-card:hover {
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
 }
 
 .email-manager-template-header {
-  margin-bottom: 16px;
+    margin-bottom: 16px;
 }
 
 .email-manager-template-header h4 {
-  margin: 0;
-  color: #1f2937;
-  font-size: 1rem;
-  font-weight: 600;
+    margin: 0;
+    color: #1f2937;
+    font-size: 1rem;
+    font-weight: 600;
 }
 
 .email-manager-template-content {
-  margin-bottom: 20px;
+    margin-bottom: 20px;
+    flex: 1; /* Allow content to expand and push footer to bottom */
 }
 
 .email-manager-template-subject {
-  margin: 0 0 12px 0;
-  color: #374151;
-  font-size: 0.85rem;
-  line-height: 1.4;
+    margin: 0 0 12px 0;
+    color: #374151;
+    font-size: 0.85rem;
+    line-height: 1.4;
 }
 
 .email-manager-template-preview {
-  color: #6b7280;
-  font-size: 0.8rem;
-  line-height: 1.4;
+    color: #6b7280;
+    font-size: 0.8rem;
+    line-height: 1.4;
 }
 
 .email-manager-template-preview pre {
-  margin: 4px 0 0 0;
-  font-family: inherit;
-  white-space: pre-wrap;
-  background: #f9fafb;
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #e5e7eb;
-  font-size: 0.75rem;
+    margin: 4px 0 0 0;
+    font-family: inherit;
+    white-space: pre-wrap;
+    background: #f9fafb;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #e5e7eb;
+    font-size: 0.75rem;
 }
 
 .email-manager-template-footer {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: auto; /* Push footer to bottom */
 }
 
 .email-manager-use-template-btn {
-  padding: 8px 12px;
-  background: #667eea;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
+    padding: 8px 12px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .email-manager-use-template-btn:hover {
-  background: #5a67d8;
-  transform: translateY(-1px);
+    background: #5a67d8;
+    transform: translateY(-1px);
 }
 
 .email-manager-use-template-btn--bulk {
-  background: #10b981;
+    background: #10b981;
 }
 
 .email-manager-use-template-btn--bulk:hover {
-  background: #059669;
+    background: #059669;
+}
+
+.email-manager-template-editor {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 24px;
+    margin-top: 20px;
+}
+
+.email-manager-editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.email-manager-editor-header h4 {
+    margin: 0;
+    color: #1f2937;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.email-manager-editor-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.email-manager-save-btn {
+    padding: 8px 16px;
+    background: #059669;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.email-manager-save-btn:hover {
+    background: #047857;
+    transform: translateY(-1px);
+}
+
+.email-manager-cancel-btn {
+    padding: 8px 16px;
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.email-manager-cancel-btn:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+}
+
+.email-manager-editor-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.email-manager-field-with-placeholders {
+    display: flex;
+    gap: 16px;
+    align-items: stretch;
+}
+
+.email-manager-field-with-placeholders textarea {
+    flex: 1;
+}
+
+.email-manager-placeholder-buttons {
+    flex: 0 0 200px;
+    background: #f9fafb;
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    overflow-y: visible; /* No scrollbar needed */
+}
+
+.email-manager-placeholder-buttons small {
+    display: block;
+    margin-bottom: 8px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.email-manager-placeholder-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.email-manager-placeholder-btn {
+    padding: 6px 10px;
+    background: white;
+    color: #374151;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.email-manager-placeholder-btn:hover {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+    transform: translateY(-1px);
+}
+
+.email-manager-edit-template-btn {
+    padding: 8px 12px;
+    background: #9b88c7;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.email-manager-edit-template-btn:hover {
+    background: #8a70b8;
+    transform: translateY(-1px);
+}
+
+.email-manager-info-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background-color: #fff8e1;
+    border: 1px solid #ffcc02;
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 16px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.email-manager-info-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.email-manager-info-content {
+    flex: 1;
+}
+
+.email-manager-info-content strong {
+    color: #e65100;
+    font-weight: 600;
 }
 
 /* Responsive */
 @media (max-width: 1024px) {
-  .email-manager-single-email,
-  .email-manager-bulk-email {
-    grid-template-columns: 1fr;
-  }
-  
-  .email-manager-templates-grid {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  }
+    .email-manager-single-email,
+    .email-manager-bulk-email {
+        grid-template-columns: 1fr;
+    }
+
+    .email-manager-templates-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
 }
 
 @media (max-width: 768px) {
-  .email-manager-tab-nav {
-    flex-wrap: wrap;
-  }
-  
-  .email-manager-tab-btn {
-    flex: none;
-    min-width: 120px;
-  }
-  
-  .email-manager-tab-content {
-    padding: 20px;
-  }
-  
-  .email-manager-templates-grid {
-    grid-template-columns: 1fr;
-  }
+    .email-manager-tab-nav {
+        flex-wrap: wrap;
+    }
+
+    .email-manager-tab-btn {
+        flex: none;
+        min-width: 120px;
+    }
+
+    .email-manager-tab-content {
+        padding: 20px;
+    }
+
+    .email-manager-templates-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 480px) {
-  .email-manager-templates-sidebar {
-    padding: 16px;
-  }
-  
-  .email-manager-template-footer {
-    gap: 6px;
-  }
-  
-  .email-manager-use-template-btn {
-    padding: 10px;
-    font-size: 0.75rem;
-  }
+    .email-manager-templates-sidebar {
+        padding: 16px;
+    }
+
+    .email-manager-template-footer {
+        gap: 6px;
+    }
+
+    .email-manager-use-template-btn {
+        padding: 10px;
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .email-manager-field-with-placeholders {
+        flex-direction: column;
+    }
+
+    .email-manager-placeholder-buttons {
+        min-width: auto;
+    }
+
+    .email-manager-placeholder-grid {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .email-manager-placeholder-btn {
+        flex: 1;
+        min-width: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .email-manager-editor-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .email-manager-editor-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
 }
