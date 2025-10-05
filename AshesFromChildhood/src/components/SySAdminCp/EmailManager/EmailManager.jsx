@@ -36,7 +36,8 @@ const EmailManager = () => {
         };
 
         loadTemplates();
-    }, [getEmailTemplates]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     // Auto-populate when selectedOrder changes (using frontend template)
     useEffect(() => {
