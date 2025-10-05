@@ -34,6 +34,9 @@ export const AuthProvider = ({ children }) => {
     const [notifications, setNotifications] = useState([]);
     const [notificationsLoading, setNotificationsLoading] = useState(false);
 
+    // Email selection states
+    const [selectedOrder, setSelectedOrder] = useState(null);
+
     const userService = userServiceFactory(isAuth.token);
     useEffect(() => {
         if (isAuth.token && isAuth.role === 'admin') {
@@ -607,6 +610,37 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const createEmailTemplate = async (templateData) => {
+        setIsLoading(true);
+        setErrorMessage('');
+
+        try {
+            const response = await userService.createEmailTemplate(templateData);
+            return response;
+        } catch (error) {
+            const errorMsg = error.message || 'Грешка при създаване на шаблона.';
+            showErrorAndSetTimeout(errorMsg);
+            throw error;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const deleteEmailTemplate = async (templateId) => {
+        setIsLoading(true);
+        setErrorMessage('');
+
+        try {
+            await userService.deleteEmailTemplate(templateId);
+        } catch (error) {
+            const errorMsg = error.message || 'Грешка при изтриване на шаблона.';
+            showErrorAndSetTimeout(errorMsg);
+            throw error;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     // ===== REPORTS =====
     const generateReport = async (reportType, period = '30d') => {
         setIsLoading(true);
@@ -744,6 +778,10 @@ export const AuthProvider = ({ children }) => {
         clearAllNotifications,
         fetchNotifications,
 
+        // Email selection
+        selectedOrder,
+        setSelectedOrder,
+
         // Admin actions
         fetchDashboardData,
         fetchOrderById,
@@ -757,6 +795,8 @@ export const AuthProvider = ({ children }) => {
         sendBulkEmail,
         getEmailTemplates,
         updateEmailTemplate,
+        createEmailTemplate,
+        deleteEmailTemplate,
         generateReport,
         exportData,
         deleteReview,
@@ -766,7 +806,7 @@ export const AuthProvider = ({ children }) => {
         bookPrice: bookPrice?.bgn || 25.0,
         updateBookPrice,
         fetchBookPrice,
-        fetchPublicReviews, // Добавете това
+        fetchPublicReviews,
         markReviewAsHelpful,
         fetchReviewsStatistics,
         // UI state

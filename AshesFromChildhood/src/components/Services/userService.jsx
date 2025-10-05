@@ -136,6 +136,14 @@ export const userServiceFactory = (token) => {
             return requester.put(`${apiUrl}/emails/templates/update/${templateId}`, templateData);
         },
 
+        createEmailTemplate: (templateData) => {
+            return requester.post(`${apiUrl}/emails/templates/create`, templateData);
+        },
+
+        deleteEmailTemplate: (templateId) => {
+            return requester.del(`${apiUrl}/emails/templates/single/${templateId}`);
+        },
+
         // ===== REPORTS & ANALYTICS =====
         // Endpoints за генериране на различни типове отчети
         generateReport: (reportType, period = '30d') => {

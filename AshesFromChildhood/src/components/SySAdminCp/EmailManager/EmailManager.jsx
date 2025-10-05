@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import './EmailManager.css';
 import { useAuthContext } from '../../contexts/userContext';
+import { populateOrderTemplate } from '../../../utils/emailTemplates';
 
 const EmailManager = () => {
-    const { sendEmailToCustomer, isLoading, getEmailTemplates, updateEmailTemplate } = useAuthContext();
+    const { sendEmailToCustomer, isLoading, selectedOrder, getEmailTemplates, updateEmailTemplate, createEmailTemplate, deleteEmailTemplate } =
+        useAuthContext();
 
     const [activeTab, setActiveTab] = useState('send');
     const [emailData, setEmailData] = useState({
@@ -12,7 +14,7 @@ const EmailManager = () => {
         message: '',
     });
 
-    // Template management state
+    // Template management state - for backend templates
     const [templates, setTemplates] = useState([]);
     const [editingTemplate, setEditingTemplate] = useState(null);
     const [templateForm, setTemplateForm] = useState({
@@ -21,36 +23,28 @@ const EmailManager = () => {
         content: '',
     });
 
-    // Placeholder buttons for easy template editing
-    const placeholders = [
-        { label: 'Име на клиент', value: '[Име на клиент]' },
-        { label: 'Номер на поръчка', value: '[Номер на поръчка]' },
-        { label: 'Количество', value: '[Количество]' },
-        { label: 'Брой поръчки', value: '[Брой поръчки]' },
-        { label: 'Обща цена', value: '[Обща цена]' },
-        { label: 'Дата на поръчка', value: '[Дата на поръчка]' },
-        { label: 'Адрес', value: '[Адрес]' },
-        { label: 'Град', value: '[Град]' },
-        { label: 'Телефон', value: '[Телефон]' },
-        { label: 'Имейл', value: '[Имейл]' },
-        { label: 'Рейтинг', value: '[Рейтинг]' },
-        { label: 'Отзив', value: '[Отзив]' },
-    ];
-
-    // Load templates from backend (we'll implement this)
+    // Load backend templates for the templates menu
     useEffect(() => {
-        loadTemplates();
-    }, []);
+        const loadTemplates = async () => {
+            try {
+                const backendTemplates = await getEmailTemplates();
+                setTemplates(backendTemplates);
+            } catch (error) {
+                console.error('Error loading backend templates:', error);
+                setTemplates([]);
+            }
+        };
 
-    const loadTemplates = async () => {
-        try {
-            const templates = await getEmailTemplates();
-            setTemplates(templates);
-        } catch (error) {
-            console.error('Error loading templates:', error);
-            alert('Грешка при зареждане на шаблоните!');
+        loadTemplates();
+    }, [getEmailTemplates]);
+
+    // Auto-populate when selectedOrder changes (using frontend template)
+    useEffect(() => {
+        if (selectedOrder) {
+            const populated = populateOrderTemplate(selectedOrder);
+            setEmailData(populated);
         }
-    };
+    }, [selectedOrder]);
 
     const handleSingleEmailSubmit = async (e) => {
         e.preventDefault();
@@ -64,7 +58,7 @@ const EmailManager = () => {
         }
     };
 
-    // Template management functions
+    // Template management functions (for backend templates)
     const startEditingTemplate = (template) => {
         setEditingTemplate(template);
         setTemplateForm({
@@ -81,37 +75,34 @@ const EmailManager = () => {
 
     const saveTemplate = async () => {
         try {
-            const updatedTemplate = await updateEmailTemplate(editingTemplate.id, {
-                name: templateForm.name,
-                subject: templateForm.subject,
-                content: templateForm.content,
-            });
+            let savedTemplate;
 
-            setTemplates((prev) => prev.map((t) => (t.id === editingTemplate.id ? updatedTemplate : t)));
+            if (editingTemplate.isNew) {
+                // Create new template
+                savedTemplate = await createEmailTemplate({
+                    name: templateForm.name,
+                    subject: templateForm.subject,
+                    content: templateForm.content,
+                });
+
+                // Add the new template to the list
+                setTemplates((prev) => [...prev, savedTemplate]);
+            } else {
+                // Update existing template
+                savedTemplate = await updateEmailTemplate(editingTemplate.id, {
+                    name: templateForm.name,
+                    subject: templateForm.subject,
+                    content: templateForm.content,
+                });
+
+                // Update the template in the list
+                setTemplates((prev) => prev.map((t) => (t.id === editingTemplate.id ? savedTemplate : t)));
+            }
+
             cancelEditingTemplate();
         } catch (error) {
             console.error('Error saving template:', error);
-        }
-    };
-
-    const insertPlaceholder = (placeholder, field) => {
-        const textarea = document.querySelector(`textarea[name="${field}"]`);
-        if (textarea) {
-            const start = textarea.selectionStart;
-            const end = textarea.selectionEnd;
-            const currentValue = templateForm[field];
-            const newValue = currentValue.substring(0, start) + placeholder + currentValue.substring(end);
-
-            setTemplateForm((prev) => ({
-                ...prev,
-                [field]: newValue,
-            }));
-
-            // Set cursor position after the inserted placeholder
-            setTimeout(() => {
-                textarea.focus();
-                textarea.setSelectionRange(start + placeholder.length, start + placeholder.length);
-            }, 0);
+            alert('Грешка при запазване на шаблона!');
         }
     };
 
@@ -123,6 +114,35 @@ const EmailManager = () => {
                 subject: template.subject,
                 message: template.content,
             }));
+        }
+    };
+
+    const handleAddNewTemplate = () => {
+        const newTemplate = {
+            name: 'Нов шаблон',
+            subject: 'Нова тема',
+            content: 'Въведете съдържание на шаблона тук...',
+            isNew: true,
+        };
+
+        setEditingTemplate(newTemplate);
+        setTemplateForm({
+            name: newTemplate.name,
+            subject: newTemplate.subject,
+            content: newTemplate.content,
+        });
+    };
+
+    const deleteTemplate = async (templateId) => {
+        if (window.confirm('Сигурни ли сте, че искате да изтриете този шаблон?')) {
+            try {
+                await deleteEmailTemplate(templateId);
+                setTemplates((prev) => prev.filter((t) => t.id !== templateId));
+                // Removed the success alert
+            } catch (error) {
+                console.error('Error deleting template:', error);
+                alert('Грешка при изтриване на шаблона!');
+            }
         }
     };
 
@@ -228,7 +248,8 @@ const EmailManager = () => {
                             <div className='email-manager-templates-header'>
                                 <h3>Управление на шаблони</h3>
                                 <p className='email-manager-templates-desc'>
-                                    Редактирайте и управлявайте шаблоните за имейли. Използвайте бутоните отдолу за лесно вмъкване на данни от поръчки и отзиви.
+                                    Управлявайте шаблоните за имейли. Промоционалният шаблон се попълва автоматично с данни, а останалите можете да създадете
+                                    според нуждите си.
                                 </p>
                             </div>
 
@@ -236,7 +257,7 @@ const EmailManager = () => {
                                 // Template Editor
                                 <div className='email-manager-template-editor'>
                                     <div className='email-manager-editor-header'>
-                                        <h4>Редактиране на шаблон: {editingTemplate.name}</h4>
+                                        <h4>{editingTemplate.isNew ? 'Създаване на нов шаблон' : `Редактиране на шаблон: ${editingTemplate.name}`}</h4>
                                         <div className='email-manager-editor-actions'>
                                             <button className='email-manager-save-btn' onClick={saveTemplate}>
                                                 💾 Запази
@@ -270,41 +291,13 @@ const EmailManager = () => {
 
                                         <div className='email-manager-form-group'>
                                             <label>Съдържание на имейла:</label>
-                                            <div className='email-manager-field-with-placeholders'>
-                                                <textarea
-                                                    name='content'
-                                                    rows={15}
-                                                    value={templateForm.content}
-                                                    onChange={(e) => setTemplateForm((prev) => ({ ...prev, content: e.target.value }))}
-                                                    placeholder='Съдържание на имейла...'
-                                                />
-                                                <div className='email-manager-placeholder-buttons'>
-                                                    <small>Кликнете за вмъкване:</small>
-                                                    <div className='email-manager-placeholder-grid'>
-                                                        {placeholders.map((placeholder, index) => (
-                                                            <button
-                                                                key={index}
-                                                                type='button'
-                                                                className='email-manager-placeholder-btn'
-                                                                onClick={() => insertPlaceholder(placeholder.value, 'content')}
-                                                                title={placeholder.label}
-                                                            >
-                                                                {placeholder.label}
-                                                            </button>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {/* Info note about dynamic fields */}
-                                            <div className='email-manager-info-note'>
-                                                <div className='email-manager-info-icon'>⚠️</div>
-                                                <div className='email-manager-info-content'>
-                                                    <strong>Динамични полета:</strong> Използвайте бутоните горе за вмъкване на placeholder-и, които автоматично
-                                                    ще се попълнят с данни от базата данни (име на клиент, номер на поръчка, цена и др.) при изпращане на
-                                                    имейла.
-                                                </div>
-                                            </div>
+                                            <textarea
+                                                name='content'
+                                                rows={15}
+                                                value={templateForm.content}
+                                                onChange={(e) => setTemplateForm((prev) => ({ ...prev, content: e.target.value }))}
+                                                placeholder='Съдържание на имейла...'
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -324,6 +317,17 @@ const EmailManager = () => {
                                                     <strong>Съдържание:</strong>
                                                     <pre>{template.content.substring(0, 200)}...</pre>
                                                 </div>
+
+                                                {/* Info note for promo template only */}
+                                                {template.name === 'Промоционален имейл' && (
+                                                    <div className='email-manager-template-warning'>
+                                                        <div className='email-manager-warning-icon'>ℹ️</div>
+                                                        <div className='email-manager-warning-text'>
+                                                            <strong>Актуални данни:</strong> Информацията в този шаблон се зарежда автоматично от сървъра с
+                                                            най-актуалните данни (рейтинг, брой поръчки, цена).
+                                                        </div>
+                                                    </div>
+                                                )}
                                             </div>
                                             <div className='email-manager-template-footer'>
                                                 <button
@@ -338,6 +342,27 @@ const EmailManager = () => {
                                                 <button className='email-manager-edit-template-btn' onClick={() => startEditingTemplate(template)}>
                                                     ✏️ Редактирай
                                                 </button>
+                                                <button
+                                                    className='email-manager-delete-template-btn'
+                                                    onClick={() => deleteTemplate(template.id)}
+                                                    title='Изтрий шаблон'
+                                                >
+                                                    🗑️ Изтриване
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                    {Array.from({ length: 3 - templates.length }, (_, index) => (
+                                        <div
+                                            key={`add-${index}`}
+                                            className='email-manager-template-card email-manager-template-card--add'
+                                            onClick={handleAddNewTemplate}
+                                        >
+                                            <div className='email-manager-template-content'>
+                                                <div className='email-manager-add-template-info'>
+                                                    <h4>Добави нов шаблон</h4>
+                                                    <p>Създайте нов шаблон за имейли според нуждите си</p>
+                                                </div>
                                             </div>
                                         </div>
                                     ))}

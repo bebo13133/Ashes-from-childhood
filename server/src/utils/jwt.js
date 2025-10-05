@@ -21,7 +21,7 @@ function tokenGenerator(type, data) {
     }
 
     const token = jwt.sign(payload, type === 'access' ? ACCESS_TOKEN_SECRET : REFRESH_TOKEN_SECRET, {
-        expiresIn: type === 'access' ? '15m' : '7d',
+        expiresIn: type === 'access' ? '1h' : '7d',
     });
 
     const expiryDate = new Date();
