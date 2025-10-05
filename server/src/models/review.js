@@ -2,6 +2,8 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
+    const { Op } = require('sequelize');
+
     class Review extends Model {
         static associate(models) {
             // Reviews don't need foreign keys for now, but we can add book association later if needed
@@ -45,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
                 where: {
                     status: 'approved',
                     rating: {
-                        [sequelize.Op.ne]: null,
+                        [Op.ne]: null,
                     },
                 },
                 raw: true,

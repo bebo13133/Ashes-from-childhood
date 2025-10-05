@@ -34,6 +34,7 @@ export const userServiceFactory = (token) => {
         getBookPrice: () => {
             return requester.get(`${apiUrl}/books/book-price`);
         },
+
         // ===== DASHBOARD & STATISTICS =====
         getDashboardStats: (period = '30d') => {
             return requester.get(`${apiUrl}/dashboard/stats?period=${period}`);
@@ -41,10 +42,6 @@ export const userServiceFactory = (token) => {
         getVisitorsStatistics: (period = '30d') => {
             return requester.get(`${apiUrl}/dashboard/visitors?period=${period}`);
         },
-
-        // getOrdersStatistics: (period = '30d') => {
-        //   return requester.get(`${apiUrl}/sys/statistics/orders?period=${period}`);
-        // },
 
         getSystemStatistics: () => {
             return requester.get(`${apiUrl}/sys/statistics/system`);
@@ -121,6 +118,7 @@ export const userServiceFactory = (token) => {
             const queryString = queryParams.toString();
             return requester.get(`${apiUrl}/reviews/approved${queryString ? `?${queryString}` : ''}`);
         },
+
         // ===== EMAIL MANAGEMENT =====
         sendEmail: (emailData) => {
             return requester.post(`${apiUrl}/emails/send`, emailData);
@@ -134,10 +132,17 @@ export const userServiceFactory = (token) => {
             return requester.get(`${apiUrl}/emails/templates`);
         },
 
-        // getEmailHistory: (filters = {}) => {
-        //   const queryString = new URLSearchParams(filters).toString();
-        //   return requester.get(`${apiUrl}/sys/emails/history${queryString ? `?${queryString}` : ''}`);
-        // },
+        updateEmailTemplate: (templateId, templateData) => {
+            return requester.put(`${apiUrl}/emails/templates/update/${templateId}`, templateData);
+        },
+
+        createEmailTemplate: (templateData) => {
+            return requester.post(`${apiUrl}/emails/templates/create`, templateData);
+        },
+
+        deleteEmailTemplate: (templateId) => {
+            return requester.del(`${apiUrl}/emails/templates/single/${templateId}`);
+        },
 
         // ===== REPORTS & ANALYTICS =====
         // Endpoints за генериране на различни типове отчети
