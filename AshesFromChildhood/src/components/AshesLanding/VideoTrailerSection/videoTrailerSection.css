@@ -1,0 +1,459 @@
+.video-trailer-section {
+  padding: 120px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.video-trailer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.video-trailer-content {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: all 1.2s cubic-bezier(0.23, 1, 0.320, 1);
+}
+
+.video-trailer-content.trailer-animate-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Header Section */
+.trailer-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.trailer-subtitle {
+  font-size: 0.9rem;
+  color: #d4af37;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  margin-bottom: 15px;
+  font-weight: 600;
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+.trailer-title {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  color: #ffffff;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 25px;
+  font-family: 'Georgia', serif;
+  text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.8);
+}
+
+.book-title-accent {
+  background: linear-gradient(135deg, #d4af37, #f7e98e, #d4af37);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.8));
+}
+
+.title-underline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.underline-dot {
+  width: 6px;
+  height: 6px;
+  background: #d4af37;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
+}
+
+.underline-line {
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #d4af37, transparent);
+}
+
+/* Video Wrapper - ФИКСИРАН */
+.video-wrapper {
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto;
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.5s ease;
+  /* ВАЖНО: Задаваме aspect ratio 16:9 */
+  aspect-ratio: 16 / 9;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%);
+}
+
+.video-wrapper:hover {
+  transform: scale(1.02);
+}
+
+/* Декоративни ъгли */
+.video-frame-corners {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.corner {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  border: 3px solid #d4af37;
+  transition: all 0.4s ease;
+}
+
+.corner-tl {
+  top: 0;
+  left: 0;
+  border-right: none;
+  border-bottom: none;
+}
+
+.corner-tr {
+  top: 0;
+  right: 0;
+  border-left: none;
+  border-bottom: none;
+}
+
+.corner-bl {
+  bottom: 0;
+  left: 0;
+  border-right: none;
+  border-top: none;
+}
+
+.corner-br {
+  bottom: 0;
+  right: 0;
+  border-left: none;
+  border-top: none;
+}
+
+.video-wrapper:hover .corner {
+  width: 70px;
+  height: 70px;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+}
+
+/* Glow Effect */
+.video-glow-effect {
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background: linear-gradient(45deg, 
+    rgba(212, 175, 55, 0.3), 
+    rgba(247, 233, 142, 0.2),
+    rgba(212, 175, 55, 0.3)
+  );
+  border-radius: 20px;
+  filter: blur(20px);
+  opacity: 0.6;
+  z-index: -1;
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+/* Video Element - ФИКСИРАН */
+.trailer-video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 15px;
+  object-fit: cover;
+  box-shadow: 
+    0 30px 80px rgba(0, 0, 0, 0.7),
+    0 10px 40px rgba(0, 0, 0, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  /* ВАЖНО: За да не се смачква видеото */
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* Play Overlay */
+.play-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  transition: all 0.4s ease;
+  z-index: 5;
+}
+
+.play-overlay:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.play-button {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.play-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #d4af37, #f7e98e);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: #1a1a1a;
+  box-shadow: 
+    0 10px 40px rgba(212, 175, 55, 0.5),
+    inset 0 0 20px rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+  z-index: 2;
+  padding-left: 5px;
+}
+
+.play-overlay:hover .play-icon {
+  transform: scale(1.1);
+  box-shadow: 
+    0 15px 50px rgba(212, 175, 55, 0.7),
+    inset 0 0 30px rgba(255, 255, 255, 0.5);
+}
+
+.play-pulse {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border: 3px solid rgba(212, 175, 55, 0.6);
+  border-radius: 50%;
+  animation: pulsate 2s ease-out infinite;
+}
+
+@keyframes pulsate {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+.play-text {
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* Custom Controls */
+.video-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 10;
+}
+
+.video-controls.controls-visible {
+  opacity: 1;
+}
+
+.control-btn {
+  width: 45px;
+  height: 45px;
+  background: rgba(212, 175, 55, 0.3);
+  border: 2px solid rgba(212, 175, 55, 0.6);
+  border-radius: 50%;
+  color: #d4af37;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.control-btn:hover {
+  background: rgba(212, 175, 55, 0.5);
+  border-color: #d4af37;
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+}
+
+.control-btn:active {
+  transform: scale(0.95);
+}
+
+/* CTA Section */
+.trailer-cta {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.cta-text {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.2rem;
+  margin-bottom: 25px;
+  font-style: italic;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.cta-button {
+  background: linear-gradient(135deg, #d4af37 0%, #f7e98e 50%, #d4af37 100%);
+  border: none;
+  color: #1a1a1a;
+  padding: 16px 45px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+}
+
+.cta-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(212, 175, 55, 0.6);
+  background: linear-gradient(135deg, #f7e98e 0%, #d4af37 50%, #f7e98e 100%);
+}
+
+.cta-button:active {
+  transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .video-trailer-section {
+    padding: 80px 0;
+  }
+
+  .video-trailer-container {
+    padding: 0 20px;
+  }
+
+  .trailer-header {
+    margin-bottom: 40px;
+  }
+
+  .play-button {
+    width: 80px;
+    height: 80px;
+  }
+
+  .play-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+  }
+
+  .play-pulse {
+    width: 80px;
+    height: 80px;
+  }
+
+  .corner {
+    width: 35px;
+    height: 35px;
+  }
+
+  .video-wrapper:hover .corner {
+    width: 45px;
+    height: 45px;
+  }
+
+  .control-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .cta-button {
+    padding: 14px 35px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .video-trailer-section {
+    padding: 60px 0;
+  }
+
+  .trailer-subtitle {
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+  }
+
+  .trailer-cta {
+    margin-top: 35px;
+  }
+
+  .cta-text {
+    font-size: 1rem;
+  }
+
+  .video-controls {
+    padding: 15px;
+    gap: 10px;
+  }
+
+  .control-btn {
+    width: 35px;
+    height: 35px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Performance optimizations */
+@media (prefers-reduced-motion: reduce) {
+  .video-trailer-content,
+  .video-wrapper,
+  .control-btn,
+  .cta-button {
+    transition: none;
+  }
+
+  .play-pulse,
+  .video-glow-effect {
+    animation: none;
+  }
+}
