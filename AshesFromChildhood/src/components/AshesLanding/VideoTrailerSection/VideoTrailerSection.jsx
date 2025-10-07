@@ -6,10 +6,9 @@ const VideoTrailerSection = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [showControls, setShowControls] = useState(false);
-  const videoRef = useRef(null);
+  const playerRef = useRef(null);
   const sectionRef = useRef(null);
 
-  // Intersection Observer за анимация при скрол
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -27,49 +26,67 @@ const VideoTrailerSection = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Parallax ефект
   useEffect(() => {
-    const handleScroll = () => {
-      if (sectionRef.current) {
-        const rect = sectionRef.current.getBoundingClientRect();
-        const scrollPercent = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
-        const translateY = (scrollPercent - 0.5) * 50;
-        
-        if (videoRef.current) {
-          videoRef.current.style.transform = `translateY(${translateY}px)`;
-        }
-      }
-    };
+    if (window.YT && window.YT.Player) {
+      initPlayer();
+      return;
+    }
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    const firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    window.onYouTubeIframeAPIReady = initPlayer;
   }, []);
 
-  const togglePlay = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
+  const initPlayer = () => {
+    if (playerRef.current) return;
+
+    playerRef.current = new window.YT.Player('yt-player', {
+      videoId: 'sBpkjFZXO6c',
+      playerVars: {
+        controls: 0,
+        modestbranding: 1,
+        rel: 0,
+        showinfo: 0,
+        fs: 0,
+        iv_load_policy: 3,
+        disablekb: 1
+      },
+      events: {
+        onStateChange: (e) => {
+          if (e.data === 1) setIsPlaying(true);
+          if (e.data === 2 || e.data === 0) setIsPlaying(false);
+        }
       }
-      setIsPlaying(!isPlaying);
+    });
+  };
+
+  const togglePlay = () => {
+    if (!playerRef.current) return;
+    if (isPlaying) {
+      playerRef.current.pauseVideo();
+    } else {
+      playerRef.current.playVideo();
     }
   };
 
   const toggleMute = () => {
-    if (videoRef.current) {
-      videoRef.current.muted = !isMuted;
-      setIsMuted(!isMuted);
+    if (!playerRef.current) return;
+    if (isMuted) {
+      playerRef.current.unMute();
+      setIsMuted(false);
+    } else {
+      playerRef.current.mute();
+      setIsMuted(true);
     }
   };
 
   const toggleFullscreen = () => {
-    if (videoRef.current) {
-      if (videoRef.current.requestFullscreen) {
-        videoRef.current.requestFullscreen();
-      } else if (videoRef.current.webkitRequestFullscreen) {
-        videoRef.current.webkitRequestFullscreen();
-      }
+    const iframe = document.getElementById('yt-player');
+    if (iframe?.requestFullscreen) {
+      iframe.requestFullscreen();
     }
   };
 
@@ -78,7 +95,6 @@ const VideoTrailerSection = () => {
       <div className="video-trailer-container">
         <div className={`video-trailer-content ${isVisible ? 'trailer-animate-in' : ''}`}>
           
-          {/* Header */}
           <div className="trailer-header">
             <div className="trailer-subtitle">Гледайте сега</div>
             <h2 className="trailer-title">
@@ -91,13 +107,11 @@ const VideoTrailerSection = () => {
             </div>
           </div>
 
-          {/* Video Container */}
           <div 
             className="video-wrapper"
             onMouseEnter={() => setShowControls(true)}
             onMouseLeave={() => setShowControls(false)}
           >
-            {/* Декоративни елементи */}
             <div className="video-frame-corners">
               <div className="corner corner-tl"></div>
               <div className="corner corner-tr"></div>
@@ -105,32 +119,28 @@ const VideoTrailerSection = () => {
               <div className="corner corner-br"></div>
             </div>
 
-            {/* Glow ефекти */}
             <div className="video-glow-effect"></div>
             
-            {/* Видео елемент */}
-            <video
-              ref={videoRef}
-              className="trailer-video"
-              poster="/images/book/trailer-poster.png"
-              onClick={togglePlay}
-            >
-              <source src="/videos/book-trailer.mp4" type="video/mp4" />
-              Вашият браузър не поддържа видео елемента.
-            </video>
+            <div id="yt-player" className="trailer-video"></div>
+            
+            {/* БЛОКИРА YouTube контроли */}
+            <div className="yt-blocker"></div>
 
-            {/* Play overlay когато видеото не се изпълнява */}
             {!isPlaying && (
-              <div className="play-overlay" onClick={togglePlay}>
-                <div className="play-button">
-                  <div className="play-icon">▶</div>
-                  <div className="play-pulse"></div>
+              <>
+                <div className="video-poster">
+                  <img src="/images/book/trailer-poster.png" alt="Trailer" />
                 </div>
-                <p className="play-text">Пусни трейлъра</p>
-              </div>
+                <div className="play-overlay" onClick={togglePlay}>
+                  <div className="play-button">
+                    <div className="play-icon">▶</div>
+                    <div className="play-pulse"></div>
+                  </div>
+                  <p className="play-text">Пусни трейлъра</p>
+                </div>
+              </>
             )}
 
-            {/* Custom Controls */}
             <div className={`video-controls ${showControls || !isPlaying ? 'controls-visible' : ''}`}>
               <button 
                 className="control-btn play-pause-btn"
@@ -158,7 +168,6 @@ const VideoTrailerSection = () => {
             </div>
           </div>
 
-          {/* Call to action под видеото */}
           <div className="trailer-cta">
             <p className="cta-text">
               Вдъхновени от историята? Книгата ви очаква.
