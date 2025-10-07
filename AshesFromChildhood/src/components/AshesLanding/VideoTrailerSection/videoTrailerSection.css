@@ -579,7 +579,10 @@
 }
 
 /* BLACK OVERLAY - покрива долната част с контролите */
+
 /* .yt-blocker::before {
+=======
+
   content: '';
   position: absolute;
   bottom: 0;
@@ -589,7 +592,9 @@
   background: linear-gradient(to top, #000 0%, #000 60%, transparent 100%);
   z-index: 50;
   pointer-events: none;
+
 } */
+
 
 /* Покрива горната част с title/logo */
 /* .yt-blocker::after {
