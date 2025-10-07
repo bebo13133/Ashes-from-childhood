@@ -6,8 +6,7 @@ const VideoTrailerSection = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [showControls, setShowControls] = useState(false);
-  const [shouldLoadPlayer, setShouldLoadPlayer] = useState(false);
-  const playerRef = useRef(null);
+  const videoRef = useRef(null);
   const sectionRef = useRef(null);
 
   // Intersection Observer за анимация при скрол
@@ -28,117 +27,49 @@ const VideoTrailerSection = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Load YouTube IFrame API само когато е нужно
+  // Parallax ефект
   useEffect(() => {
-    if (!shouldLoadPlayer) return;
-
-    // Проверка дали вече е заредено
-    if (window.YT && window.YT.Player) {
-      initPlayer();
-      return;
-    }
-
-    // Зареждане на YouTube IFrame API
-    const tag = document.createElement('script');
-    tag.src = 'https://www.youtube.com/iframe_api';
-    const firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-    window.onYouTubeIframeAPIReady = initPlayer;
-  }, [shouldLoadPlayer]);
-
-  const initPlayer = () => {
-    if (playerRef.current) return;
-
-    playerRef.current = new window.YT.Player('youtube-player', {
-      videoId: 'sBpkjFZXO6c',
-      playerVars: {
-        controls: 0,
-        modestbranding: 1,
-        rel: 0,
-        showinfo: 0,
-        fs: 1,
-        enablejsapi: 1,
-        autoplay: 1,
-        playsinline: 1,
-        vq: 'hd1080'  // Форсира HD качество
-      },
-      events: {
-        onReady: onPlayerReady,
-        onStateChange: onPlayerStateChange
+    const handleScroll = () => {
+      if (sectionRef.current) {
+        const rect = sectionRef.current.getBoundingClientRect();
+        const scrollPercent = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
+        const translateY = (scrollPercent - 0.5) * 50;
+        
+        if (videoRef.current) {
+          videoRef.current.style.transform = `translateY(${translateY}px)`;
+        }
       }
-    });
-  };
+    };
 
-  const onPlayerReady = (event) => {
-    // Форсирай най-високото качество
-    const availableQualityLevels = event.target.getAvailableQualityLevels();
-    if (availableQualityLevels.length > 0) {
-      // Избери hd1080 или hd720
-      if (availableQualityLevels.includes('hd1080')) {
-        event.target.setPlaybackQuality('hd1080');
-      } else if (availableQualityLevels.includes('hd720')) {
-        event.target.setPlaybackQuality('hd720');
-      } else {
-        event.target.setPlaybackQuality(availableQualityLevels[0]);
-      }
-    }
-    // Пусни видеото
-    event.target.playVideo();
-  };
-
-  const onPlayerStateChange = (event) => {
-    if (event.data === window.YT.PlayerState.PLAYING) {
-      setIsPlaying(true);
-    } else if (event.data === window.YT.PlayerState.PAUSED || event.data === window.YT.PlayerState.ENDED) {
-      setIsPlaying(false);
-    }
-  };
-
-  const handlePlayClick = () => {
-    if (!shouldLoadPlayer) {
-      // Първо кликване - зареди player-а
-      setShouldLoadPlayer(true);
-    } else if (playerRef.current) {
-      // Player-а е зареден - toggle play/pause
-      togglePlay();
-    }
-  };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const togglePlay = () => {
-    if (!playerRef.current) return;
-
-    if (isPlaying) {
-      playerRef.current.pauseVideo();
-    } else {
-      playerRef.current.playVideo();
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
     }
   };
 
   const toggleMute = () => {
-    if (!playerRef.current) return;
-
-    if (isMuted) {
-      playerRef.current.unMute();
-      setIsMuted(false);
-    } else {
-      playerRef.current.mute();
-      setIsMuted(true);
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
     }
   };
 
   const toggleFullscreen = () => {
-    const iframe = document.getElementById('youtube-player');
-    if (!iframe) return;
-    
-    if (iframe.requestFullscreen) {
-      iframe.requestFullscreen();
-    } else if (iframe.webkitRequestFullscreen) {
-      iframe.webkitRequestFullscreen();
-    } else if (iframe.mozRequestFullScreen) {
-      iframe.mozRequestFullScreen();
-    } else if (iframe.msRequestFullscreen) {
-      iframe.msRequestFullscreen();
+    if (videoRef.current) {
+      if (videoRef.current.requestFullscreen) {
+        videoRef.current.requestFullscreen();
+      } else if (videoRef.current.webkitRequestFullscreen) {
+        videoRef.current.webkitRequestFullscreen();
+      }
     }
   };
 
@@ -177,25 +108,20 @@ const VideoTrailerSection = () => {
             {/* Glow ефекти */}
             <div className="video-glow-effect"></div>
             
-            {/* ТВОЯ Thumbnail преди зареждане на player */}
-            {!shouldLoadPlayer && (
-              <div className="video-thumbnail">
-                <img 
-                  src="/images/book/trailer-poster.png"
-                  alt="Пепел от детството трейлър"
-                  className="trailer-video"
-                />
-              </div>
-            )}
-
-            {/* YouTube Player - зарежда се при първо кликване */}
-            {shouldLoadPlayer && (
-              <div id="youtube-player" className="trailer-video"></div>
-            )}
+            {/* Видео елемент */}
+            <video
+              ref={videoRef}
+              className="trailer-video"
+              poster="/images/book/trailer-poster.png"
+              onClick={togglePlay}
+            >
+              <source src="/videos/book-trailer.mp4" type="video/mp4" />
+              Вашият браузър не поддържа видео елемента.
+            </video>
 
             {/* Play overlay когато видеото не се изпълнява */}
             {!isPlaying && (
-              <div className="play-overlay" onClick={handlePlayClick}>
+              <div className="play-overlay" onClick={togglePlay}>
                 <div className="play-button">
                   <div className="play-icon">▶</div>
                   <div className="play-pulse"></div>
@@ -204,34 +130,32 @@ const VideoTrailerSection = () => {
               </div>
             )}
 
-            {/* Custom Controls - показват се само след зареждане на player */}
-            {shouldLoadPlayer && (
-              <div className={`video-controls ${showControls || !isPlaying ? 'controls-visible' : ''}`}>
-                <button 
-                  className="control-btn play-pause-btn"
-                  onClick={togglePlay}
-                  aria-label={isPlaying ? 'Пауза' : 'Пусни'}
-                >
-                  {isPlaying ? '⏸' : '▶'}
-                </button>
+            {/* Custom Controls */}
+            <div className={`video-controls ${showControls || !isPlaying ? 'controls-visible' : ''}`}>
+              <button 
+                className="control-btn play-pause-btn"
+                onClick={togglePlay}
+                aria-label={isPlaying ? 'Пауза' : 'Пусни'}
+              >
+                {isPlaying ? '⏸' : '▶'}
+              </button>
 
-                <button 
-                  className="control-btn mute-btn"
-                  onClick={toggleMute}
-                  aria-label={isMuted ? 'Включи звук' : 'Изключи звук'}
-                >
-                  {isMuted ? '🔇' : '🔊'}
-                </button>
+              <button 
+                className="control-btn mute-btn"
+                onClick={toggleMute}
+                aria-label={isMuted ? 'Включи звук' : 'Изключи звук'}
+              >
+                {isMuted ? '🔇' : '🔊'}
+              </button>
 
-                <button 
-                  className="control-btn fullscreen-btn"
-                  onClick={toggleFullscreen}
-                  aria-label="Цял екран"
-                >
-                  ⛶
-                </button>
-              </div>
-            )}
+              <button 
+                className="control-btn fullscreen-btn"
+                onClick={toggleFullscreen}
+                aria-label="Цял екран"
+              >
+                ⛶
+              </button>
+            </div>
           </div>
 
           {/* Call to action под видеото */}
