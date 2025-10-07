@@ -25,7 +25,7 @@ const SySAdminCp = () => {
         changePassword,
         updateBookPrice,
         bookPrice,
-        fetchBookPrice
+        fetchBookPrice,
     } = useAuthContext();
 
     const [activeSection, setActiveSection] = useState('dashboard');
@@ -33,7 +33,7 @@ const SySAdminCp = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [showProfileDropdown, setShowProfileDropdown] = useState(false);
     const [showPasswordModal, setShowPasswordModal] = useState(false);
-    
+
     const profileDropdownRef = useRef(null);
 
     // Redirect if not authenticated
@@ -59,6 +59,18 @@ const SySAdminCp = () => {
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    useEffect(() => {
+        const handleNavigateToEmail = () => {
+            setActiveSection('email');
+        };
+
+        window.addEventListener('navigateToEmail', handleNavigateToEmail);
+
+        return () => {
+            window.removeEventListener('navigateToEmail', handleNavigateToEmail);
         };
     }, []);
 
@@ -96,38 +108,38 @@ const SySAdminCp = () => {
             id: 'dashboard',
             title: 'Табло',
             icon: '📊',
-            description: 'Общ преглед на статистиките'
+            description: 'Общ преглед на статистиките',
         },
         {
             id: 'orders',
             title: 'Поръчки',
             icon: '📦',
-            description: 'Управление на поръчки'
+            description: 'Управление на поръчки',
         },
         {
             id: 'visitors',
             title: 'Посетители',
             icon: '👥',
-            description: 'Статистика за посетители'
+            description: 'Статистика за посетители',
         },
         {
             id: 'ratings',
             title: 'Рейтинги',
             icon: '⭐',
-            description: 'Отзиви и рейтинги'
+            description: 'Отзиви и рейтинги',
         },
         {
             id: 'email',
             title: 'Имейли',
             icon: '📧',
-            description: 'Изпращане на имейли'
+            description: 'Изпращане на имейли',
         },
         {
             id: 'reports',
             title: 'Отчети',
             icon: '📈',
-            description: 'Детайлни отчети'
-        }
+            description: 'Детайлни отчети',
+        },
     ];
 
     const renderActiveSection = () => {
@@ -145,41 +157,38 @@ const SySAdminCp = () => {
             case 'reports':
                 return <Reports />;
             default:
-                return <div className="section-placeholder">Секцията не е намерена</div>;
+                return <div className='section-placeholder'>Секцията не е намерена</div>;
         }
     };
 
     return (
-        <div className="admin-panel">
+        <div className='admin-panel'>
             {/* Sidebar */}
             <aside className={`admin-sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}>
-                <div className="sidebar-header">
-                    <div className="admin-logo">
+                <div className='sidebar-header'>
+                    <div className='admin-logo'>
                         {/* <div className="logo-icon">👑</div> */}
-                        {!sidebarCollapsed && <span className="logo-text">Admin Panel</span>}
+                        {!sidebarCollapsed && <span className='logo-text'>Admin Panel</span>}
                     </div>
-                    <button
-                        className="sidebar-toggle"
-                        onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-                    >
+                    <button className='sidebar-toggle' onClick={() => setSidebarCollapsed(!sidebarCollapsed)}>
                         {sidebarCollapsed ? '→' : '←'}
                     </button>
                 </div>
 
-                <nav className="sidebar-nav">
-                    <ul className="nav-list">
+                <nav className='sidebar-nav'>
+                    <ul className='nav-list'>
                         {menuItems.map((item) => (
-                            <li key={item.id} className="nav-item">
+                            <li key={item.id} className='nav-item'>
                                 <button
                                     className={`nav-link ${activeSection === item.id ? 'active' : ''}`}
                                     onClick={() => setActiveSection(item.id)}
                                     title={sidebarCollapsed ? item.title : ''}
                                 >
-                                    <span className="nav-icon">{item.icon}</span>
+                                    <span className='nav-icon'>{item.icon}</span>
                                     {!sidebarCollapsed && (
-                                        <div className="nav-content">
-                                            <span className="nav-title">{item.title}</span>
-                                            <span className="nav-description">{item.description}</span>
+                                        <div className='nav-content'>
+                                            <span className='nav-title'>{item.title}</span>
+                                            <span className='nav-description'>{item.description}</span>
                                         </div>
                                     )}
                                 </button>
@@ -188,15 +197,15 @@ const SySAdminCp = () => {
                     </ul>
                 </nav>
 
-                <div className="sidebar-footer">
+                <div className='sidebar-footer'>
                     {!sidebarCollapsed && (
-                        <div className="admin-info">
-                            <div className="admin-avatar-small">
-                                <span className="avatar-text">{adminName?.charAt(0) || 'A'}</span>
+                        <div className='admin-info'>
+                            <div className='admin-avatar-small'>
+                                <span className='avatar-text'>{adminName?.charAt(0) || 'A'}</span>
                             </div>
-                            <div className="admin-details">
-                                <span className="admin-name">{adminName || 'Admin'}</span>
-                                <span className="admin-role">Администратор</span>
+                            <div className='admin-details'>
+                                <span className='admin-name'>{adminName || 'Admin'}</span>
+                                <span className='admin-role'>Администратор</span>
                             </div>
                         </div>
                     )}
@@ -204,79 +213,63 @@ const SySAdminCp = () => {
             </aside>
 
             {/* Main Content */}
-            <main className="admin-main">
+            <main className='admin-main'>
                 {/* Header */}
-                <header className="admin-header">
-                    <div className="header-left">
-                        <h1 className="page-title">
-                            {menuItems.find(item => item.id === activeSection)?.title || 'Админ панел'}
-                        </h1>
-                        <p className="page-subtitle">
-                            {menuItems.find(item => item.id === activeSection)?.description || ''}
-                        </p>
+                <header className='admin-header'>
+                    <div className='header-left'>
+                        <h1 className='page-title'>{menuItems.find((item) => item.id === activeSection)?.title || 'Админ панел'}</h1>
+                        <p className='page-subtitle'>{menuItems.find((item) => item.id === activeSection)?.description || ''}</p>
                     </div>
 
-                    <div className="header-center">
-                        <BookPriceManager 
-                            currentPrice={bookPrice}
-                            onPriceUpdate={updateBookPrice}
-                        />
+                    <div className='header-center'>
+                        <BookPriceManager currentPrice={bookPrice} onPriceUpdate={updateBookPrice} />
                     </div>
 
-                    <div className="header-right">
-                        <div className="header-actions">
-                            <NotificationDropdown 
+                    <div className='header-right'>
+                        <div className='header-actions'>
+                            <NotificationDropdown
                                 notifications={notifications}
                                 onMarkAsRead={markNotificationAsRead}
                                 onMarkAllAsRead={markAllNotificationsAsRead}
                                 onNotificationClick={handleNotificationClick}
                             />
 
-                            <div className="admin-profile-wrapper" ref={profileDropdownRef}>
-                                <div 
-                                    className="admin-profile"
-                                    onClick={() => setShowProfileDropdown(!showProfileDropdown)}
-                                >
-                                    <div className="profile-info">
-                                        <span className="profile-name">{adminName || 'Admin'}</span>
-                                        <span className="profile-email">{adminEmail}</span>
+                            <div className='admin-profile-wrapper' ref={profileDropdownRef}>
+                                <div className='admin-profile' onClick={() => setShowProfileDropdown(!showProfileDropdown)}>
+                                    <div className='profile-info'>
+                                        <span className='profile-name'>{adminName || 'Admin'}</span>
+                                        <span className='profile-email'>{adminEmail}</span>
                                     </div>
-                                    <div className="profile-avatar">
-                                        <span className="avatar-text">{adminName?.charAt(0) || 'A'}</span>
+                                    <div className='profile-avatar'>
+                                        <span className='avatar-text'>{adminName?.charAt(0) || 'A'}</span>
                                     </div>
-                                    <button className="profile-dropdown">▼</button>
+                                    <button className='profile-dropdown'>▼</button>
                                 </div>
 
                                 {/* Profile Dropdown Menu */}
                                 {showProfileDropdown && (
-                                    <div className="profile-dropdown-menu">
-                                        <div className="profile-dropdown-header">
-                                            <div className="dropdown-avatar">
-                                                <span className="avatar-text">{adminName?.charAt(0) || 'A'}</span>
+                                    <div className='profile-dropdown-menu'>
+                                        <div className='profile-dropdown-header'>
+                                            <div className='dropdown-avatar'>
+                                                <span className='avatar-text'>{adminName?.charAt(0) || 'A'}</span>
                                             </div>
-                                            <div className="dropdown-info">
-                                                <span className="dropdown-name">{adminName || 'Admin'}</span>
-                                                <span className="dropdown-email">{adminEmail}</span>
+                                            <div className='dropdown-info'>
+                                                <span className='dropdown-name'>{adminName || 'Admin'}</span>
+                                                <span className='dropdown-email'>{adminEmail}</span>
                                             </div>
                                         </div>
 
-                                        <div className="profile-dropdown-divider"></div>
+                                        <div className='profile-dropdown-divider'></div>
 
-                                        <div className="profile-dropdown-items">
-                                            <button 
-                                                className="profile-dropdown-item"
-                                                onClick={handlePasswordChange}
-                                            >
-                                                <span className="dropdown-item-icon">🔑</span>
-                                                <span className="dropdown-item-text">Смяна на парола</span>
+                                        <div className='profile-dropdown-items'>
+                                            <button className='profile-dropdown-item' onClick={handlePasswordChange}>
+                                                <span className='dropdown-item-icon'>🔑</span>
+                                                <span className='dropdown-item-text'>Смяна на парола</span>
                                             </button>
-                                            
-                                            <button 
-                                                className="profile-dropdown-item logout-item"
-                                                onClick={handleLogout}
-                                            >
-                                                <span className="dropdown-item-icon">🚪</span>
-                                                <span className="dropdown-item-text">Изход</span>
+
+                                            <button className='profile-dropdown-item logout-item' onClick={handleLogout}>
+                                                <span className='dropdown-item-icon'>🚪</span>
+                                                <span className='dropdown-item-text'>Изход</span>
                                             </button>
                                         </div>
                                     </div>
@@ -287,11 +280,11 @@ const SySAdminCp = () => {
                 </header>
 
                 {/* Content Area */}
-                <div className="admin-content">
-                    <div className="content-wrapper">
+                <div className='admin-content'>
+                    <div className='content-wrapper'>
                         {isLoading ? (
-                            <div className="loading-screen">
-                                <div className="loading-spinner"></div>
+                            <div className='loading-screen'>
+                                <div className='loading-spinner'></div>
                                 <p>Зареждане...</p>
                             </div>
                         ) : (
@@ -302,12 +295,7 @@ const SySAdminCp = () => {
             </main>
 
             {/* Password Change Modal */}
-            {showPasswordModal && (
-                <PasswordChangeModal 
-                    onClose={() => setShowPasswordModal(false)}
-                    changePassword={changePassword}
-                />
-            )}
+            {showPasswordModal && <PasswordChangeModal onClose={() => setShowPasswordModal(false)} changePassword={changePassword} />}
         </div>
     );
 };
@@ -318,7 +306,7 @@ const BookPriceManager = ({ currentPrice, onPriceUpdate }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [prices, setPrices] = useState({
         bgn: '',
-        eur: ''
+        eur: '',
     });
     const [isLoading, setIsLoading] = useState(false);
     const [lastChangedField, setLastChangedField] = useState('bgn');
@@ -331,34 +319,34 @@ const BookPriceManager = ({ currentPrice, onPriceUpdate }) => {
             const eurPrice = bgnPrice / exchangeRate;
             setPrices({
                 bgn: bgnPrice.toFixed(2),
-                eur: eurPrice.toFixed(2)
+                eur: eurPrice.toFixed(2),
             });
         }
     }, [currentPrice]);
 
     const handlePriceChange = (field, value) => {
         const numValue = parseFloat(value) || 0;
-        
+
         if (field === 'bgn') {
             const eurValue = numValue / exchangeRate;
             setPrices({
                 bgn: value,
-                eur: eurValue.toFixed(2)
+                eur: eurValue.toFixed(2),
             });
         } else if (field === 'eur') {
             const bgnValue = numValue * exchangeRate;
             setPrices({
                 bgn: bgnValue.toFixed(2),
-                eur: value
+                eur: value,
             });
         }
-        
+
         setLastChangedField(field);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         const bgnPrice = parseFloat(prices.bgn);
         if (isNaN(bgnPrice) || bgnPrice <= 0) {
             alert('Моля, въведете валидна цена');
@@ -384,7 +372,7 @@ const BookPriceManager = ({ currentPrice, onPriceUpdate }) => {
             const eurPrice = bgnPrice / exchangeRate;
             setPrices({
                 bgn: bgnPrice.toFixed(2),
-                eur: eurPrice.toFixed(2)
+                eur: eurPrice.toFixed(2),
             });
         }
         setIsEditing(false);
@@ -392,58 +380,49 @@ const BookPriceManager = ({ currentPrice, onPriceUpdate }) => {
 
     if (isEditing) {
         return (
-            <div className="book-price-manager editing">
-                <form onSubmit={handleSubmit} className="price-edit-form">
-                    <div className="dual-price-inputs">
-                        <div className="price-input-group">
-                            <label className="price-label-small">BGN:</label>
+            <div className='book-price-manager editing'>
+                <form onSubmit={handleSubmit} className='price-edit-form'>
+                    <div className='dual-price-inputs'>
+                        <div className='price-input-group'>
+                            <label className='price-label-small'>BGN:</label>
                             <input
-                                type="number"
-                                step="0.01"
-                                min="0"
+                                type='number'
+                                step='0.01'
+                                min='0'
                                 value={prices.bgn}
                                 onChange={(e) => handlePriceChange('bgn', e.target.value)}
-                                className="price-input"
-                                placeholder="0.00"
+                                className='price-input'
+                                placeholder='0.00'
                                 disabled={isLoading}
                                 autoFocus={lastChangedField === 'bgn'}
                             />
-                            <span className="currency">лв</span>
+                            <span className='currency'>лв</span>
                         </div>
-                        
-                        <div className="price-separator">/</div>
-                        
-                        <div className="price-input-group">
-                            <label className="price-label-small">EUR:</label>
+
+                        <div className='price-separator'>/</div>
+
+                        <div className='price-input-group'>
+                            <label className='price-label-small'>EUR:</label>
                             <input
-                                type="number"
-                                step="0.01"
-                                min="0"
+                                type='number'
+                                step='0.01'
+                                min='0'
                                 value={prices.eur}
                                 onChange={(e) => handlePriceChange('eur', e.target.value)}
-                                className="price-input"
-                                placeholder="0.00"
+                                className='price-input'
+                                placeholder='0.00'
                                 disabled={isLoading}
                                 autoFocus={lastChangedField === 'eur'}
                             />
-                            <span className="currency">€</span>
+                            <span className='currency'>€</span>
                         </div>
                     </div>
-                    
-                    <div className="price-actions">
-                        <button 
-                            type="submit" 
-                            className="save-price-btn"
-                            disabled={isLoading}
-                        >
+
+                    <div className='price-actions'>
+                        <button type='submit' className='save-price-btn' disabled={isLoading}>
                             {isLoading ? '...' : '✓'}
                         </button>
-                        <button 
-                            type="button" 
-                            className="cancel-price-btn"
-                            onClick={handleCancel}
-                            disabled={isLoading}
-                        >
+                        <button type='button' className='cancel-price-btn' onClick={handleCancel} disabled={isLoading}>
                             ✕
                         </button>
                     </div>
@@ -455,24 +434,20 @@ const BookPriceManager = ({ currentPrice, onPriceUpdate }) => {
     const currentEurPrice = currentPrice ? (Number(currentPrice) / exchangeRate).toFixed(2) : '0.00';
 
     return (
-        <div className="book-price-manager">
-            <div className="price-display">
-                <span className="price-label">Цена на книгата:</span>
-                <div className="price-value-container">
-                    <span className="price-value">
+        <div className='book-price-manager'>
+            <div className='price-display'>
+                <span className='price-label'>Цена на книгата:</span>
+                <div className='price-value-container'>
+                    <span className='price-value'>
                         {currentPrice ? (
-                            <span className="dual-price-display">
+                            <span className='dual-price-display'>
                                 {Number(currentPrice).toFixed(2)} лв / {currentEurPrice} €
                             </span>
                         ) : (
                             'Зареждане...'
                         )}
                     </span>
-                    <button 
-                        className="edit-price-btn"
-                        onClick={() => setIsEditing(true)}
-                        title="Редактирай цената"
-                    >
+                    <button className='edit-price-btn' onClick={() => setIsEditing(true)} title='Редактирай цената'>
                         ✏️
                     </button>
                 </div>
@@ -485,14 +460,14 @@ const PasswordChangeModal = ({ onClose, changePassword }) => {
     const [passwordData, setPasswordData] = useState({
         currentPassword: '',
         newPassword: '',
-        confirmPassword: ''
+        confirmPassword: '',
     });
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const [showPasswords, setShowPasswords] = useState({
         current: false,
         new: false,
-        confirm: false
+        confirm: false,
     });
 
     const handleSubmit = async (e) => {
@@ -525,9 +500,9 @@ const PasswordChangeModal = ({ onClose, changePassword }) => {
         try {
             await changePassword({
                 currentPassword: passwordData.currentPassword,
-                newPassword: passwordData.newPassword
+                newPassword: passwordData.newPassword,
             });
-            
+
             alert('Паролата е сменена успешно!');
             onClose();
         } catch (error) {
@@ -538,126 +513,102 @@ const PasswordChangeModal = ({ onClose, changePassword }) => {
     };
 
     const togglePasswordVisibility = (field) => {
-        setShowPasswords(prev => ({
+        setShowPasswords((prev) => ({
             ...prev,
-            [field]: !prev[field]
+            [field]: !prev[field],
         }));
     };
 
     return (
-        <div className="password-modal-overlay">
-            <div className="password-modal">
-                <div className="password-modal-header">
+        <div className='password-modal-overlay'>
+            <div className='password-modal'>
+                <div className='password-modal-header'>
                     <h3>Смяна на парола</h3>
-                    <button 
-                        className="password-modal-close"
-                        onClick={onClose}
-                        disabled={isLoading}
-                    >
+                    <button className='password-modal-close' onClick={onClose} disabled={isLoading}>
                         ×
                     </button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="password-form">
+                <form onSubmit={handleSubmit} className='password-form'>
                     {error && (
-                        <div className="password-error">
-                            <span className="error-icon">⚠️</span>
-                            <span className="error-text">{error}</span>
+                        <div className='password-error'>
+                            <span className='error-icon'>⚠️</span>
+                            <span className='error-text'>{error}</span>
                         </div>
                     )}
 
-                    <div className="password-form-group">
+                    <div className='password-form-group'>
                         <label>Текуща парола:</label>
-                        <div className="password-input-wrapper">
+                        <div className='password-input-wrapper'>
                             <input
-                                type={showPasswords.current ? "text" : "password"}
+                                type={showPasswords.current ? 'text' : 'password'}
                                 value={passwordData.currentPassword}
-                                onChange={(e) => setPasswordData(prev => ({ 
-                                    ...prev, 
-                                    currentPassword: e.target.value 
-                                }))}
-                                placeholder="Въведете текущата парола"
+                                onChange={(e) =>
+                                    setPasswordData((prev) => ({
+                                        ...prev,
+                                        currentPassword: e.target.value,
+                                    }))
+                                }
+                                placeholder='Въведете текущата парола'
                                 disabled={isLoading}
                                 required
                             />
-                            <button
-                                type="button"
-                                className="password-toggle"
-                                onClick={() => togglePasswordVisibility('current')}
-                                disabled={isLoading}
-                            >
+                            <button type='button' className='password-toggle' onClick={() => togglePasswordVisibility('current')} disabled={isLoading}>
                                 {showPasswords.current ? '👁️' : '👁️‍🗨️'}
                             </button>
                         </div>
                     </div>
 
-                    <div className="password-form-group">
+                    <div className='password-form-group'>
                         <label>Нова парола:</label>
-                        <div className="password-input-wrapper">
+                        <div className='password-input-wrapper'>
                             <input
-                                type={showPasswords.new ? "text" : "password"}
+                                type={showPasswords.new ? 'text' : 'password'}
                                 value={passwordData.newPassword}
-                                onChange={(e) => setPasswordData(prev => ({ 
-                                    ...prev, 
-                                    newPassword: e.target.value 
-                                }))}
-                                placeholder="Въведете новата парола"
+                                onChange={(e) =>
+                                    setPasswordData((prev) => ({
+                                        ...prev,
+                                        newPassword: e.target.value,
+                                    }))
+                                }
+                                placeholder='Въведете новата парола'
                                 disabled={isLoading}
                                 required
                             />
-                            <button
-                                type="button"
-                                className="password-toggle"
-                                onClick={() => togglePasswordVisibility('new')}
-                                disabled={isLoading}
-                            >
+                            <button type='button' className='password-toggle' onClick={() => togglePasswordVisibility('new')} disabled={isLoading}>
                                 {showPasswords.new ? '👁️' : '👁️‍🗨️'}
                             </button>
                         </div>
-                        <div className="password-requirements">
-                            Минимум 6 символа
-                        </div>
+                        <div className='password-requirements'>Минимум 6 символа</div>
                     </div>
 
-                    <div className="password-form-group">
+                    <div className='password-form-group'>
                         <label>Потвърди новата парола:</label>
-                        <div className="password-input-wrapper">
+                        <div className='password-input-wrapper'>
                             <input
-                                type={showPasswords.confirm ? "text" : "password"}
+                                type={showPasswords.confirm ? 'text' : 'password'}
                                 value={passwordData.confirmPassword}
-                                onChange={(e) => setPasswordData(prev => ({ 
-                                    ...prev, 
-                                    confirmPassword: e.target.value 
-                                }))}
-                                placeholder="Повторете новата парола"
+                                onChange={(e) =>
+                                    setPasswordData((prev) => ({
+                                        ...prev,
+                                        confirmPassword: e.target.value,
+                                    }))
+                                }
+                                placeholder='Повторете новата парола'
                                 disabled={isLoading}
                                 required
                             />
-                            <button
-                                type="button"
-                                className="password-toggle"
-                                onClick={() => togglePasswordVisibility('confirm')}
-                                disabled={isLoading}
-                            >
+                            <button type='button' className='password-toggle' onClick={() => togglePasswordVisibility('confirm')} disabled={isLoading}>
                                 {showPasswords.confirm ? '👁️' : '👁️‍🗨️'}
                             </button>
                         </div>
                     </div>
 
-                    <div className="password-modal-actions">
-                        <button 
-                            type="button" 
-                            className="password-cancel-btn"
-                            onClick={onClose}
-                            disabled={isLoading}
-                        >
+                    <div className='password-modal-actions'>
+                        <button type='button' className='password-cancel-btn' onClick={onClose} disabled={isLoading}>
                             Отказ
                         </button>
-                        <button 
-                            type="submit" 
-                            className="password-save-btn"
-                            disabled={isLoading}
-                        >
+                        <button type='submit' className='password-save-btn' disabled={isLoading}>
                             {isLoading ? 'Променяне...' : '🔑 Смени парола'}
                         </button>
                     </div>

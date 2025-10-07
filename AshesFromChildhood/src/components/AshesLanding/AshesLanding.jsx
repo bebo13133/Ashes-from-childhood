@@ -11,6 +11,7 @@ import BookPresentation3D from './BookPresentation3D/BookPresentation3D';
 import AuthorSection from './AuthorSection/AuthorSection';
 import ScrollToTop from '../ScrollToTop/ScrollToTop';
 import ReviewsSection from './ReviewsSection/ReviewsSection';
+import VideoTrailerSection from './VideoTrailerSection/VideoTrailerSection';
 
 const AshesLanding = () => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -49,6 +50,7 @@ const AshesLanding = () => {
 
             {/* Mystery Section - интерактивна мистериозна част */}
             <MysterySection />
+            <VideoTrailerSection />
             <AuthorSection />
             {/* Gallery Section - slide с още снимки */}
             <GallerySection
