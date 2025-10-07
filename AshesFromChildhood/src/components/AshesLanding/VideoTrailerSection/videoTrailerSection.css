@@ -457,3 +457,160 @@
     animation: none;
   }
 }
+/* YouTube Player Wrapper - скрива абсолютно всичко от YouTube */
+.youtube-player-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: auto;
+  overflow: hidden;
+  border-radius: 15px;
+}
+
+#youtube-player {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+}
+
+/* Скрива YouTube iframe елементи */
+#youtube-player iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 15px;
+  pointer-events: auto;
+}
+
+/* ВАЖНО: Скрива YouTube контроли и лого чрез overlay */
+.youtube-player-wrapper::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: transparent;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Video Poster Overlay */
+.video-poster-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 15;
+  pointer-events: none;
+  background: #000;
+}
+
+.video-poster-overlay img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 15px;
+}
+
+/* Play overlay трябва да е над poster-а */
+.play-overlay {
+  z-index: 20 !important;
+}
+
+/* Контролите трябва да са най-отгоре */
+.video-controls {
+  z-index: 25 !important;
+}/* Блокира ВСИЧКИ hover и click към YouTube iframe */
+#yt-player,
+#yt-player iframe {
+  pointer-events: none !important;
+}
+
+/* Overlay който приема кликове вместо iframe-а */
+.yt-blocker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  pointer-events: auto !important;
+  background: transparent;
+}
+
+/* Твоите контроли над всичко */
+.video-controls {
+  pointer-events: auto !important;
+  z-index: 100 !important;
+}
+
+.play-overlay {
+  pointer-events: auto !important;
+  z-index: 50 !important;
+}
+/* Скрива НАПЪЛНО YouTube контролите */
+#yt-player {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
+}
+
+#yt-player iframe {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border: none !important;
+  pointer-events: none !important;
+}
+
+/* BLACK OVERLAY - покрива долната част с контролите */
+.yt-blocker::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(to top, #000 0%, #000 60%, transparent 100%);
+  z-index: 50;
+  pointer-events: none;
+}
+
+/* Покрива горната част с title/logo */
+/* .yt-blocker::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(to bottom, #000 0%, transparent 100%);
+  z-index: 50;
+  pointer-events: none;
+} */
+
+/* Твоите контроли НАД всичко */
+.video-controls {
+  z-index: 100 !important;
+  pointer-events: auto !important;
+}
+
+.play-overlay {
+  z-index: 100 !important;
+  pointer-events: auto !important;
+}
