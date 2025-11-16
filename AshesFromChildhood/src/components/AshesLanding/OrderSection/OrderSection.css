@@ -1,934 +1,970 @@
 .OrderSection-order-section {
-  padding: 120px 0;
-  position: relative;
-  overflow: hidden;
+    padding: 120px 0;
+    position: relative;
+    overflow: hidden;
 }
 
 .OrderSection-order-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
 }
 
 .OrderSection-background-pattern {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-image: 
-    radial-gradient(circle at 25% 25%, rgba(212, 175, 55, 0.1) 0%, transparent 2%),
-    radial-gradient(circle at 75% 75%, rgba(64, 179, 255, 0.1) 0%, transparent 2%);
-  background-size: 100px 100px;
-  animation: OrderSection-patternShift 20s infinite linear;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(circle at 25% 25%, rgba(212, 175, 55, 0.1) 0%, transparent 2%),
+        radial-gradient(circle at 75% 75%, rgba(64, 179, 255, 0.1) 0%, transparent 2%);
+    background-size: 100px 100px;
+    animation: OrderSection-patternShift 20s infinite linear;
 }
 
 @keyframes OrderSection-patternShift {
-  0% { transform: translate(0, 0); }
-  100% { transform: translate(100px, 100px); }
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(100px, 100px);
+    }
 }
 
 .OrderSection-floating-orbs {
-  position: absolute;
-  width: 100%;
-  height: 100%;
+    position: absolute;
+    width: 100%;
+    height: 100%;
 }
 
 .OrderSection-floating-orb {
-  position: absolute;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, rgba(212, 175, 55, 0.3), transparent);
-  animation: OrderSection-orbFloat 12s infinite ease-in-out;
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(212, 175, 55, 0.3), transparent);
+    animation: OrderSection-orbFloat 12s infinite ease-in-out;
 }
 
-.OrderSection-orb-1 { top: 10%; left: 10%; animation-delay: 0s; }
-.OrderSection-orb-2 { top: 60%; right: 15%; animation-delay: 2s; }
-.OrderSection-orb-3 { bottom: 20%; left: 20%; animation-delay: 4s; }
-.OrderSection-orb-4 { top: 30%; right: 40%; animation-delay: 6s; }
-.OrderSection-orb-5 { bottom: 50%; left: 60%; animation-delay: 8s; }
-.OrderSection-orb-6 { top: 80%; right: 70%; animation-delay: 10s; }
+.OrderSection-orb-1 {
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+}
+.OrderSection-orb-2 {
+    top: 60%;
+    right: 15%;
+    animation-delay: 2s;
+}
+.OrderSection-orb-3 {
+    bottom: 20%;
+    left: 20%;
+    animation-delay: 4s;
+}
+.OrderSection-orb-4 {
+    top: 30%;
+    right: 40%;
+    animation-delay: 6s;
+}
+.OrderSection-orb-5 {
+    bottom: 50%;
+    left: 60%;
+    animation-delay: 8s;
+}
+.OrderSection-orb-6 {
+    top: 80%;
+    right: 70%;
+    animation-delay: 10s;
+}
 
 @keyframes OrderSection-orbFloat {
-  0%, 100% { 
-    transform: translateY(0px) scale(1);
-    opacity: 0.3;
-  }
-  50% { 
-    transform: translateY(-30px) scale(1.2);
-    opacity: 0.6;
-  }
+    0%,
+    100% {
+        transform: translateY(0px) scale(1);
+        opacity: 0.3;
+    }
+    50% {
+        transform: translateY(-30px) scale(1.2);
+        opacity: 0.6;
+    }
 }
 
 .OrderSection-order-content {
-  opacity: 0;
-  transform: translateY(60px);
-  transition: all 1s ease-out;
-  position: relative;
-  z-index: 10;
+    opacity: 0;
+    transform: translateY(60px);
+    transition: all 1s ease-out;
+    position: relative;
+    z-index: 10;
 }
 
 .OrderSection-order-content.OrderSection-fade-in-up {
-  opacity: 1;
-  transform: translateY(0);
+    opacity: 1;
+    transform: translateY(0);
 }
 
 /* Order Header */
 .OrderSection-order-header {
-  text-align: center;
-  margin-bottom: 80px;
+    text-align: center;
+    margin-bottom: 80px;
 }
 
 .OrderSection-order-title {
-  font-size: clamp(2.5rem, 6vw, 4rem);
-  color: var(--text-light);
-  margin-bottom: 20px;
-  text-shadow: 
-    4px 4px 8px var(--shadow-deep),
-    0 0 40px rgba(64, 179, 255, 0.3);
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    color: var(--text-light);
+    margin-bottom: 20px;
+    text-shadow: 4px 4px 8px var(--shadow-deep), 0 0 40px rgba(64, 179, 255, 0.3);
 }
 
 .OrderSection-title-accent {
-  color: var(--accent-gold);
-  background: linear-gradient(135deg, #d4af37, #f4d03f);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: none;
-  filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.8));
+    color: var(--accent-gold);
+    background: linear-gradient(135deg, #d4af37, #f4d03f);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: none;
+    filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.8));
 }
 
 .OrderSection-order-subtitle {
-  font-size: clamp(1.2rem, 2.8vw, 1.6rem);
-  color: var(--text-muted);
-  font-style: italic;
-  margin-bottom: 30px;
-  text-shadow: 2px 2px 4px var(--shadow-deep);
+    font-size: clamp(1.2rem, 2.8vw, 1.6rem);
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px var(--shadow-deep);
 }
 
 .OrderSection-price-display {
-  display: inline-flex;
-  align-items: center;
-  gap: 15px;
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.4));
-  padding: 15px 30px;
-  border-radius: 50px;
-  border: 2px solid rgba(212, 175, 55, 0.5);
-  box-shadow: 
-    0 8px 25px rgba(0, 0, 0, 0.4),
-    0 0 30px rgba(212, 175, 55, 0.2);
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.4));
+    padding: 15px 30px;
+    border-radius: 50px;
+    border: 2px solid rgba(212, 175, 55, 0.5);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 30px rgba(212, 175, 55, 0.2);
 }
 
 .OrderSection-price-label {
-  color: var(--text-light);
-  font-size: 1.1rem;
-  font-weight: bold;
+    color: var(--text-light);
+    font-size: 1.1rem;
+    font-weight: bold;
 }
 
 .OrderSection-price-amount {
-  color: var(--accent-gold);
-  font-size: 1.4rem;
-  font-weight: bold;
-  text-shadow: 2px 2px 4px var(--shadow-deep);
+    color: var(--accent-gold);
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px var(--shadow-deep);
 }
 
 .OrderSection-price-loading {
-  color: var(--text-muted);
-  font-style: italic;
+    color: var(--text-muted);
+    font-style: italic;
 }
 
 .OrderSection-price-error {
-  color: #ff6b6b;
-  font-style: italic;
+    color: #ff6b6b;
+    font-style: italic;
 }
 
 .OrderSection-order-grid {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 80px;
-  align-items: start;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 80px;
+    align-items: start;
 }
 
 /* Form Container */
 .OrderSection-order-form-container {
-  position: relative;
+    position: relative;
 }
 
 .OrderSection-form-wrapper {
-  background: linear-gradient(135deg, 
-    rgba(26, 26, 46, 0.9), 
-    rgba(15, 52, 96, 0.8),
-    rgba(26, 26, 46, 0.9)
-  );
-  border-radius: 20px;
-  padding: 20px;
-  border: 2px solid rgba(212, 175, 55, 0.3);
-  box-shadow: 
-    0 20px 60px rgba(0, 0, 0, 0.6),
-    0 0 50px rgba(64, 179, 255, 0.1),
-    inset 0 0 50px rgba(212, 175, 55, 0.05);
-  backdrop-filter: blur(15px);
-  position: relative;
-  overflow: hidden;
+    background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(15, 52, 96, 0.8), rgba(26, 26, 46, 0.9));
+    border-radius: 20px;
+    padding: 20px;
+    border: 2px solid rgba(212, 175, 55, 0.3);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 50px rgba(64, 179, 255, 0.1), inset 0 0 50px rgba(212, 175, 55, 0.05);
+    backdrop-filter: blur(15px);
+    position: relative;
+    overflow: hidden;
 }
 
 .OrderSection-form-wrapper::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(45deg, transparent, rgba(212, 175, 55, 0.1), transparent);
-  animation: OrderSection-shimmer 3s infinite;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+    animation: OrderSection-shimmer 3s infinite;
 }
 
 @keyframes OrderSection-shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
 }
 
 .OrderSection-form-header {
-  text-align: center;
-  margin-bottom: 30px;
-  position: relative;
+    text-align: center;
+    margin-bottom: 30px;
+    position: relative;
 }
 
 .OrderSection-form-title {
-  font-size: 1.8rem;
-  color: var(--accent-gold);
-  margin-bottom: 15px;
-  text-shadow: 2px 2px 4px var(--shadow-deep);
+    font-size: 1.8rem;
+    color: var(--accent-gold);
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 4px var(--shadow-deep);
 }
 
 .OrderSection-form-decoration {
-  width: 80px;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
-  margin: 0 auto;
-  border-radius: 2px;
-  box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+    margin: 0 auto;
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
 }
 
 /* Form Styles */
 .OrderSection-order-form {
-  position: relative;
-  z-index: 20;
+    position: relative;
+    z-index: 20;
 }
 
 .OrderSection-form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
 }
 
 .OrderSection-form-group {
-  position: relative;
-  margin-bottom: 25px;
+    position: relative;
+    margin-bottom: 25px;
 }
 
 .OrderSection-form-group.OrderSection-focused .OrderSection-form-label {
-  color: var(--accent-gold);
-  transform: translateY(-2px);
+    color: var(--accent-gold);
+    transform: translateY(-2px);
 }
 
 .OrderSection-form-group.OrderSection-focused .OrderSection-input-glow {
-  opacity: 1;
-  transform: scale(1);
+    opacity: 1;
+    transform: scale(1);
 }
 
 .OrderSection-form-label {
-  display: block;
-  color: var(--text-light);
-  font-size: 0.95rem;
-  font-weight: 600;
-  margin-bottom: 8px;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
-  transition: all 0.3s ease;
+    display: block;
+    color: var(--text-light);
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    transition: all 0.3s ease;
 }
 
 .OrderSection-form-input,
 .OrderSection-form-textarea {
-  width: 100%;
-  padding: 10px 10px;
-  background: rgba(10, 10, 10, 0.8);
-  border: 2px solid rgba(212, 175, 55, 0.3);
-  border-radius: 12px;
-  color: var(--text-light);
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  position: relative;
-  z-index: 10;
-  box-sizing: border-box;
+    width: 100%;
+    padding: 10px 10px;
+    background: rgba(10, 10, 10, 0.8);
+    border: 2px solid rgba(212, 175, 55, 0.3);
+    border-radius: 12px;
+    color: var(--text-light);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 10;
+    box-sizing: border-box;
 }
 
 .OrderSection-form-input:focus,
 .OrderSection-form-textarea:focus {
-  outline: none;
-  border-color: var(--accent-gold);
-  background: rgba(15, 15, 15, 0.9);
-  box-shadow: 
-    0 0 20px rgba(212, 175, 55, 0.4),
-    inset 0 0 10px rgba(0, 0, 0, 0.5);
+    outline: none;
+    border-color: var(--accent-gold);
+    background: rgba(15, 15, 15, 0.9);
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4), inset 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .OrderSection-form-textarea {
-  resize: vertical;
-  min-height: 80px;
+    resize: vertical;
+    min-height: 80px;
 }
 
 .OrderSection-input-glow {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(45deg, transparent, rgba(212, 175, 55, 0.2), transparent);
-  border-radius: 12px;
-  opacity: 0;
-  transform: scale(0.8);
-  transition: all 0.3s ease;
-  z-index: 1;
-  pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent, rgba(212, 175, 55, 0.2), transparent);
+    border-radius: 12px;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.3s ease;
+    z-index: 1;
+    pointer-events: none;
 }
 
 /* Quantity Controls */
 .OrderSection-quantity-row {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 30px;
-  align-items: end;
-  margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 30px;
+    align-items: end;
+    margin-bottom: 30px;
 }
 
 .OrderSection-quantity-controls {
-  display: flex;
-  align-items: center;
-  background: rgba(10, 10, 10, 0.8);
-  border: 2px solid rgba(212, 175, 55, 0.3);
-  border-radius: 12px;
-  overflow: hidden;
-  z-index: 10;
+    display: flex;
+    align-items: center;
+    background: rgba(10, 10, 10, 0.8);
+    border: 2px solid rgba(212, 175, 55, 0.3);
+    border-radius: 12px;
+    overflow: hidden;
+    z-index: 10;
 }
 
 .OrderSection-quantity-btn {
-  background: rgba(212, 175, 55, 0.2);
-  border: none;
-  color: var(--accent-gold);
-  font-size: 1.5rem;
-  font-weight: bold;
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  z-index: 11;
+    background: rgba(212, 175, 55, 0.2);
+    border: none;
+    color: var(--accent-gold);
+    font-size: 1.5rem;
+    font-weight: bold;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 11;
 }
 
 .OrderSection-quantity-btn:hover {
-  background: rgba(212, 175, 55, 0.4);
-  box-shadow: inset 0 0 15px rgba(212, 175, 55, 0.3);
+    background: rgba(212, 175, 55, 0.4);
+    box-shadow: inset 0 0 15px rgba(212, 175, 55, 0.3);
 }
 
 .OrderSection-quantity-input {
-  background: transparent;
-  border: none;
-  color: var(--text-light);
-  text-align: center;
-  font-size: 1.2rem;
-  font-weight: bold;
-  width: 60px;
-  height: 50px;
+    background: transparent;
+    border: none;
+    color: var(--text-light);
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    width: 60px;
+    height: 50px;
 }
 
 .OrderSection-quantity-input:focus {
-  outline: none;
-  background: rgba(212, 175, 55, 0.1);
+    outline: none;
+    background: rgba(212, 175, 55, 0.1);
 }
 
 /* Total Price Display */
 .OrderSection-total-display {
-  margin-top: 1rem;
-  background: linear-gradient(135deg, rgba(15, 52, 96, 0.8), rgba(26, 26, 46, 0.8));
-  padding: 20px 25px;
-  border-radius: 15px;
-  border: 2px solid rgba(64, 179, 255, 0.4);
-  text-align: center;
-  box-shadow: 
-    0 8px 25px rgba(0, 0, 0, 0.4),
-    0 0 30px rgba(64, 179, 255, 0.2);
+    margin-top: 1rem;
+    background: linear-gradient(135deg, rgba(15, 52, 96, 0.8), rgba(26, 26, 46, 0.8));
+    padding: 20px 25px;
+    border-radius: 15px;
+    border: 2px solid rgba(64, 179, 255, 0.4);
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 30px rgba(64, 179, 255, 0.2);
 }
 
 .OrderSection-total-label {
-  display: block;
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  margin-bottom: 5px;
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 5px;
 }
 
 .OrderSection-total-amount {
-  display: block;
-  color: #40b3ff;
-  font-size: 1.6rem;
-  font-weight: bold;
-  text-shadow: 2px 2px 4px var(--shadow-deep);
+    display: block;
+    color: #40b3ff;
+    font-size: 1.6rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px var(--shadow-deep);
 }
 
 .OrderSection-total-loading {
-  color: var(--text-muted);
-  font-style: italic;
+    color: var(--text-muted);
+    font-style: italic;
 }
 
 .OrderSection-total-error {
-  color: #ff6b6b;
-  font-style: italic;
+    color: #ff6b6b;
+    font-style: italic;
 }
 
 /* Payment Info */
 .OrderSection-payment-info {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  background: rgba(15, 52, 96, 0.3);
-  padding: 20px;
-  border-radius: 12px;
-  border: 1px solid rgba(64, 179, 255, 0.3);
-  margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(15, 52, 96, 0.3);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(64, 179, 255, 0.3);
+    margin-bottom: 30px;
 }
 
 .OrderSection-payment-icon {
-  font-size: 2rem;
+    font-size: 2rem;
 }
 
 .OrderSection-payment-text h4 {
-  color: var(--text-light);
-  font-size: 1.1rem;
-  margin-bottom: 5px;
+    color: var(--text-light);
+    font-size: 1.1rem;
+    margin-bottom: 5px;
 }
 
 .OrderSection-payment-text p {
-  color: var(--text-muted);
-  font-size: 0.9rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
 }
 
 /* Submit Button */
 .OrderSection-submit-btn {
-  width: 100%;
-  padding: 20px;
-  background: linear-gradient(135deg, #d4af37, #f4d03f, #d4af37);
-  border: none;
-  border-radius: 15px;
-  color: #0a0a0a;
-  font-size: 1.3rem;
-  font-weight: bold;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.4s ease;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  box-shadow: 
-    0 10px 30px rgba(0, 0, 0, 0.4),
-    0 0 40px rgba(212, 175, 55, 0.3),
-    inset 0 0 20px rgba(255, 255, 255, 0.2);
+    width: 100%;
+    padding: 20px;
+    background: linear-gradient(135deg, #d4af37, #f4d03f, #d4af37);
+    border: none;
+    border-radius: 15px;
+    color: #0a0a0a;
+    font-size: 1.3rem;
+    font-weight: bold;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 40px rgba(212, 175, 55, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.2);
 }
 
 .OrderSection-submit-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 
-    0 15px 40px rgba(0, 0, 0, 0.5),
-    0 0 50px rgba(212, 175, 55, 0.5);
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), 0 0 50px rgba(212, 175, 55, 0.5);
 }
 
 .OrderSection-submit-btn:active {
-  transform: translateY(-1px);
+    transform: translateY(-1px);
 }
 
 .OrderSection-submit-btn.OrderSection-submitting,
 .OrderSection-submit-btn.OrderSection-disabled {
-  background: linear-gradient(135deg, #888, #aaa, #888);
-  cursor: not-allowed;
+    background: linear-gradient(135deg, #888, #aaa, #888);
+    cursor: not-allowed;
 }
 
 .OrderSection-btn-content {
-  position: relative;
-  z-index: 10;
+    position: relative;
+    z-index: 10;
 }
 
 .OrderSection-btn-glow {
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-  animation: OrderSection-btnShine 3s infinite;
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: OrderSection-btnShine 3s infinite;
 }
 
 @keyframes OrderSection-btnShine {
-  0% { left: -100%; }
-  100% { left: 100%; }
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
 }
 
 .OrderSection-btn-particles {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
 }
 
 .OrderSection-btn-particle {
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.8);
-  border-radius: 50%;
-  animation: OrderSection-btnParticleFloat 2s infinite ease-in-out;
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    animation: OrderSection-btnParticleFloat 2s infinite ease-in-out;
 }
 
-.OrderSection-btn-particle:nth-child(1) { top: 20%; left: 20%; animation-delay: 0s; }
-.OrderSection-btn-particle:nth-child(2) { top: 80%; left: 80%; animation-delay: 0.3s; }
-.OrderSection-btn-particle:nth-child(3) { top: 60%; left: 40%; animation-delay: 0.6s; }
-.OrderSection-btn-particle:nth-child(4) { top: 30%; right: 30%; animation-delay: 0.9s; }
+.OrderSection-btn-particle:nth-child(1) {
+    top: 20%;
+    left: 20%;
+    animation-delay: 0s;
+}
+.OrderSection-btn-particle:nth-child(2) {
+    top: 80%;
+    left: 80%;
+    animation-delay: 0.3s;
+}
+.OrderSection-btn-particle:nth-child(3) {
+    top: 60%;
+    left: 40%;
+    animation-delay: 0.6s;
+}
+.OrderSection-btn-particle:nth-child(4) {
+    top: 30%;
+    right: 30%;
+    animation-delay: 0.9s;
+}
 
 @keyframes OrderSection-btnParticleFloat {
-  0%, 100% {
-    transform: translateY(0px);
-    opacity: 0.6;
-  }
-  50% {
-    transform: translateY(-10px);
-    opacity: 1;
-  }
+    0%,
+    100% {
+        transform: translateY(0px);
+        opacity: 0.6;
+    }
+    50% {
+        transform: translateY(-10px);
+        opacity: 1;
+    }
 }
 
 /* Order Benefits */
 .OrderSection-order-benefits {
-  padding: 40px;
-  background: linear-gradient(135deg, rgba(26, 26, 46, 0.7), rgba(15, 52, 96, 0.5));
-  border-radius: 20px;
-  border: 2px solid rgba(64, 179, 255, 0.3);
-  box-shadow: 
-    0 15px 40px rgba(0, 0, 0, 0.5),
-    inset 0 0 30px rgba(64, 179, 255, 0.1);
-  backdrop-filter: blur(15px);
+    padding: 40px;
+    background: linear-gradient(135deg, rgba(26, 26, 46, 0.7), rgba(15, 52, 96, 0.5));
+    border-radius: 20px;
+    border: 2px solid rgba(64, 179, 255, 0.3);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(64, 179, 255, 0.1);
+    backdrop-filter: blur(15px);
 }
 
 .OrderSection-benefits-title {
-  font-size: 1.8rem;
-  color: var(--text-light);
-  margin-bottom: 30px;
-  text-align: center;
-  text-shadow: 2px 2px 4px var(--shadow-deep);
+    font-size: 1.8rem;
+    color: var(--text-light);
+    margin-bottom: 30px;
+    text-align: center;
+    text-shadow: 2px 2px 4px var(--shadow-deep);
 }
 
 .OrderSection-benefits-list {
-  margin-bottom: 30px;
+    margin-bottom: 30px;
 }
 
 .OrderSection-benefit-item {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  padding: 20px 0;
-  border-bottom: 1px solid rgba(64, 179, 255, 0.2);
-  transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(64, 179, 255, 0.2);
+    transition: all 0.3s ease;
 }
 
 .OrderSection-benefit-item:last-child {
-  border-bottom: none;
+    border-bottom: none;
 }
 
 .OrderSection-benefit-item:hover {
-  transform: translateX(10px);
-  padding-left: 10px;
+    transform: translateX(10px);
+    padding-left: 10px;
 }
 
 .OrderSection-benefit-icon {
-  font-size: 2rem;
-  min-width: 50px;
-  text-align: center;
+    font-size: 2rem;
+    min-width: 50px;
+    text-align: center;
 }
 
 .OrderSection-benefit-content h4 {
-  color: var(--text-light);
-  font-size: 1.1rem;
-  margin-bottom: 5px;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    color: var(--text-light);
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 .OrderSection-benefit-content p {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  line-height: 1.4;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.4;
 }
 
 /* Trust Section */
 .OrderSection-trust-section {
-  text-align: center;
-  padding-top: 25px;
-  border-top: 1px solid rgba(64, 179, 255, 0.3);
+    text-align: center;
+    padding-top: 25px;
+    border-top: 1px solid rgba(64, 179, 255, 0.3);
 }
 
 .OrderSection-trust-title {
-  color: var(--text-light);
-  font-size: 1.2rem;
-  margin-bottom: 20px;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    color: var(--text-light);
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 .OrderSection-trust-badges {
-  display: flex;
-  justify-content: space-around;
-  gap: 15px;
+    display: flex;
+    justify-content: space-around;
+    gap: 15px;
 }
 
 .OrderSection-trust-badge {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  padding: 15px 10px;
-  background: rgba(212, 175, 55, 0.1);
-  border-radius: 10px;
-  border: 1px solid rgba(212, 175, 55, 0.3);
-  transition: all 0.3s ease;
-  flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 15px 10px;
+    background: rgba(212, 175, 55, 0.1);
+    border-radius: 10px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    transition: all 0.3s ease;
+    flex: 1;
 }
 
 .OrderSection-trust-badge:hover {
-  background: rgba(212, 175, 55, 0.2);
-  transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
+    background: rgba(212, 175, 55, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
 }
 
 .OrderSection-badge-icon {
-  font-size: 1.5rem;
+    font-size: 1.5rem;
 }
 
 .OrderSection-trust-badge span {
-  color: var(--text-muted);
-  font-size: 0.8rem;
-  text-align: center;
-  line-height: 1.2;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    text-align: center;
+    line-height: 1.2;
 }
 
 /* Success Message */
 .OrderSection-success-message {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 60vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
 }
 
 .OrderSection-success-animation {
-  text-align: center;
-  background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(15, 52, 96, 0.8));
-  padding: 60px 40px;
-  border-radius: 20px;
-  border: 2px solid var(--accent-gold);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    text-align: center;
+    background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(15, 52, 96, 0.8));
+    padding: 60px 40px;
+    border-radius: 20px;
+    border: 2px solid var(--accent-gold);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
 }
 
 .OrderSection-success-icon {
-  font-size: 4rem;
-  margin-bottom: 20px;
-  animation: OrderSection-successPulse 2s infinite;
+    font-size: 4rem;
+    margin-bottom: 20px;
+    animation: OrderSection-successPulse 2s infinite;
 }
 
 @keyframes OrderSection-successPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
 }
 
 .OrderSection-success-title {
-  color: var(--accent-gold);
-  font-size: 2rem;
-  margin-bottom: 15px;
+    color: var(--accent-gold);
+    font-size: 2rem;
+    margin-bottom: 15px;
 }
 
 .OrderSection-success-text {
-  color: var(--text-light);
-  font-size: 1.1rem;
-  margin-bottom: 30px;
-  max-width: 400px;
+    color: var(--text-light);
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    max-width: 400px;
 }
 
 .OrderSection-success-btn {
-  background: linear-gradient(135deg, #d4af37, #f4d03f);
-  border: none;
-  padding: 15px 30px;
-  border-radius: 10px;
-  color: #0a0a0a;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
+    background: linear-gradient(135deg, #d4af37, #f4d03f);
+    border: none;
+    padding: 15px 30px;
+    border-radius: 10px;
+    color: #0a0a0a;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 /* Error Message */
 .OrderSection-error-message {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  background: linear-gradient(135deg, rgba(220, 53, 69, 0.2), rgba(220, 53, 69, 0.1));
-  border: 2px solid rgba(220, 53, 69, 0.5);
-  padding: 15px 20px;
-  border-radius: 10px;
-  margin-bottom: 30px;
-  color: #ff6b6b;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.2), rgba(220, 53, 69, 0.1));
+    border: 2px solid rgba(220, 53, 69, 0.5);
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    color: #ff6b6b;
 }
 
 .OrderSection-error-icon {
-  font-size: 1.5rem;
+    font-size: 1.5rem;
 }
 
 .OrderSection-error-close {
-  background: none;
-  border: none;
-  color: #ff6b6b;
-  font-size: 1.5rem;
-  cursor: pointer;
-  margin-left: auto;
+    background: none;
+    border: none;
+    color: #ff6b6b;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-left: auto;
 }
 
 /* Responsive Design */
 @media (max-width: 1024px) {
-  .OrderSection-order-grid {
-    grid-template-columns: 1fr;
-    gap: 60px;
-  }
-  
-  .OrderSection-order-benefits {
-    order: 2;
-  }
+    .OrderSection-order-grid {
+        grid-template-columns: 1fr;
+        gap: 60px;
+    }
+
+    .OrderSection-order-benefits {
+        order: 2;
+    }
 }
 
 @media (max-width: 768px) {
-  .OrderSection-order-section {
-    padding: 80px 0;
-  }
-  
-  .OrderSection-order-header {
-    margin-bottom: 50px;
-  }
-  
-  .OrderSection-form-wrapper {
-    padding: 30px;
-  }
-  
-  .OrderSection-form-row {
-    grid-template-columns: 1fr;
-    gap: 15px;
-  }
-  
-  .OrderSection-quantity-row {
-    grid-template-columns: 1fr;
-    gap: 20px;
-    text-align: center;
-  }
-  
-  .OrderSection-trust-badges {
-    flex-direction: column;
-    gap: 10px;
-  }
+    .OrderSection-order-section {
+        padding: 60px 0 35px; /* top 60, bottom 35 to tighten space before footer */
+    }
+
+    .OrderSection-order-header {
+        margin-bottom: 50px;
+    }
+
+    .OrderSection-form-wrapper {
+        padding: 30px;
+    }
+
+    .OrderSection-form-row {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .OrderSection-quantity-row {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        text-align: center;
+    }
+
+    .OrderSection-trust-badges {
+        flex-direction: column;
+        gap: 10px;
+    }
 }
 
 @media (max-width: 640px) {
-  .OrderSection-floating-orbs {
-    display: none;
-  }
-  
-  .OrderSection-form-wrapper {
-    padding: 25px;
-  }
-  
-  .OrderSection-order-benefits {
-    padding: 30px;
-  }
+    .OrderSection-floating-orbs {
+        display: none;
+    }
+
+    .OrderSection-form-wrapper {
+        padding: 25px;
+    }
+
+    .OrderSection-order-benefits {
+        padding: 30px;
+    }
 }
 
 @media (max-width: 480px) {
-  .OrderSection-order-section {
-    padding: 60px 0;
-  }
-  
-  .OrderSection-form-wrapper {
-    padding: 20px;
-  }
-  
-  .OrderSection-form-input,
-  .OrderSection-form-textarea {
-    padding: 12px 15px;
-  }
-  
-  .OrderSection-submit-btn {
-    padding: 18px;
-    font-size: 1.1rem;
-  }
-  
-  .OrderSection-order-benefits {
-    padding: 25px;
-  }
+    .OrderSection-order-section {
+        padding: 60px 0;
+    }
+
+    .OrderSection-form-wrapper {
+        padding: 20px;
+    }
+
+    .OrderSection-form-input,
+    .OrderSection-form-textarea {
+        padding: 12px 15px;
+    }
+
+    .OrderSection-submit-btn {
+        padding: 18px;
+        font-size: 1.1rem;
+    }
+
+    .OrderSection-order-benefits {
+        padding: 25px;
+    }
 }
 
 /* Accessibility */
 @media (prefers-reduced-motion: reduce) {
-  .OrderSection-floating-orb,
-  .OrderSection-btn-glow,
-  .OrderSection-btn-particle {
-    animation: none;
-  }
-  
-  .OrderSection-order-content {
-    transition: opacity 0.3s ease;
-  }
+    .OrderSection-floating-orb,
+    .OrderSection-btn-glow,
+    .OrderSection-btn-particle {
+        animation: none;
+    }
+
+    .OrderSection-order-content {
+        transition: opacity 0.3s ease;
+    }
 }
 /* Добави в края на файла */
 .OrderSection-dual-price,
 .OrderSection-dual-total {
-  white-space: nowrap;
-  font-weight: bold;
+    white-space: nowrap;
+    font-weight: bold;
 }
 
 .OrderSection-dual-price {
-  color: var(--accent-gold);
-  font-size: 1.4rem;
-  text-shadow: 2px 2px 4px var(--shadow-deep);
+    color: var(--accent-gold);
+    font-size: 1.4rem;
+    text-shadow: 2px 2px 4px var(--shadow-deep);
 }
 
 .OrderSection-dual-total {
-  color: #40b3ff;
-  font-size: 1.6rem;
-  text-shadow: 2px 2px 4px var(--shadow-deep);
+    color: #40b3ff;
+    font-size: 1.6rem;
+    text-shadow: 2px 2px 4px var(--shadow-deep);
 }
 
 @media (max-width: 768px) {
-  .OrderSection-dual-price {
-    font-size: 1.2rem;
-  }
-  
-  .OrderSection-dual-total {
-    font-size: 1.4rem;
-  }
+    .OrderSection-dual-price {
+        font-size: 1.2rem;
+    }
+
+    .OrderSection-dual-total {
+        font-size: 1.4rem;
+    }
 }
 
 @media (max-width: 480px) {
-  .OrderSection-dual-price {
-    font-size: 1.1rem;
-  }
-  
-  .OrderSection-dual-total {
-    font-size: 1.2rem;
-  }
+    .OrderSection-dual-price {
+        font-size: 1.1rem;
+    }
+
+    .OrderSection-dual-total {
+        font-size: 1.2rem;
+    }
 }
 /* Terms and Conditions Section */
 .OrderSection-terms-section {
-  margin-bottom: 30px;
-  padding: 20px;
-  background: rgba(15, 52, 96, 0.2);
-  border-radius: 12px;
-  border: 1px solid rgba(64, 179, 255, 0.3);
+    margin-bottom: 30px;
+    padding: 20px;
+    background: rgba(15, 52, 96, 0.2);
+    border-radius: 12px;
+    border: 1px solid rgba(64, 179, 255, 0.3);
 }
 
 .OrderSection-terms-checkbox {
-  display: flex;
-  align-items: flex-start;
+    display: flex;
+    align-items: flex-start;
 }
 
 .OrderSection-terms-label {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  cursor: pointer;
-  user-select: none;
-  line-height: 1.5;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+    user-select: none;
+    line-height: 1.5;
 }
 
 .OrderSection-terms-input {
-  display: none;
+    display: none;
 }
 
 .OrderSection-terms-checkmark {
-  position: relative;
-  width: 20px;
-  height: 20px;
-  background: rgba(10, 10, 20, 0.8);
-  border: 2px solid rgba(106, 127, 219, 0.3);
-  border-radius: 4px;
-  transition: all 0.3s ease;
-  flex-shrink: 0;
-  margin-top: 2px;
+    position: relative;
+    width: 20px;
+    height: 20px;
+    background: rgba(10, 10, 20, 0.8);
+    border: 2px solid rgba(106, 127, 219, 0.3);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    margin-top: 2px;
 }
 
 .OrderSection-terms-checkmark::after {
-  content: '✓';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  color: #ffffff;
-  font-weight: bold;
-  font-size: 14px;
-  transition: all 0.3s ease;
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 14px;
+    transition: all 0.3s ease;
 }
 
 .OrderSection-terms-input:checked + .OrderSection-terms-checkmark {
-  background: #6a7fdb;
-  border-color: #6a7fdb;
-  box-shadow: 0 0 15px rgba(106, 127, 219, 0.4);
+    background: #6a7fdb;
+    border-color: #6a7fdb;
+    box-shadow: 0 0 15px rgba(106, 127, 219, 0.4);
 }
 
 .OrderSection-terms-input:checked + .OrderSection-terms-checkmark::after {
-  transform: translate(-50%, -50%) scale(1);
+    transform: translate(-50%, -50%) scale(1);
 }
 
 .OrderSection-terms-text {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 0.95rem;
-  line-height: 1.5;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.95rem;
+    line-height: 1.5;
 }
 
 .OrderSection-terms-link {
-  color: #8fa3e8;
-  text-decoration: underline;
-  transition: all 0.3s ease;
+    color: #8fa3e8;
+    text-decoration: underline;
+    transition: all 0.3s ease;
 }
 
 .OrderSection-terms-link:hover {
-  color: #ffffff;
-  text-shadow: 0 0 8px rgba(143, 163, 232, 0.6);
+    color: #ffffff;
+    text-shadow: 0 0 8px rgba(143, 163, 232, 0.6);
 }
 
 /* Button state when terms not accepted */
 .OrderSection-submit-btn.OrderSection-disabled {
-  background: linear-gradient(135deg, #666, #888, #666);
-  cursor: not-allowed;
-  opacity: 0.7;
+    background: linear-gradient(135deg, #666, #888, #666);
+    cursor: not-allowed;
+    opacity: 0.7;
 }
 
 /* Responsive design for terms section */
 @media (max-width: 768px) {
-  .OrderSection-terms-section {
-    padding: 15px;
-  }
-  
-  .OrderSection-terms-text {
-    font-size: 0.9rem;
-  }
+    .OrderSection-terms-section {
+        padding: 15px;
+    }
+
+    .OrderSection-terms-text {
+        font-size: 0.9rem;
+    }
 }
 
 @media (max-width: 480px) {
-  .OrderSection-terms-section {
-    padding: 12px;
-  }
-  
-  .OrderSection-terms-text {
-    font-size: 0.85rem;
-  }
-  
-  .OrderSection-terms-checkmark {
-    width: 18px;
-    height: 18px;
-  }
+    .OrderSection-terms-section {
+        padding: 12px;
+    }
+
+    .OrderSection-terms-text {
+        font-size: 0.85rem;
+    }
+
+    .OrderSection-terms-checkmark {
+        width: 18px;
+        height: 18px;
+    }
 }
