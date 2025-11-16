@@ -436,6 +436,22 @@ export const AuthProvider = ({ children }) => {
             setIsLoading(false);
         }
     };
+
+    const fetchImageReviews = async () => {
+        setIsLoading(true);
+        setErrorMessage('');
+
+        try {
+            const response = await userService.getImageReviews();
+            return response.imageReviews || [];
+        } catch (error) {
+            console.error('Error fetching image reviews:', error);
+            return [];
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const updateReviewStatus = async (reviewId, status) => {
         setIsLoading(true);
         setErrorMessage('');
@@ -809,6 +825,7 @@ export const AuthProvider = ({ children }) => {
         fetchPublicReviews,
         markReviewAsHelpful,
         fetchReviewsStatistics,
+        fetchImageReviews,
         // UI state
         isLoading,
         errorMessage,

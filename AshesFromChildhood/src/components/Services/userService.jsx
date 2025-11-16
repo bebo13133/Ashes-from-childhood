@@ -119,6 +119,10 @@ export const userServiceFactory = (token) => {
             return requester.get(`${apiUrl}/reviews/approved${queryString ? `?${queryString}` : ''}`);
         },
 
+        getImageReviews: () => {
+            return requester.get(`${apiUrl}/reviews/images`);
+        },
+
         // ===== EMAIL MANAGEMENT =====
         sendEmail: (emailData) => {
             return requester.post(`${apiUrl}/emails/send`, emailData);

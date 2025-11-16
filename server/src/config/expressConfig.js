@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 
 const { port, frontend_server } = require('./envConfig');
 
@@ -19,6 +20,8 @@ module.exports = function expressConfig(app) {
     app.use(express.urlencoded({ extended: true }));
     app.use(cors(corsOptions));
     app.use(cookieParser());
+
+    app.use('/uploads/images', express.static(path.join(__dirname, '../uploads/reviewImages')));
 
     app.listen(port, async () => {
         await setupDatabase();
