@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Suspense, useRef, useState, useEffect } from 'react';
+import React, { Suspense, useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame, useLoader } from '@react-three/fiber';
 import { OrbitControls, Text, Environment, ContactShadows, Float } from '@react-three/drei';
 import * as THREE from 'three';
@@ -194,6 +194,40 @@ function LightingSetup() {
     );
 }
 
+// Error Boundary Component
+class ErrorBoundary extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { hasError: false };
+    }
+
+    static getDerivedStateFromError(error) {
+        return { hasError: true };
+    }
+
+    componentDidCatch(error, errorInfo) {
+        console.warn('Environment failed to load:', error);
+    }
+
+    render() {
+        if (this.state.hasError) {
+            return this.props.fallback || null;
+        }
+        return this.props.children;
+    }
+}
+
+// Environment with error handling
+function SafeEnvironment() {
+    return (
+        <ErrorBoundary fallback={null}>
+            <Suspense fallback={null}>
+                <Environment preset='sunset' />
+            </Suspense>
+        </ErrorBoundary>
+    );
+}
+
 // 3D Сцена
 function BookScene() {
     return (
@@ -206,7 +240,7 @@ function BookScene() {
                     </Float>
                     <Particles />
                     <ContactShadows position={[0, -3, 0]} opacity={0.4} scale={10} blur={2.5} far={4} />
-                    <Environment preset='sunset' />
+                    <SafeEnvironment />
                     <OrbitControls
                         enablePan={false}
                         minDistance={6}
@@ -269,7 +303,7 @@ function BookRating({ rating = 4.8, viewers, isLoading = false, totalReviews = 0
                 <span className='book-presentation-3d-rating-number'>{isLoading ? '...' : `${rating}/5`}</span>
             </div>
             {totalReviews > 0 && !isLoading && (
-                <div className='book-presentation-3d-reviews-count' style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
+                <div className='book-presentation-3d-reviews-count'>
                     Базирано на {totalReviews} {totalReviews === 1 ? 'отзив' : 'отзива'}
                 </div>
             )}

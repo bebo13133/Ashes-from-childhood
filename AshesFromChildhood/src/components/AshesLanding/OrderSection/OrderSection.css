@@ -98,6 +98,13 @@
     z-index: 10;
 }
 
+/* Container for OrderSection */
+.OrderSection-order-section .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 60px;
+}
+
 .OrderSection-order-content.OrderSection-fade-in-up {
     opacity: 1;
     transform: translateY(0);
@@ -171,8 +178,11 @@
 .OrderSection-order-grid {
     display: grid;
     grid-template-columns: 1.2fr 1fr;
-    gap: 80px;
+    gap: 50px;
     align-items: start;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
 }
 
 /* Form Container */
@@ -730,6 +740,10 @@
 
 /* Responsive Design */
 @media (max-width: 1024px) {
+    .OrderSection-order-section .container {
+        padding: 0 40px;
+    }
+
     .OrderSection-order-grid {
         grid-template-columns: 1fr;
         gap: 60px;
@@ -741,6 +755,10 @@
 }
 
 @media (max-width: 768px) {
+    .OrderSection-order-section .container {
+        padding: 0 20px;
+    }
+
     .OrderSection-order-section {
         padding: 60px 0 35px; /* top 60, bottom 35 to tighten space before footer */
     }

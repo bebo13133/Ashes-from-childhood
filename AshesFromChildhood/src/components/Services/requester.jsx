@@ -3,16 +3,14 @@ import { refreshToken } from '../../utils/refreshToken.js';
 const requester = async (method, url, data) => {
     const options = {
         credentials: 'include',
+        headers: {},
     };
 
     if (method !== 'GET') {
         options.method = method;
 
         if (data) {
-            options.headers = {
-                'content-type': 'application/json',
-            };
-
+            options.headers['content-type'] = 'application/json';
             options.body = JSON.stringify(data);
         }
     }
@@ -24,10 +22,7 @@ const requester = async (method, url, data) => {
             if (auth.token) {
                 const accessToken = await refreshToken(auth);
                 if (!accessToken) return window.location.replace('/');
-                options.headers = {
-                    ...options.headers,
-                    Authorization: `Bearer ${accessToken.token}`,
-                };
+                options.headers.Authorization = `Bearer ${accessToken.token}`;
             }
         }
 

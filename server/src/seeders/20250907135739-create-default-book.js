@@ -6,7 +6,7 @@ module.exports = {
         await queryInterface.bulkInsert('Books', [
             {
                 title: 'Пепел от детството',
-                price: 25.0,
+                price: 28.0,
                 currency: 'BGN',
                 is_active: true,
                 created_at: new Date(),
