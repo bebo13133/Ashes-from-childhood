@@ -1413,7 +1413,33 @@
     }
 
     .book-presentation-3d-thumbnail-gallery {
-        padding: 12px;
+        padding: 15px;
+    }
+
+    .book-presentation-3d-thumbnails-container {
+        gap: 12px;
+    }
+
+    .book-presentation-3d-thumbnail {
+        width: 80px;
+        height: 62px;
+    }
+
+    .book-presentation-3d-model-thumb-icon {
+        font-size: 2.3rem;
+    }
+
+    .book-presentation-3d-model-thumb-text {
+        font-size: 1.05rem;
+    }
+
+    .book-presentation-3d-thumbnail-title {
+        font-size: 0.8rem;
+        padding: 6px 4px;
+    }
+
+    .book-presentation-3d-gallery-title {
+        font-size: 1.2rem;
     }
 
     .book-presentation-3d-mini-3d-model {
@@ -1519,16 +1545,33 @@
     }
 
     .book-presentation-3d-thumbnail-gallery {
-        padding: 12px;
+        padding: 15px;
     }
 
     .book-presentation-3d-thumbnails-container {
-        gap: 8px;
+        gap: 12px;
     }
 
     .book-presentation-3d-thumbnail {
-        width: 55px;
-        height: 42px;
+        width: 75px;
+        height: 58px;
+    }
+
+    .book-presentation-3d-model-thumb-icon {
+        font-size: 2.2rem;
+    }
+
+    .book-presentation-3d-model-thumb-text {
+        font-size: 1rem;
+    }
+
+    .book-presentation-3d-thumbnail-title {
+        font-size: 0.75rem;
+        padding: 5px 4px;
+    }
+
+    .book-presentation-3d-gallery-title {
+        font-size: 1.15rem;
     }
 
     .book-presentation-3d-mini-3d-model {
