@@ -842,6 +842,14 @@
 }
 
 /* Show More Reviews Button */
+.reviews-load-more-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+    width: 100%;
+}
+
 .show-more-reviews-btn {
     width: 100%;
     padding: 15px 20px;
@@ -853,7 +861,6 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    margin-top: 10px;
     box-shadow: 0 4px 15px rgba(106, 127, 219, 0.3);
 }
 
@@ -864,6 +871,31 @@
 }
 
 .show-more-reviews-btn:active {
+    transform: translateY(0);
+}
+
+.hide-reviews-btn {
+    width: 100%;
+    padding: 15px 20px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.hide-reviews-btn:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.hide-reviews-btn:active {
     transform: translateY(0);
 }
 

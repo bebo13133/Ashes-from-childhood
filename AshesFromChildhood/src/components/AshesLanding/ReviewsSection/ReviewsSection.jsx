@@ -24,7 +24,7 @@ const ReviewsSection = () => {
     const [carouselImages, setCarouselImages] = useState([]);
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
-    const [showAllReviews, setShowAllReviews] = useState(false);
+    const [visibleReviewsCount, setVisibleReviewsCount] = useState(3);
     const [isMobile, setIsMobile] = useState(false);
 
     const { submitReview, fetchPublicReviews, markReviewAsHelpful, fetchImageReviews, isLoading } = useAuthContext();
@@ -469,7 +469,7 @@ const ReviewsSection = () => {
                                     </div>
                                 ) : reviews.length > 0 ? (
                                     <>
-                                        {(isMobile && !showAllReviews ? reviews.slice(0, 3) : reviews).map((review, index) => (
+                                        {(isMobile ? reviews.slice(0, visibleReviewsCount) : reviews).map((review, index) => (
                                             <div
                                                 key={review.id}
                                                 className={`review-card ${isVisible ? 'slide-in' : ''}`}
@@ -504,10 +504,32 @@ const ReviewsSection = () => {
                                                 </div>
                                             </div>
                                         ))}
-                                        {isMobile && reviews.length > 3 && !showAllReviews && (
-                                            <button className='show-more-reviews-btn' onClick={() => setShowAllReviews(true)}>
-                                                Покажи всички отзиви ({reviews.length})
-                                            </button>
+                                        {isMobile && reviews.length > visibleReviewsCount && (
+                                            <div className='reviews-load-more-buttons'>
+                                                <button
+                                                    className='show-more-reviews-btn'
+                                                    onClick={() => {
+                                                        const scrollToIndex = visibleReviewsCount - 1;
+                                                        setVisibleReviewsCount((prev) => Math.min(prev + 5, reviews.length));
+                                                        setTimeout(() => {
+                                                            const reviewElements = document.querySelectorAll('.review-card');
+                                                            if (reviewElements[scrollToIndex]) {
+                                                                reviewElements[scrollToIndex].scrollIntoView({
+                                                                    behavior: 'smooth',
+                                                                    block: 'start',
+                                                                });
+                                                            }
+                                                        }, 100);
+                                                    }}
+                                                >
+                                                    Зареди още 5
+                                                </button>
+                                                {visibleReviewsCount > 3 && (
+                                                    <button className='hide-reviews-btn' onClick={() => setVisibleReviewsCount(3)}>
+                                                        Скрий всички
+                                                    </button>
+                                                )}
+                                            </div>
                                         )}
                                     </>
                                 ) : (
