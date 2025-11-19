@@ -198,10 +198,40 @@
 }
 
 @media (max-width: 767px) {
+    .book-presentation-3d-container {
+        padding: 2rem 20px;
+        max-width: 100%;
+    }
+
+    .book-presentation-3d-presentation-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        text-align: center;
+        justify-items: center;
+    }
+
     .book-presentation-3d-book-info {
         overflow: visible;
         padding-left: 0;
         height: auto;
+    }
+
+    .book-presentation-3d-book-showcase {
+        height: 600px;
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .book-presentation-3d-scene {
+        height: 500px;
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .book-presentation-3d-scene canvas {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
     }
 
     .book-presentation-3d-benefits-grid {
@@ -1974,6 +2004,9 @@
         max-width: 100%;
         width: 100%;
         margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .book-presentation-3d-scene {
@@ -1985,17 +2018,22 @@
         justify-content: center;
         margin-left: auto;
         margin-right: auto;
+        width: 100%;
+        max-width: 100%;
+        position: relative;
+        left: 0;
+        right: 0;
     }
 
     .book-presentation-3d-scene canvas {
         display: block !important;
         margin: 0 auto !important;
         width: 100% !important;
-        max-width: 100%;
-    }
-
-    .book-presentation-3d-info-title {
-        font-size: clamp(1.3rem, 2.8vw, 1.7rem);
+        max-width: 100% !important;
+        position: relative !important;
+        left: auto !important;
+        right: auto !important;
+        transform: none !important;
     }
 
     .book-presentation-3d-feature-item {
@@ -2134,6 +2172,138 @@
     .book-presentation-3d-interaction-hint {
         font-size: 0.75rem;
         padding: 6px 10px;
+    }
+}
+
+/* Very Small Mobile (max-width: 430px) - Fix centering issue */
+@media (max-width: 430px) {
+    #book-presentation,
+    .book-presentation-3d-main {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+        box-sizing: border-box !important;
+    }
+
+    .book-presentation-3d-container {
+        padding: 1.5rem 10px !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+        overflow-x: hidden !important;
+    }
+
+    .book-presentation-3d-presentation-content {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .book-presentation-3d-presentation-grid {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .book-presentation-3d-book-showcase {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        position: relative;
+        left: 0;
+        right: 0;
+    }
+
+    .book-presentation-3d-scene {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        position: relative;
+        left: 0 !important;
+        right: 0 !important;
+        transform: none !important;
+    }
+
+    .book-presentation-3d-scene canvas {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+        display: block !important;
+        position: relative !important;
+        left: auto !important;
+        right: auto !important;
+        transform: none !important;
+    }
+
+    .book-presentation-3d-rating-container {
+        left: 10px !important;
+        right: 10px !important;
+        width: auto !important;
+        max-width: calc(100% - 20px) !important;
+    }
+
+    .book-presentation-3d-thumbnail-gallery {
+        left: 10px !important;
+        right: 10px !important;
+        width: auto !important;
+        max-width: calc(100% - 20px) !important;
+    }
+
+    .book-presentation-3d-benefits-grid {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .book-presentation-3d-benefit-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 15px !important;
+    }
+
+    .book-presentation-3d-book-info {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 0 !important;
+    }
+
+    .book-presentation-3d-quote-container,
+    .book-presentation-3d-impact-section,
+    .book-presentation-3d-impact-item {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .book-presentation-3d-section-header {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 0 5px !important;
+    }
+
+    .book-presentation-3d-section-title,
+    .book-presentation-3d-section-subtitle {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
     }
 }
 
