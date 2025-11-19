@@ -287,7 +287,7 @@ const OrderSection = () => {
 
                                     <div className={`OrderSection-form-group ${focusedField === 'address' ? 'OrderSection-focused' : ''}`}>
                                         <label htmlFor='address' className='OrderSection-form-label'>
-                                            Адрес за доставка
+                                            Адрес за доставка или офис на Еконт/Спиди
                                         </label>
                                         <textarea
                                             id='address'

@@ -244,7 +244,7 @@ function BookScene() {
                     <OrbitControls
                         enablePan={false}
                         minDistance={6}
-                        maxDistance={10}
+                        maxDistance={8}
                         minPolarAngle={Math.PI / 3}
                         maxPolarAngle={(2 * Math.PI) / 3}
                         autoRotate
