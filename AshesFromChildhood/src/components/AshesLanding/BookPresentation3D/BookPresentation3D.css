@@ -682,6 +682,10 @@
     background: rgba(255, 255, 255, 0.1);
 }
 
+.book-presentation-3d-model-thumb {
+    overflow: visible;
+}
+
 .book-presentation-3d-thumbnail.book-presentation-3d-active {
     border-color: #d4af37;
     box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
@@ -704,17 +708,21 @@
     align-items: center;
     justify-content: center;
     background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.1));
+    overflow: visible;
 }
 
 .book-presentation-3d-model-thumb-content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 11px 0;
+    justify-content: center;
+    padding: 8px 0;
+    height: 100%;
+    width: 100%;
 }
 
 .book-presentation-3d-model-thumb-icon {
-    font-size: 2rem;
+    font-size: 2.8rem;
 }
 
 .book-presentation-3d-model-thumb-text {
@@ -722,6 +730,9 @@
     color: #d4af37;
     text-align: center;
     font-weight: 600;
+    margin-top: 4px;
+    white-space: nowrap;
+    line-height: 1.2;
 }
 
 .book-presentation-3d-thumbnail-title {
@@ -1451,16 +1462,22 @@
     }
 
     .book-presentation-3d-thumbnail {
-        width: 80px;
-        height: 62px;
+        width: 100px;
+        height: 95px;
     }
 
     .book-presentation-3d-model-thumb-icon {
-        font-size: 2.3rem;
+        font-size: 3.5rem;
     }
 
     .book-presentation-3d-model-thumb-text {
         font-size: 1.05rem;
+        margin-top: 4px;
+        white-space: nowrap;
+    }
+
+    .book-presentation-3d-model-thumb-content {
+        padding: 8px 0;
     }
 
     .book-presentation-3d-thumbnail-title {
@@ -1583,16 +1600,22 @@
     }
 
     .book-presentation-3d-thumbnail {
-        width: 75px;
-        height: 58px;
+        width: 95px;
+        height: 90px;
     }
 
     .book-presentation-3d-model-thumb-icon {
-        font-size: 2.2rem;
+        font-size: 3.2rem;
     }
 
     .book-presentation-3d-model-thumb-text {
         font-size: 1rem;
+        margin-top: 4px;
+        white-space: nowrap;
+    }
+
+    .book-presentation-3d-model-thumb-content {
+        padding: 8px 0;
     }
 
     .book-presentation-3d-thumbnail-title {
