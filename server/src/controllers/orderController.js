@@ -156,12 +156,41 @@ orderController.put('/update-status/:id', isAuth, async (req, res, next) => {
             });
         }
 
+        const previousStatus = order.status;
+        const book = await Book.findByPk(order.bookId);
+
+        if (!book) {
+            return res.status(404).json({
+                success: false,
+                message: 'Book not found',
+            });
+        }
+
         // Use helper methods for specific status changes
         if (status === 'completed') {
+            // Decrement stock when order is completed (allow stock to go to 0, not negative)
+            if (previousStatus !== 'completed') {
+                const newStock = Math.max(0, book.stock - order.quantity);
+                await book.update({
+                    stock: newStock,
+                });
+            }
             await order.markAsCompleted();
         } else if (status === 'cancelled') {
+            // Restore stock if order was previously completed
+            if (previousStatus === 'completed') {
+                await book.update({
+                    stock: book.stock + order.quantity,
+                });
+            }
             await order.cancel();
         } else if (status === 'pending') {
+            // Restore stock if order was previously completed and is being set back to pending
+            if (previousStatus === 'completed') {
+                await book.update({
+                    stock: book.stock + order.quantity,
+                });
+            }
             await order.update({
                 status: 'pending',
                 completedAt: null,
@@ -197,6 +226,16 @@ orderController.delete('/single/:id', isAuth, async (req, res, next) => {
 
         const orderNumber = order.orderNumber;
         const customerName = order.customerName;
+
+        // Restore stock if order was completed
+        if (order.status === 'completed') {
+            const book = await Book.findByPk(order.bookId);
+            if (book) {
+                await book.update({
+                    stock: book.stock + order.quantity,
+                });
+            }
+        }
 
         await order.destroy();
 

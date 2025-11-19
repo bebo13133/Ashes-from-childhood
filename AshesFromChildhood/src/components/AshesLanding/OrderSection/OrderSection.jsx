@@ -3,7 +3,7 @@ import './OrderSection.css';
 import { useAuthContext } from '../../contexts/userContext';
 
 const OrderSection = () => {
-    const { submitBookOrder, isLoading, errorMessage, clearError, bookPrice, fetchBookPrice } = useAuthContext();
+    const { submitBookOrder, isLoading, errorMessage, clearError, bookPrice, bookStock, fetchBookPrice } = useAuthContext();
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -189,6 +189,12 @@ const OrderSection = () => {
                                 )}
                             </span>
                         </div>
+                        {bookStock !== undefined && bookStock !== null && (
+                            <div className='OrderSection-stock-display'>
+                                <span className='OrderSection-stock-label'>Налично количество:</span>
+                                <span className={`OrderSection-stock-amount ${bookStock < 10 ? 'OrderSection-stock-low' : ''}`}>{bookStock} бр.</span>
+                            </div>
+                        )}
                     </div>
 
                     {/* Error Message */}

@@ -25,6 +25,8 @@ const SySAdminCp = () => {
         changePassword,
         updateBookPrice,
         bookPrice,
+        bookStock,
+        updateBookStock,
         fetchBookPrice,
     } = useAuthContext();
 
@@ -223,6 +225,7 @@ const SySAdminCp = () => {
 
                     <div className='header-center'>
                         <BookPriceManager currentPrice={bookPrice} onPriceUpdate={updateBookPrice} />
+                        <BookStockManager currentStock={bookStock} onStockUpdate={updateBookStock} />
                     </div>
 
                     <div className='header-right'>
@@ -455,6 +458,97 @@ const BookPriceManager = ({ currentPrice, onPriceUpdate }) => {
         </div>
     );
 };
+
+// Book Stock Manager Component
+const BookStockManager = ({ currentStock, onStockUpdate }) => {
+    const [isEditing, setIsEditing] = useState(false);
+    const [stock, setStock] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        if (currentStock !== undefined && currentStock !== null) {
+            setStock(currentStock.toString());
+        }
+    }, [currentStock]);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const stockValue = parseInt(stock);
+        if (isNaN(stockValue) || stockValue < 0) {
+            alert('Моля, въведете валидно количество (0 или повече)');
+            return;
+        }
+
+        setIsLoading(true);
+        try {
+            await onStockUpdate(stockValue);
+            setIsEditing(false);
+            alert('Количеството е обновено успешно!');
+        } catch (error) {
+            alert('Грешка при обновяване на количеството: ' + error.message);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleCancel = () => {
+        if (currentStock !== undefined && currentStock !== null) {
+            setStock(currentStock.toString());
+        }
+        setIsEditing(false);
+    };
+
+    if (isEditing) {
+        return (
+            <div className='book-stock-manager editing'>
+                <form onSubmit={handleSubmit} className='stock-edit-form'>
+                    <div className='stock-input-group'>
+                        <label className='stock-label-small'>Количество:</label>
+                        <input
+                            type='number'
+                            min='0'
+                            step='1'
+                            value={stock}
+                            onChange={(e) => setStock(e.target.value)}
+                            className='stock-input'
+                            placeholder='0'
+                            disabled={isLoading}
+                            autoFocus
+                        />
+                        <span className='stock-unit'>бр.</span>
+                    </div>
+
+                    <div className='stock-actions'>
+                        <button type='submit' className='save-stock-btn' disabled={isLoading}>
+                            {isLoading ? '...' : '✓'}
+                        </button>
+                        <button type='button' className='cancel-stock-btn' onClick={handleCancel} disabled={isLoading}>
+                            ✕
+                        </button>
+                    </div>
+                </form>
+            </div>
+        );
+    }
+
+    return (
+        <div className='book-stock-manager'>
+            <div className='stock-display'>
+                <span className='stock-label'>Налично количество:</span>
+                <div className='stock-value-container'>
+                    <span className='stock-value'>
+                        {currentStock !== undefined && currentStock !== null ? <span className='stock-display-value'>{currentStock} бр.</span> : 'Зареждане...'}
+                    </span>
+                    <button className='edit-stock-btn' onClick={() => setIsEditing(true)} title='Редактирай количеството'>
+                        ✏️
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 // Password Change Modal Component
 const PasswordChangeModal = ({ onClose, changePassword }) => {
     const [passwordData, setPasswordData] = useState({

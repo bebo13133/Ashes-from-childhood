@@ -25,6 +25,7 @@ export const AuthProvider = ({ children }) => {
         bgn: 28.0,
         eur: null,
     });
+    const [bookStock, setBookStock] = useState(234);
     const navigate = useNavigate();
     // Функция за конвертиране
     const convertToEur = (bgnPrice) => {
@@ -314,6 +315,15 @@ export const AuthProvider = ({ children }) => {
             // Update local state
             setOrders((prevOrders) => prevOrders.map((order) => (order.id === orderId ? { ...order, status, updatedAt: new Date().toISOString() } : order)));
 
+            // Refresh book stock since completing/cancelling orders affects stock
+            if (status === 'completed' || status === 'cancelled' || status === 'pending') {
+                try {
+                    await fetchBookPrice();
+                } catch (error) {
+                    console.error('Error refreshing book stock:', error);
+                }
+            }
+
             return response;
         } catch (error) {
             const errorMsg = error.message || 'Грешка при обновяване на поръчката.';
@@ -343,10 +353,23 @@ export const AuthProvider = ({ children }) => {
         setErrorMessage('');
 
         try {
+            // Get order before deleting to check if it was completed
+            const orderToDelete = orders.find((order) => order.id === orderId);
+            const wasCompleted = orderToDelete?.status === 'completed';
+
             await userService.deleteOrder(orderId);
 
             // Update local state
             setOrders((prevOrders) => prevOrders.filter((order) => order.id !== orderId));
+
+            // Refresh book stock if deleted order was completed (stock was restored)
+            if (wasCompleted) {
+                try {
+                    await fetchBookPrice();
+                } catch (error) {
+                    console.error('Error refreshing book stock:', error);
+                }
+            }
 
             return { success: true, message: 'Поръчката е изтрита успешно.' };
         } catch (error) {
@@ -763,6 +786,10 @@ export const AuthProvider = ({ children }) => {
                 eur: convertToEur(Number(bgnPrice)),
             };
             setBookPrice(priceObj);
+            // Also update stock if available
+            if (response.stock !== undefined) {
+                setBookStock(response.stock);
+            }
             return priceObj;
         } catch (error) {
             console.error('Error fetching book price:', error);
@@ -774,6 +801,20 @@ export const AuthProvider = ({ children }) => {
             return defaultPrice;
         }
     }, [userService]);
+
+    const updateBookStock = useCallback(
+        async (stock) => {
+            try {
+                const response = await userService.updateBookStock(stock);
+                setBookStock(response.stock || stock);
+                return response;
+            } catch (error) {
+                console.error('Error updating book stock:', error);
+                throw error;
+            }
+        },
+        [userService]
+    );
 
     const contextValue = {
         // Auth state
@@ -831,7 +872,9 @@ export const AuthProvider = ({ children }) => {
         submitBookOrder,
         submitReview,
         bookPrice: bookPrice?.bgn || 28.0,
+        bookStock,
         updateBookPrice,
+        updateBookStock,
         fetchBookPrice,
         fetchPublicReviews,
         markReviewAsHelpful,

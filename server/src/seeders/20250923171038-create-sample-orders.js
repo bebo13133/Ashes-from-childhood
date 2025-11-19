@@ -3,6 +3,12 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface, Sequelize) {
+        // Only run in development/test environments, skip in production
+        if (process.env.NODE_ENV === 'production') {
+            console.log('Skipping sample orders seeder in production environment');
+            return;
+        }
+
         // Generate orders with realistic distribution from today back to 8 months ago
         const orders = [];
         const now = new Date();
@@ -200,6 +206,11 @@ module.exports = {
     },
 
     async down(queryInterface, Sequelize) {
+        // Only run in development/test environments, skip in production
+        if (process.env.NODE_ENV === 'production') {
+            console.log('Skipping sample orders seeder rollback in production environment');
+            return;
+        }
         // Delete all orders that were created by this seeder
         await queryInterface.bulkDelete('Orders', {
             order_number: {

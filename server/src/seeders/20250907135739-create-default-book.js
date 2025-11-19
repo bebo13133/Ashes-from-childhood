@@ -9,6 +9,7 @@ module.exports = {
                 price: 28.0,
                 currency: 'BGN',
                 is_active: true,
+                stock: 234,
                 created_at: new Date(),
                 updated_at: new Date(),
             },

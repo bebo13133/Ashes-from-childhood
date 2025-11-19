@@ -22,6 +22,11 @@ module.exports = (sequelize, DataTypes) => {
             await this.update({ price: newPrice });
         }
 
+        // Helper method to update stock
+        async updateStock(newStock) {
+            await this.update({ stock: newStock });
+        }
+
         // Getter for formatted price
         get formattedPrice() {
             return `${this.price} ${this.currency}`;
@@ -48,6 +53,11 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 defaultValue: true,
                 field: 'is_active',
+            },
+            stock: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: 0,
             },
             createdAt: {
                 type: DataTypes.DATE,
