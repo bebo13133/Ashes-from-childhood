@@ -3,6 +3,12 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface, Sequelize) {
+        // Only run in development/test environments, skip in production
+        if (process.env.NODE_ENV === 'production') {
+            console.log('Skipping sample reviews seeder in production environment');
+            return;
+        }
+
         // Generate reviews with realistic distribution from today back to 8 months ago
         const reviews = [];
         const now = new Date();
@@ -208,6 +214,11 @@ module.exports = {
     },
 
     async down(queryInterface, Sequelize) {
+        // Only run in development/test environments, skip in production
+        if (process.env.NODE_ENV === 'production') {
+            console.log('Skipping sample reviews seeder rollback in production environment');
+            return;
+        }
         // Delete all reviews that were created by this seeder
         // We'll identify them by the comment pattern or just delete all for simplicity
         await queryInterface.bulkDelete('Reviews', {

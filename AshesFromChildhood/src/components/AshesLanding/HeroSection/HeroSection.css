@@ -672,12 +672,12 @@
     }
 
     .hero-section-book-display {
-        width: clamp(240px, 35vw, 250px);
-        height: clamp(310px, 44vw, 250px);
+        width: clamp(350px, 50vw, 450px);
+        height: clamp(450px, 65vw, 580px);
     }
 
     .hero-section-book-stack {
-        transform: perspective(1200px) rotateY(-12deg) rotateX(3deg) scale(0.85);
+        transform: perspective(1200px) rotateY(-12deg) rotateX(3deg) scale(1);
     }
 
     .hero-section-title-group {
