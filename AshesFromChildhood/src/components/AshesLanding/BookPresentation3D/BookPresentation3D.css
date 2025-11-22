@@ -1,1605 +1,2780 @@
 .book-presentation-3d-container {
-  position: relative;
-  z-index: 10;
+    position: relative;
+    z-index: 10;
 }
 
 .book-presentation-3d-presentation-content {
-  position: relative;
-  z-index: 11;
+    position: relative;
+    z-index: 11;
 }
 
 .book-presentation-3d-cosmic-particles {
-  position: absolute;
-  width: 100%;
-  height: 100%;
+    position: absolute;
+    width: 100%;
+    height: 100%;
 }
 
 .book-presentation-3d-cosmic-particle {
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  background: radial-gradient(circle, #d4af37, transparent);
-  border-radius: 50%;
-  animation: cosmicFloat 15s infinite linear;
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: radial-gradient(circle, #d4af37, transparent);
+    border-radius: 50%;
+    animation: cosmicFloat 15s infinite linear;
 }
 
-.book-presentation-3d-cosmic-0 { left: 10%; top: 10%; animation-delay: 0s; }
-.book-presentation-3d-cosmic-1 { left: 80%; top: 20%; animation-delay: 3s; }
-.book-presentation-3d-cosmic-2 { left: 60%; top: 60%; animation-delay: 6s; }
-.book-presentation-3d-cosmic-3 { left: 20%; top: 80%; animation-delay: 9s; }
-.book-presentation-3d-cosmic-4 { left: 90%; top: 40%; animation-delay: 12s; }
+.book-presentation-3d-cosmic-0 {
+    left: 10%;
+    top: 10%;
+    animation-delay: 0s;
+}
+.book-presentation-3d-cosmic-1 {
+    left: 80%;
+    top: 20%;
+    animation-delay: 3s;
+}
+.book-presentation-3d-cosmic-2 {
+    left: 60%;
+    top: 60%;
+    animation-delay: 6s;
+}
+.book-presentation-3d-cosmic-3 {
+    left: 20%;
+    top: 80%;
+    animation-delay: 9s;
+}
+.book-presentation-3d-cosmic-4 {
+    left: 90%;
+    top: 40%;
+    animation-delay: 12s;
+}
 
 @keyframes cosmicFloat {
-  0% { 
-    transform: translateY(0) rotate(0deg) scale(1); 
-    opacity: 0; 
-  }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { 
-    transform: translateY(-100vh) rotate(360deg) scale(1.5); 
-    opacity: 0; 
-  }
+    0% {
+        transform: translateY(0) rotate(0deg) scale(1);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100vh) rotate(360deg) scale(1.5);
+        opacity: 0;
+    }
 }
 
 .book-presentation-3d-container {
-  max-width: 1450px;
-  margin: 0 auto;
-  padding: 4rem 40px;
+    max-width: 1450px;
+    margin: 0 auto;
+    padding: 4rem 40px;
 }
 
 .book-presentation-3d-presentation-content {
-  opacity: 0;
-  transform: translateY(80px);
-  transition: all 1.2s ease-out;
+    opacity: 0;
+    transform: translateY(80px);
+    transition: all 1.2s ease-out;
 }
 
 .book-presentation-3d-presentation-content.book-presentation-3d-fade-in-up {
-  opacity: 1;
-  transform: translateY(0);
+    opacity: 1;
+    transform: translateY(0);
 }
 
 /* Section Header */
 .book-presentation-3d-section-header {
-  text-align: center;
-  margin-bottom: 80px;
+    text-align: center;
+    margin-bottom: 80px;
 }
 
 .book-presentation-3d-section-title {
-  font-size: clamp(2.5rem, 6vw, 4.5rem);
-  color: #d4af37;
-  margin-bottom: 25px;
-  text-shadow: 
-    4px 4px 8px rgba(0, 0, 0, 0.8),
-    0 0 40px rgba(212, 175, 55, 0.4);
-  font-family: 'Georgia', serif;
-  font-weight: 700;
-  letter-spacing: 1px;
-  background: linear-gradient(135deg, #e8e8e8, #b0c4de);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-shadow: none;
-  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.8));
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    color: #d4af37;
+    margin-bottom: 25px;
+    text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.8), 0 0 40px rgba(212, 175, 55, 0.4);
+    font-family: 'Georgia', serif;
+    font-weight: 700;
+    letter-spacing: 1px;
+    background: linear-gradient(135deg, #e8e8e8, #b0c4de);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.8));
 }
 
 .book-presentation-3d-section-subtitle {
-  font-size: clamp(1.2rem, 2.8vw, 1.6rem);
-  color: rgba(255, 255, 255, 0.9);
-  font-style: italic;
-  max-width: 700px;
-  margin: 0 auto;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+    font-size: clamp(1.2rem, 2.8vw, 1.6rem);
+    color: rgba(255, 255, 255, 0.9);
+    font-style: italic;
+    max-width: 700px;
+    margin: 0 auto;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
 }
 
 /* Main Grid */
 .book-presentation-3d-presentation-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
-  align-items: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: start;
+    width: 100%;
+    max-width: 100%;
 }
 
 /* 3D Book Showcase */
 .book-presentation-3d-book-showcase {
-  position: relative;
-  height: 850px;
-  background: radial-gradient(ellipse, rgba(15, 52, 96, 0.1), transparent);
-  border-radius: 20px;
-  border: 2px solid rgba(212, 175, 55, 0.2);
-  overflow: hidden;
-  box-shadow: 
-    0 20px 40px rgba(0, 0, 0, 0.8),
-    0 10px 20px rgba(0, 0, 0, 0.6),
-    0 5px 10px rgba(0, 0, 0, 0.4);
-  transition: all 0.3s ease;
+    position: relative;
+    height: 1040px;
+    background: radial-gradient(ellipse, rgba(15, 52, 96, 0.1), transparent);
+    border-radius: 20px;
+    border: 2px solid rgba(212, 175, 55, 0.2);
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 10px 20px rgba(0, 0, 0, 0.6), 0 5px 10px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    width: 100%;
 }
 
 .book-presentation-3d-scene {
-  width: 100%;
-  height: 720px;
-  border-radius: 20px;
+    width: 100%;
+    height: 1040px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.book-presentation-3d-scene canvas {
+    display: block !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+    max-width: 100%;
 }
 
 .book-presentation-3d-interaction-hint {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.8);
-  color: #d4af37;
-  padding: 10px 20px;
-  border-radius: 25px;
-  font-size: 0.9rem;
-  text-align: center;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(212, 175, 55, 0.3);
-  animation: hintPulse 3s infinite ease-in-out;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: #d4af37;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    animation: hintPulse 3s infinite ease-in-out;
 }
 
 @keyframes hintPulse {
-  0%, 100% { opacity: 0.7; transform: translateX(-50%) scale(1); }
-  50% { opacity: 1; transform: translateX(-50%) scale(1.05); }
+    0%,
+    100% {
+        opacity: 0.7;
+        transform: translateX(-50%) scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: translateX(-50%) scale(1.05);
+    }
 }
 
 /* 3D Information Panel */
 .book-presentation-3d-book-info {
-  padding-left: 20px;
+    padding-left: 30px;
+    height: 1040px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow: hidden;
+    max-width: 100%;
 }
 
-.book-presentation-3d-info-title {
-  font-size: clamp(1.8rem, 4vw, 2.8rem);
-  color: #ffffff;
-  margin-bottom: 40px;
-  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.6);
-  font-weight: 600;
-  line-height: 1.2;
+@media (max-width: 767px) {
+    .book-presentation-3d-container {
+        padding: 2rem 20px;
+        max-width: 100%;
+    }
+
+    .book-presentation-3d-presentation-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        text-align: center;
+        justify-items: center;
+    }
+
+    .book-presentation-3d-book-info {
+        overflow: visible;
+        padding-left: 0;
+        height: auto;
+    }
+
+    .book-presentation-3d-book-showcase {
+        height: 600px;
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .book-presentation-3d-scene {
+        height: 500px;
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .book-presentation-3d-scene canvas {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+    }
+
+    .book-presentation-3d-benefits-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .book-presentation-3d-benefit-card {
+        padding: 12px;
+    }
+
+    .book-presentation-3d-benefit-icon {
+        font-size: 1.8rem;
+    }
+
+    .book-presentation-3d-benefit-card h4 {
+        font-size: 1rem;
+    }
+
+    .book-presentation-3d-benefit-card p {
+        font-size: 0.9rem;
+    }
+}
+
+/* Quote Section */
+.book-presentation-3d-quote-section {
+    margin-bottom: 16px;
+    flex-shrink: 0;
+    max-width: 100%;
+}
+
+.book-presentation-3d-quote-container {
+    position: relative;
+    background: rgba(26, 26, 46, 0.6);
+    border-radius: 15px;
+    padding: 20px;
+    border-left: 4px solid #d4af37;
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+}
+
+.book-presentation-3d-quote-mark {
+    font-size: 4rem;
+    color: #d4af37;
+    line-height: 1;
+    opacity: 0.3;
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    font-family: Georgia, serif;
+}
+
+.book-presentation-3d-featured-quote {
+    font-size: 1.05rem;
+    color: #ffffff;
+    font-style: italic;
+    margin: 0 0 10px 0;
+    padding-left: 30px;
+    padding-bottom: 15px;
+    line-height: 1.5;
+    position: relative;
+    z-index: 1;
+    flex: 0 1 auto;
+    min-height: 80px;
+}
+
+.book-presentation-3d-quote-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+    flex-shrink: 0;
+}
+
+.book-presentation-3d-quote-source {
+    display: block;
+    font-size: 0.85rem;
+    color: #d4af37;
+    font-style: normal;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.book-presentation-3d-next-quote-btn {
+    position: relative;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.4));
+    border: 2px solid rgba(212, 175, 55, 0.5);
+    color: #d4af37;
+    padding: 6px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.7rem;
+    font-weight: 600;
+    transition: all 0.4s ease;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    width: fit-content;
+}
+
+.book-presentation-3d-next-quote-btn:hover {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.4), rgba(212, 175, 55, 0.6));
+    border-color: rgba(212, 175, 55, 0.8);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2), 0 0 20px rgba(212, 175, 55, 0.3);
+}
+
+.book-presentation-3d-btn-glow {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s ease;
+}
+
+.book-presentation-3d-next-quote-btn:hover .book-presentation-3d-btn-glow {
+    left: 100%;
+}
+
+/* Impact Section */
+.book-presentation-3d-impact-section {
+    margin-bottom: 25px;
+    flex: 0 1 auto;
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+}
+
+.book-presentation-3d-impact-title {
+    font-size: 1.4rem;
+    color: #ffffff;
+    margin-bottom: 12px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.book-presentation-3d-impact-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex: 0 1 auto;
+}
+
+.book-presentation-3d-impact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    background: rgba(26, 26, 46, 0.4);
+    padding: 15px;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    border-left: 3px solid rgba(212, 175, 55, 0.5);
+    flex-shrink: 0;
+    max-width: 100%;
+    word-wrap: break-word;
+}
+
+.book-presentation-3d-impact-icon {
+    font-size: 1.8rem;
+    min-width: 35px;
+    text-align: center;
+}
+
+.book-presentation-3d-impact-text {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.book-presentation-3d-impact-text strong {
+    color: #d4af37;
+    font-weight: 600;
+}
+
+/* Benefits Grid */
+.book-presentation-3d-benefits-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    flex-shrink: 0;
+    max-width: 100%;
+    margin-top: 25px;
+}
+
+.book-presentation-3d-benefit-card {
+    background: rgba(26, 26, 46, 0.5);
+    border-radius: 12px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    transition: all 0.3s ease;
+    word-wrap: break-word;
+    display: flex;
+    flex-direction: column;
+}
+
+.book-presentation-3d-benefit-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(212, 175, 55, 0.5);
+    box-shadow: 0 5px 20px rgba(212, 175, 55, 0.2);
+}
+
+.book-presentation-3d-benefit-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.book-presentation-3d-benefit-icon {
+    font-size: 1.5rem;
+}
+
+.book-presentation-3d-benefit-card h4 {
+    font-size: 1rem;
+    color: #d4af37;
+    margin: 0;
+    font-weight: 600;
+}
+
+.book-presentation-3d-benefit-card p {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.5;
+    margin: 0;
+    flex: 1;
 }
 
 .book-presentation-3d-feature-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 20px;
-  margin-bottom: 30px;
-  padding: 25px;
-  background: rgba(26, 26, 46, 0.6);
-  border-radius: 15px;
-  border-left: 4px solid #f90000;
-  opacity: 0;
-  transform: translateX(30px);
-  transition: all 0.6s ease;
-  backdrop-filter: blur(10px);
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 30px;
+    padding: 25px;
+    background: rgba(26, 26, 46, 0.6);
+    border-radius: 15px;
+    border-left: 4px solid #f90000;
+    opacity: 0;
+    transform: translateX(30px);
+    transition: all 0.6s ease;
+    backdrop-filter: blur(10px);
 }
 
 .book-presentation-3d-feature-item.book-presentation-3d-animate-in {
-  opacity: 1;
-  transform: translateX(0);
+    opacity: 1;
+    transform: translateX(0);
 }
 
 .book-presentation-3d-feature-item:hover {
-  transform: translateX(-5px);
-  box-shadow: 
-    0 15px 40px rgba(0, 0, 0, 0.3),
-    0 0 20px rgba(212, 175, 55, 0.1);
-  background: rgba(26, 26, 46, 0.8);
+    transform: translateX(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(212, 175, 55, 0.1);
+    background: rgba(26, 26, 46, 0.8);
 }
 
 .book-presentation-3d-feature-icon {
-  font-size: 2.2rem;
-  min-width: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    font-size: 2.2rem;
+    min-width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .book-presentation-3d-feature-content h4 {
-  font-size: 1.3rem;
-  color: #d4af37;
-  margin-bottom: 8px;
-  font-weight: 600;
+    font-size: 1.3rem;
+    color: #d4af37;
+    margin-bottom: 8px;
+    font-weight: 600;
 }
 
 .book-presentation-3d-feature-content p {
-  color: rgba(255, 255, 255, 0.85);
-  line-height: 1.6;
-  font-size: 1rem;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.6;
+    font-size: 1rem;
 }
 
 /* CTA Section */
 .book-presentation-3d-cta-section {
-  padding: 30px;
-  background: rgba(15, 52, 96, 0.3);
-  border-radius: 20px;
-  border: 1px solid rgba(212, 175, 55, 0.2);
-  text-align: center;
-  backdrop-filter: blur(15px);
+    padding: 30px;
+    background: rgba(15, 52, 96, 0.3);
+    border-radius: 20px;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    text-align: center;
+    backdrop-filter: blur(15px);
 }
 
 .book-presentation-3d-book-quote {
-  font-size: 1.4rem;
-  font-style: italic;
-  color: #d4af37;
-  margin-bottom: 15px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
-  line-height: 1.5;
+    font-size: 1.4rem;
+    font-style: italic;
+    color: #d4af37;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+    line-height: 1.5;
 }
 
 .book-presentation-3d-quote-caption {
-  font-size: 1.1rem;
-  color: rgba(255, 255, 255, 0.8);
-  font-style: italic;
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-style: italic;
 }
 
 /* Book Rating */
 .book-presentation-3d-rating-container {
-  position: absolute;
-  top: 15px;
-  left: 20px;
-  right: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  backdrop-filter: blur(35px);
-  border-radius: 15px;
-  padding: 12px 20px;
-  z-index: 100;
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(35px);
+    border-radius: 15px;
+    padding: 12px 20px;
+    z-index: 100;
 }
 
 .book-presentation-3d-rating-section {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .book-presentation-3d-stars-container {
-  display: flex;
-  gap: 2px;
+    display: flex;
+    gap: 2px;
 }
 
 .book-presentation-3d-star {
-  font-size: 1.2rem;
-  transition: all 0.3s ease;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
 }
 
 .book-presentation-3d-star.book-presentation-3d-full {
-  color: #d4af37;
-  text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+    color: #d4af37;
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
 }
 
 .book-presentation-3d-star.book-presentation-3d-half {
-  background: linear-gradient(90deg, #d4af37 50%, #666 50%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+    background: linear-gradient(90deg, #d4af37 50%, #666 50%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .book-presentation-3d-star.book-presentation-3d-empty {
-  color: #666;
+    color: #666;
 }
 
 .book-presentation-3d-rating-number {
-  color: #d4af37;
-  font-weight: 600;
-  font-size: 0.9rem;
+    color: #d4af37;
+    font-weight: 600;
+    font-size: 1.3rem;
+}
+
+.book-presentation-3d-reviews-count {
+    font-size: 1.2rem;
+    color: #ffffff;
+    margin-top: 4px;
 }
 
 .book-presentation-3d-viewers-section {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .book-presentation-3d-live-indicator {
-  width: 8px;
-  height: 8px;
-  background: #ff4444;
-  border-radius: 50%;
-  animation: livePulse 2s infinite;
+    width: 8px;
+    height: 8px;
+    background: #ff4444;
+    border-radius: 50%;
+    animation: livePulse 2s infinite;
 }
 
 @keyframes livePulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.3;
+    }
 }
 
 .book-presentation-3d-viewers-count {
-  color: #ffffff;
-  font-size: 0.9rem;
-  font-weight: 500;
+    color: #ffffff;
+    font-size: 0.9rem;
+    font-weight: 500;
 }
 
 /* Thumbnail Gallery */
 .book-presentation-3d-thumbnail-gallery {
-  position: absolute;
-  bottom: 15px;
-  left: 20px;
-  right: 20px;
-  backdrop-filter: blur(35px);
-  border-radius: 15px;
-  padding: 15px;
-  z-index: 100;
+    position: absolute;
+    bottom: 15px;
+    left: 20px;
+    right: 20px;
+    backdrop-filter: blur(35px);
+    border-radius: 15px;
+    padding: 15px;
+    z-index: 100;
 }
 
 /* Минималистичен urgent label */
 .book-presentation-3d-urgent-label {
-  background: rgba(249, 0, 0, 0.8);
-  border-radius: 8px;
-  padding: 8px 12px;
-  margin-bottom: 12px;
-  text-align: center;
+    background: rgba(249, 0, 0, 0.8);
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-bottom: 12px;
+    text-align: center;
 }
 
 .book-presentation-3d-urgent-label span {
-  color: #ffffff;
-  font-size: 0.8rem;
-  font-weight: 500;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    color: #ffffff;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
 }
 
 .book-presentation-3d-gallery-title {
-  color: #ffffff;
-  font-size: 0.9rem;
-  margin-bottom: 10px;
-  text-align: center;
-  font-weight: 500;
+    color: #ffffff;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    text-align: center;
+    font-weight: 500;
 }
 
 .book-presentation-3d-thumbnails-container {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
 }
 
 .book-presentation-3d-thumbnail {
-  width: 60px;
-  height: 45px;
-  border-radius: 8px;
-  overflow: hidden;
-  cursor: pointer;
-  border: 2px solid transparent;
-  transition: all 0.3s ease;
-  position: relative;
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.book-presentation-3d-thumbnail.book-presentation-3d-active {
-  border-color: #d4af37;
-  box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
-  transform: scale(1.1);
-}
-
-.book-presentation-3d-thumbnail:hover {
-  transform: scale(1.05);
-  border-color: rgba(212, 175, 55, 0.5);
-}
-
-.book-presentation-3d-thumbnail img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+    width: 90px;
+    height: 70px;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    position: relative;
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .book-presentation-3d-model-thumb {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.1));
+    overflow: visible;
+}
+
+.book-presentation-3d-thumbnail.book-presentation-3d-active {
+    border-color: #d4af37;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+    transform: scale(1.1);
+}
+
+.book-presentation-3d-thumbnail:hover {
+    transform: scale(1.05);
+    border-color: rgba(212, 175, 55, 0.5);
+}
+
+.book-presentation-3d-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.book-presentation-3d-model-thumb {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.1));
+    overflow: visible;
 }
 
 .book-presentation-3d-model-thumb-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 11px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 0;
+    height: 100%;
+    width: 100%;
 }
 
 .book-presentation-3d-model-thumb-icon {
-  font-size: 1.2rem;
+    font-size: 2.8rem;
 }
 
 .book-presentation-3d-model-thumb-text {
-  font-size: 0.6rem;
-  color: #d4af37;
-  text-align: center;
-  font-weight: 600;
+    font-size: 0.9rem;
+    color: #d4af37;
+    text-align: center;
+    font-weight: 600;
+    margin-top: 4px;
+    white-space: nowrap;
+    line-height: 1.2;
 }
 
 .book-presentation-3d-thumbnail-title {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
-  color: #ffffff;
-  font-size: 0.5rem;
-  padding: 2px 4px;
-  text-align: center;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+    color: #ffffff;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    padding: 4px 6px;
+    text-align: center;
 }
 
 /* Простия order бутон */
 .book-presentation-3d-order-btn-gallery {
-  width: 100%;
-  background: linear-gradient(135deg, #d4af37 0%, #f7e98e 50%, #d4af37 100%);
-  border: none;
-  color: #1a1a1a;
-  padding: 12px 20px;
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+    width: 100%;
+    background: linear-gradient(135deg, #d4af37 0%, #f7e98e 50%, #d4af37 100%);
+    border: none;
+    color: #1a1a1a;
+    padding: 12px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
 }
 
 .book-presentation-3d-order-btn-gallery:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.6);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.6);
 }
 
 /* Image View */
 .book-presentation-3d-image-view-container {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  border-radius: 20px;
-  overflow: hidden;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    padding-bottom: 150px;
+    padding-top: 10px;
+    box-sizing: border-box;
 }
 
 .book-presentation-3d-large-image-wrapper {
-  position: relative;
-  max-width: 100%;
-  max-height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    position: relative;
+    max-width: 100%;
+    max-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .book-presentation-3d-large-display-image {
-  max-width: 100%;
-  max-height: 350px;
-  object-fit: contain;
-  border-radius: 15px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+    max-width: 100%;
+    max-height: 450px;
+    object-fit: contain;
+    border-radius: 15px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+    margin-bottom: 10px;
 }
 
 .book-presentation-3d-back-to-3d-btn {
-  position: absolute;
+    display: none;
 }
 
 .book-presentation-3d-back-to-3d-btn:hover {
-  background: rgba(212, 175, 55, 0.2);
-  border-color: #d4af37;
-  transform: translateX(-5px);
+    background: rgba(212, 175, 55, 0.2);
+    border-color: #d4af37;
+    transform: translateX(-5px);
+}
+
+/* Trailer inside 3D card */
+/* Trailer Wrapper - адаптиран от VideoTrailerSection */
+.book-presentation-3d-trailer-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px 90px;
+    box-sizing: border-box;
+}
+
+/* Video Wrapper - точно като VideoTrailerSection */
+.book-presentation-3d-video-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    aspect-ratio: 16 / 9;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%);
+    min-height: 0;
+    display: block;
+}
+
+.book-presentation-3d-video-wrapper:hover {
+    transform: scale(1.02);
+}
+
+/* Декоративни ъгли */
+.book-presentation-3d-video-frame-corners {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.book-presentation-3d-corner {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border: 3px solid #d4af37;
+    transition: all 0.4s ease;
+}
+
+.book-presentation-3d-corner-tl {
+    top: 0;
+    left: 0;
+    border-right: none;
+    border-bottom: none;
+}
+
+.book-presentation-3d-corner-tr {
+    top: 0;
+    right: 0;
+    border-left: none;
+    border-bottom: none;
+}
+
+.book-presentation-3d-corner-bl {
+    bottom: 0;
+    left: 0;
+    border-right: none;
+    border-top: none;
+}
+
+.book-presentation-3d-corner-br {
+    bottom: 0;
+    right: 0;
+    border-left: none;
+    border-top: none;
+}
+
+.book-presentation-3d-video-wrapper:hover .book-presentation-3d-corner {
+    width: 70px;
+    height: 70px;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+}
+
+/* Glow Effect */
+.book-presentation-3d-video-glow-effect {
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    background: linear-gradient(45deg, rgba(212, 175, 55, 0.3), rgba(247, 233, 142, 0.2), rgba(212, 175, 55, 0.3));
+    border-radius: 20px;
+    filter: blur(20px);
+    opacity: 0.6;
+    z-index: -1;
+    animation: book-presentation-3d-glowPulse 3s ease-in-out infinite;
+}
+
+@keyframes book-presentation-3d-glowPulse {
+    0%,
+    100% {
+        opacity: 0.4;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+/* Video Element - removed duplicate, using the one below */
+
+/* Блокира YouTube контроли */
+.book-presentation-3d-yt-blocker {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    pointer-events: auto !important;
+    background: transparent;
+}
+
+/* Video Poster */
+.book-presentation-3d-video-poster {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 15;
+    pointer-events: none;
+    background: #000;
+}
+
+.book-presentation-3d-video-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+/* Play Overlay */
+.book-presentation-3d-play-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    transition: all 0.4s ease;
+    z-index: 20;
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+.book-presentation-3d-play-overlay:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.book-presentation-3d-play-button {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.book-presentation-3d-play-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #d4af37, #f7e98e);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(212, 175, 55, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    z-index: 2;
+    padding-left: 5px;
+}
+
+.book-presentation-3d-play-overlay:hover .book-presentation-3d-play-icon {
+    transform: scale(1.1);
+    box-shadow: 0 15px 50px rgba(212, 175, 55, 0.7), inset 0 0 30px rgba(255, 255, 255, 0.5);
+}
+
+.book-presentation-3d-play-pulse {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border: 3px solid rgba(212, 175, 55, 0.6);
+    border-radius: 50%;
+    animation: book-presentation-3d-pulsate 2s ease-out infinite;
+}
+
+@keyframes book-presentation-3d-pulsate {
+    0% {
+        transform: scale(0.8);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1.4);
+        opacity: 0;
+    }
+}
+
+.book-presentation-3d-play-text {
+    color: #ffffff;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Custom Controls */
+.book-presentation-3d-video-controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 25;
+    pointer-events: auto;
+}
+
+/* Desktop controls - hidden on mobile */
+.book-presentation-3d-video-controls-desktop {
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 25;
+    pointer-events: auto;
+}
+
+/* Mobile controls - hidden on desktop, shown on mobile */
+.book-presentation-3d-video-controls-mobile {
+    display: none;
+}
+
+@media (max-width: 767px) {
+    .book-presentation-3d-video-controls-desktop {
+        display: none !important;
+    }
+
+    .book-presentation-3d-video-wrapper {
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    .book-presentation-3d-video-controls-mobile {
+        display: flex !important;
+        position: relative !important;
+        bottom: auto !important;
+        left: auto !important;
+        right: auto !important;
+        margin-top: 0 !important;
+        margin-bottom: 20px !important;
+        padding: 15px;
+        background: transparent !important;
+        border-top-left-radius: 0 !important;
+        border-top-right-radius: 0 !important;
+        border-radius: 0 !important;
+        border-top: none !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+        opacity: 1 !important;
+        width: 100%;
+        max-width: 100%;
+        justify-content: center;
+        gap: 15px;
+        z-index: 25;
+    }
+}
+
+.book-presentation-3d-video-controls.book-presentation-3d-controls-visible,
+.book-presentation-3d-video-controls-desktop.book-presentation-3d-controls-visible {
+    opacity: 1;
+}
+
+.book-presentation-3d-control-btn {
+    width: 45px;
+    height: 45px;
+    background: rgba(212, 175, 55, 0.3);
+    border: 2px solid rgba(212, 175, 55, 0.6);
+    border-radius: 50%;
+    color: #d4af37;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    pointer-events: auto;
+}
+
+.book-presentation-3d-control-btn:hover {
+    background: rgba(212, 175, 55, 0.5);
+    border-color: #d4af37;
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+}
+
+.book-presentation-3d-control-btn:active {
+    transform: scale(0.95);
+}
+
+/* Скрива YouTube контролите - точно като VideoTrailerSection */
+.book-presentation-3d-trailer-video,
+[id^='yt-player'] {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow: hidden !important;
+    border-radius: 15px;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.book-presentation-3d-trailer-video iframe,
+[id^='yt-player'] iframe {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    border: none !important;
+    border-radius: 15px;
+    pointer-events: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Target all nested divs that YouTube creates */
+.book-presentation-3d-trailer-video > div,
+.book-presentation-3d-trailer-video > div > div,
+.book-presentation-3d-trailer-video > div > div > div,
+[id^='yt-player'] > div,
+[id^='yt-player'] > div > div,
+[id^='yt-player'] > div > div > div {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+@media (max-width: 767px) {
+    .book-presentation-3d-trailer-wrapper {
+        padding: 20px 10px 80px;
+        padding-bottom: 100px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+    }
+
+    .book-presentation-3d-video-wrapper {
+        max-width: 100%;
+        aspect-ratio: 16 / 9;
+        width: 100%;
+        margin-bottom: 0;
+    }
+
+    .book-presentation-3d-play-button {
+        width: 80px;
+        height: 80px;
+    }
+
+    .book-presentation-3d-play-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+
+    .book-presentation-3d-play-pulse {
+        width: 80px;
+        height: 80px;
+    }
+
+    .book-presentation-3d-corner {
+        width: 35px;
+        height: 35px;
+    }
+
+    .book-presentation-3d-video-wrapper:hover .book-presentation-3d-corner {
+        width: 45px;
+        height: 45px;
+    }
+
+    .book-presentation-3d-control-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+
+    .book-presentation-3d-video-controls {
+        padding: 15px;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .book-presentation-3d-play-text {
+        font-size: 1rem;
+    }
+
+    .book-presentation-3d-control-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
+    }
 }
 
 /* Mini 3D Model */
 .book-presentation-3d-mini-3d-model {
-  position: absolute;
-  bottom: 120px;
-  right: 20px;
-  width: 120px;
-  height: 90px;
-  border-radius: 10px;
-  overflow: hidden;
-  cursor: pointer;
-  border: 2px solid rgba(212, 175, 55, 0.5);
-  transition: all 0.3s ease;
-  z-index: 150;
+    position: absolute;
+    bottom: 120px;
+    right: 20px;
+    width: 120px;
+    height: 90px;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid rgba(212, 175, 55, 0.5);
+    transition: all 0.3s ease;
+    z-index: 150;
 }
 
 .book-presentation-3d-mini-3d-model:hover {
-  transform: scale(1.05);
-  border-color: #d4af37;
-  box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+    transform: scale(1.05);
+    border-color: #d4af37;
+    box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
 }
 
 .book-presentation-3d-mini-3d-content {
-  position: relative;
-  width: 100%;
-  height: 100%;
+    position: relative;
+    width: 100%;
+    height: 100%;
 }
 
 .book-presentation-3d-mini-3d-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
-  color: #d4af37;
-  font-size: 0.7rem;
-  padding: 5px;
-  text-align: center;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+    color: #d4af37;
+    font-size: 0.7rem;
+    padding: 5px;
+    text-align: center;
 }
 
 .book-presentation-3d-book-image {
-  filter: brightness(1.15) contrast(1.05);
+    filter: brightness(1.15) contrast(1.05);
 }
 
 .book-presentation-3d-book-3d-container:hover .book-presentation-3d-book-image {
-  filter: brightness(1.3) contrast(1.15);
+    filter: brightness(1.3) contrast(1.15);
 }
 
 /* ===== RESPONSIVE CSS ===== */
 
 /* Extra Large Screens (1920px+) */
 @media (min-width: 1920px) {
-  .book-presentation-3d-container {
-    max-width: 1800px;
-    padding: 5rem 60px;
-  }
-  
-  .book-presentation-3d-section-title {
-    font-size: 5rem;
-  }
-  
-  .book-presentation-3d-section-subtitle {
-    font-size: 1.8rem;
-  }
-  
-  .book-presentation-3d-presentation-grid {
-    gap: 100px;
-  }
-  
-  .book-presentation-3d-book-showcase {
-    height: 950px;
-  }
-  
-  .book-presentation-3d-scene {
-    height: 820px;
-  }
-  
-  .book-presentation-3d-info-title {
-    font-size: 3.2rem;
-  }
-  
-  .book-presentation-3d-feature-item {
-    padding: 35px;
-    margin-bottom: 40px;
-  }
-  
-  .book-presentation-3d-feature-icon {
-    font-size: 2.6rem;
-    min-width: 60px;
-  }
-  
-  .book-presentation-3d-feature-content h4 {
-    font-size: 1.5rem;
-  }
-  
-  .book-presentation-3d-feature-content p {
-    font-size: 1.1rem;
-  }
+    .book-presentation-3d-container {
+        max-width: 1800px;
+        padding: 5rem 60px;
+    }
+
+    .book-presentation-3d-section-title {
+        font-size: 5rem;
+    }
+
+    .book-presentation-3d-section-subtitle {
+        font-size: 1.8rem;
+    }
+
+    .book-presentation-3d-presentation-grid {
+        gap: 100px;
+    }
+
+    .book-presentation-3d-book-showcase {
+        height: 950px;
+    }
+
+    .book-presentation-3d-scene {
+        height: 820px;
+    }
+
+    .book-presentation-3d-info-title {
+        font-size: 3.2rem;
+    }
+
+    .book-presentation-3d-feature-item {
+        padding: 35px;
+        margin-bottom: 40px;
+    }
+
+    .book-presentation-3d-feature-icon {
+        font-size: 2.6rem;
+        min-width: 60px;
+    }
+
+    .book-presentation-3d-feature-content h4 {
+        font-size: 1.5rem;
+    }
+
+    .book-presentation-3d-feature-content p {
+        font-size: 1.1rem;
+    }
 }
 
 /* Large Screens (1440px-1919px) */
 @media (min-width: 1440px) and (max-width: 1919px) {
-  .book-presentation-3d-container {
-    max-width: 1600px;
-    padding: 4.5rem 50px;
-  }
-  
-  .book-presentation-3d-presentation-grid {
-    gap: 90px;
-  }
-  
-  .book-presentation-3d-book-showcase {
-    height: 900px;
-  }
-  
-  .book-presentation-3d-scene {
-    height: 770px;
-  }
+    .book-presentation-3d-container {
+        max-width: 1600px;
+        padding: 4.5rem 50px;
+    }
+
+    .book-presentation-3d-presentation-grid {
+        gap: 90px;
+    }
+
+    .book-presentation-3d-book-showcase {
+        height: 900px;
+    }
+
+    .book-presentation-3d-scene {
+        height: 770px;
+    }
 }
 
 /* Medium Large Screens (1280px-1439px) */
 @media (min-width: 1280px) and (max-width: 1439px) {
-  .book-presentation-3d-container {
-    max-width: 1400px;
-    padding: 4rem 45px;
-  }
-  
-  .book-presentation-3d-presentation-grid {
-    gap: 85px;
-  }
-  
-  .book-presentation-3d-book-showcase {
-    height: 850px;
-  }
-  
-  .book-presentation-3d-feature-item {
-    padding: 28px;
-    margin-bottom: 32px;
-  }
+    .book-presentation-3d-container {
+        max-width: 1400px;
+        padding: 4rem 45px;
+    }
+
+    .book-presentation-3d-presentation-grid {
+        gap: 85px;
+    }
+
+    .book-presentation-3d-book-showcase {
+        height: 850px;
+    }
+
+    .book-presentation-3d-feature-item {
+        padding: 28px;
+        margin-bottom: 32px;
+    }
 }
 
 /* Small Laptops/Large Tablets (1024px-1279px) */
 @media (min-width: 1024px) and (max-width: 1279px) {
-  .book-presentation-3d-container {
-    max-width: 1200px;
-    padding: 3.5rem 40px;
-  }
-  
-  .book-presentation-3d-section-header {
-    margin-bottom: 60px;
-  }
-  
-  .book-presentation-3d-presentation-grid {
-    grid-template-columns: 1fr;
-    gap: 60px;
-    text-align: center;
-  }
-  
-  .book-presentation-3d-book-info {
-    padding-left: 0;
-  }
-  
-  .book-presentation-3d-book-showcase {
-    height: 780px;
-    margin: 0 200px;
-    max-width: 600px;
-  }
-  
-  .book-presentation-3d-scene {
-    height: 560px;
-  }
-  
-  .book-presentation-3d-info-title {
-    font-size: 2.4rem;
-  }
-  .book-presentation-3d-large-display-image {
-    max-height: 340px;
-    margin-bottom: 8rem;
-  }
-  .book-presentation-3d-feature-item {
-    padding: 25px;
-    margin-bottom: 25px;
-  }
-  
-  .book-presentation-3d-rating-container {
-    padding: 10px 18px;
-  }
-  
-  .book-presentation-3d-thumbnail-gallery {
-    padding: 12px;
-  }
-  
-  .book-presentation-3d-mini-3d-model {
-    width: 110px;
-    height: 85px;
-    bottom: 115px;
-  }
+    .book-presentation-3d-container {
+        max-width: 1200px;
+        padding: 3.5rem 40px;
+    }
+
+    .book-presentation-3d-section-header {
+        margin-bottom: 60px;
+    }
+
+    .book-presentation-3d-presentation-grid {
+        grid-template-columns: 1fr;
+        gap: 60px;
+        text-align: center;
+    }
+
+    .book-presentation-3d-book-info {
+        padding-left: 0;
+        height: auto;
+        overflow: visible;
+    }
+
+    .book-presentation-3d-book-showcase {
+        height: 780px;
+        margin: 0 200px;
+        max-width: 600px;
+    }
+
+    .book-presentation-3d-scene {
+        height: 560px;
+    }
+
+    .book-presentation-3d-info-title {
+        font-size: 2.4rem;
+    }
+
+    .book-presentation-3d-large-display-image {
+        max-height: 420px;
+        margin-bottom: 2rem;
+    }
+    .book-presentation-3d-feature-item {
+        padding: 25px;
+        margin-bottom: 25px;
+    }
+
+    .book-presentation-3d-rating-container {
+        padding: 10px 18px;
+    }
+
+    .book-presentation-3d-thumbnail-gallery {
+        padding: 15px;
+    }
+
+    .book-presentation-3d-thumbnails-container {
+        gap: 12px;
+    }
+
+    .book-presentation-3d-thumbnail {
+        width: 100px;
+        height: 95px;
+    }
+
+    .book-presentation-3d-model-thumb-icon {
+        font-size: 3.5rem;
+    }
+
+    .book-presentation-3d-model-thumb-text {
+        font-size: 1.05rem;
+        margin-top: 4px;
+        white-space: nowrap;
+    }
+
+    .book-presentation-3d-model-thumb-content {
+        padding: 8px 0;
+    }
+
+    .book-presentation-3d-thumbnail-title {
+        font-size: 0.8rem;
+        padding: 6px 4px;
+    }
+
+    .book-presentation-3d-gallery-title {
+        font-size: 1.2rem;
+    }
+
+    .book-presentation-3d-mini-3d-model {
+        width: 110px;
+        height: 85px;
+        bottom: 115px;
+    }
 }
 
 /* Tablets Portrait (768px-1023px) */
 @media (min-width: 768px) and (max-width: 1023px) {
-  .book-presentation-3d-container {
-    padding: 3rem 35px;
-  }
-  .quantity-controls {
-    justify-content: center;
-  }
-  .book-presentation-3d-section-header {
-    margin-bottom: 50px;
-  }
-  
-  .book-presentation-3d-section-title {
-    font-size: clamp(2.2rem, 5vw, 3.5rem);
-  }
-  
-  .book-presentation-3d-section-subtitle {
-    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
-  }
-  
-  .book-presentation-3d-presentation-grid {
-    grid-template-columns: 1fr;
-    gap: 50px;
-    text-align: center;
-  }
-  
-  .book-presentation-3d-book-info {
-    padding-left: 0;
-  }
-  
-  .book-presentation-3d-book-showcase {
-    height: 700px;
-    /* margin: 0 auto; */
-    max-width: 100%;
-  }
-  
-  .book-presentation-3d-scene {
-    height: 520px;
-  }
-  
-  .book-presentation-3d-info-title {
-    font-size: clamp(1.6rem, 3.5vw, 2.2rem);
-  }
-  
-  .book-presentation-3d-feature-item {
-    padding: 22px;
-    margin-bottom: 22px;
-    flex-direction: row;
-    text-align: left;
-    align-items: center;
-    
-    gap: 18px;
-  }
-  
-  .book-presentation-3d-feature-icon {
-    font-size: 2rem;
-    min-width: 45px;
-  }
-  
-  .book-presentation-3d-feature-content h4 {
-    font-size: 1.2rem;
-  }
-  
-  .book-presentation-3d-feature-content p {
-    font-size: 0.95rem;
-  }
-  
-  .book-presentation-3d-rating-container {
-    padding: 10px 16px;
-  }
-  
-  .book-presentation-3d-star {
-    font-size: 1.1rem;
-  }
-  
-  .book-presentation-3d-rating-number,
-  .book-presentation-3d-viewers-count {
-    font-size: 0.85rem;
-  }
-  
-  .book-presentation-3d-thumbnail-gallery {
-    padding: 12px;
-  }
-  
-  .book-presentation-3d-thumbnails-container {
-    gap: 8px;
-  }
-  
-  .book-presentation-3d-thumbnail {
-    width: 55px;
-    height: 42px;
-  }
-  
-  .book-presentation-3d-mini-3d-model {
-    width: 105px;
-    height: 80px;
-    bottom: 110px;
-  }
-  
-  .book-presentation-3d-large-display-image {
-    max-height: 320px;
-    margin-bottom: 7rem;
-  }
-  
-  .book-presentation-3d-cta-section {
-    padding: 28px;
-  }
-  
-  .book-presentation-3d-book-quote {
-    font-size: 1.3rem;
-  }
-  
-  .book-presentation-3d-quote-caption {
-    font-size: 1rem;
-  }
+    .book-presentation-3d-container {
+        padding: 3rem 35px;
+    }
+    .quantity-controls {
+        justify-content: center;
+    }
+    .book-presentation-3d-section-header {
+        margin-bottom: 50px;
+    }
+
+    .book-presentation-3d-section-title {
+        font-size: clamp(2.2rem, 5vw, 3.5rem);
+    }
+
+    .book-presentation-3d-section-subtitle {
+        font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+    }
+
+    .book-presentation-3d-presentation-grid {
+        grid-template-columns: 1fr;
+        gap: 50px;
+        text-align: center;
+        justify-items: center;
+    }
+
+    .book-presentation-3d-book-info {
+        padding-left: 0;
+        height: auto;
+        overflow: visible;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .book-presentation-3d-book-showcase {
+        height: 700px;
+        margin: 0 auto;
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .book-presentation-3d-scene {
+        height: 600px;
+        padding-top: 10px;
+        margin-top: -120px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+    }
+
+    .book-presentation-3d-info-title {
+        font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+    }
+
+    .book-presentation-3d-feature-item {
+        padding: 22px;
+        margin-bottom: 22px;
+        flex-direction: row;
+        text-align: left;
+        align-items: center;
+
+        gap: 18px;
+    }
+
+    .book-presentation-3d-feature-icon {
+        font-size: 2rem;
+        min-width: 45px;
+    }
+
+    .book-presentation-3d-feature-content h4 {
+        font-size: 1.2rem;
+    }
+
+    .book-presentation-3d-feature-content p {
+        font-size: 0.95rem;
+    }
+
+    .book-presentation-3d-rating-container {
+        padding: 10px 16px;
+    }
+
+    .book-presentation-3d-star {
+        font-size: 1.1rem;
+    }
+
+    .book-presentation-3d-rating-number,
+    .book-presentation-3d-viewers-count {
+        font-size: 1.2rem;
+    }
+
+    .book-presentation-3d-reviews-count {
+        font-size: 1.15rem;
+    }
+
+    .book-presentation-3d-thumbnail-gallery {
+        padding: 15px;
+    }
+
+    .book-presentation-3d-thumbnails-container {
+        gap: 12px;
+    }
+
+    .book-presentation-3d-thumbnail {
+        width: 95px;
+        height: 90px;
+    }
+
+    .book-presentation-3d-model-thumb-icon {
+        font-size: 3.2rem;
+    }
+
+    .book-presentation-3d-model-thumb-text {
+        font-size: 1rem;
+        margin-top: 4px;
+        white-space: nowrap;
+    }
+
+    .book-presentation-3d-model-thumb-content {
+        padding: 8px 0;
+    }
+
+    .book-presentation-3d-thumbnail-title {
+        font-size: 0.75rem;
+        padding: 5px 4px;
+    }
+
+    .book-presentation-3d-gallery-title {
+        font-size: 1.15rem;
+    }
+
+    .book-presentation-3d-mini-3d-model {
+        width: 105px;
+        height: 80px;
+        bottom: 110px;
+    }
+
+    .book-presentation-3d-large-display-image {
+        max-height: 400px;
+        margin-bottom: 2rem;
+    }
+
+    .book-presentation-3d-cta-section {
+        padding: 28px;
+    }
+
+    .book-presentation-3d-book-quote {
+        font-size: 1.3rem;
+    }
+
+    .book-presentation-3d-quote-caption {
+        font-size: 1rem;
+    }
 }
 
 /* Large Mobile/Small Tablets (600px-767px) */
 @media (min-width: 600px) and (max-width: 767px) {
-  .book-presentation-3d-container {
-    padding: 2.5rem 30px;
-  }
-  
-  .book-presentation-3d-section-header {
-    margin-bottom: 45px;
-  }
-  
-  .book-presentation-3d-section-title {
-    font-size: clamp(2rem, 4.5vw, 3rem);
-  }
-  
-  .book-presentation-3d-section-subtitle {
-    font-size: clamp(1rem, 2.2vw, 1.3rem);
-  }
-  
-  .book-presentation-3d-presentation-grid {
-    grid-template-columns: 1fr;
-    gap: 45px;
-    text-align: center;
-  }
-  
-  .book-presentation-3d-book-info {
-    padding-left: 0;
-  }
-  
-  .book-presentation-3d-book-showcase {
-    height: 650px;
-    /* margin: 0 auto; */
-    max-width: 100%;
-  }
-  
-  .book-presentation-3d-scene {
-    height: 520px;
-  }
-  
-  .book-presentation-3d-info-title {
-    font-size: clamp(1.5rem, 3.2vw, 2rem);
-  }
-  
-  .book-presentation-3d-feature-item {
-    padding: 20px;
-    margin-bottom: 20px;
-    flex-direction: column;
-    text-align: center;
-     justify-items: center;
-     align-items: center;
-    gap: 15px;
-  }
-  
-  .book-presentation-3d-feature-icon {
-    font-size: 1.8rem;
-    min-width: auto;
-    width: 70px;
-    height: 70px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(212, 175, 55, 0.1);
-    border-radius: 50%;
-  }
-  
-  .book-presentation-3d-feature-content h4 {
-    font-size: 1.15rem;
-  }
-  
-  .book-presentation-3d-feature-content p {
-    font-size: 0.9rem;
-  }
-  
-  .book-presentation-3d-rating-container {
-    padding: 9px 14px;
-    flex-direction: column;
-    gap: 8px;
-  }
-  
-  .book-presentation-3d-rating-section,
-  .book-presentation-3d-viewers-section {
-    justify-content: center;
-  }
-  
-  .book-presentation-3d-star {
-    font-size: 1rem;
-  }
-  
-  .book-presentation-3d-rating-number,
-  .book-presentation-3d-viewers-count {
-    font-size: 0.8rem;
-  }
-  
-  .book-presentation-3d-thumbnail-gallery {
-    padding: 10px;
-  }
-  
-  .book-presentation-3d-gallery-title {
-    font-size: 0.85rem;
-  }
-  
-  .book-presentation-3d-thumbnails-container {
-    gap: 6px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  
-  .book-presentation-3d-thumbnail {
-    width: 50px;
-    height: 38px;
-  }
-  
-  .book-presentation-3d-urgent-label span {
-    font-size: 0.75rem;
-  }
-  
-  .book-presentation-3d-order-btn-gallery {
-    padding: 10px 16px;
-    font-size: 0.85rem;
-  }
-  
-  .book-presentation-3d-mini-3d-model {
-    width: 95px;
-    height: 72px;
-    bottom: 105px;
-  }
-  
-  .book-presentation-3d-large-display-image {
-    max-height: 300px;
-    margin-bottom: 7rem;
-  }
-  
-  .book-presentation-3d-cta-section {
-    padding: 25px;
-  }
-  
-  .book-presentation-3d-book-quote {
-    font-size: 1.2rem;
-  }
-  .quantity-controls {
-    justify-content: center;
-  }
-  .book-presentation-3d-interaction-hint {
-    font-size: 0.85rem;
-    padding: 8px 14px;
-  }
+    .book-presentation-3d-container {
+        padding: 2.5rem 30px;
+    }
+
+    .book-presentation-3d-section-header {
+        margin-bottom: 45px;
+    }
+
+    .book-presentation-3d-section-title {
+        font-size: clamp(2rem, 4.5vw, 3rem);
+    }
+
+    .book-presentation-3d-section-subtitle {
+        font-size: clamp(1rem, 2.2vw, 1.3rem);
+    }
+
+    .book-presentation-3d-presentation-grid {
+        grid-template-columns: 1fr;
+        gap: 45px;
+        text-align: center;
+        justify-items: center;
+    }
+
+    .book-presentation-3d-book-info {
+        padding-left: 0;
+        height: auto;
+        overflow: visible;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .book-presentation-3d-book-showcase {
+        height: 650px;
+        margin: 0 auto;
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .book-presentation-3d-scene {
+        height: 600px;
+        padding-top: 10px;
+        margin-top: -120px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+    }
+
+    .book-presentation-3d-info-title {
+        font-size: clamp(1.5rem, 3.2vw, 2rem);
+    }
+
+    .book-presentation-3d-feature-item {
+        padding: 20px;
+        margin-bottom: 20px;
+        flex-direction: column;
+        text-align: center;
+        justify-items: center;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .book-presentation-3d-feature-icon {
+        font-size: 1.8rem;
+        min-width: auto;
+        width: 70px;
+        height: 70px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(212, 175, 55, 0.1);
+        border-radius: 50%;
+    }
+
+    .book-presentation-3d-feature-content h4 {
+        font-size: 1.15rem;
+    }
+
+    .book-presentation-3d-feature-content p {
+        font-size: 0.9rem;
+    }
+
+    .book-presentation-3d-rating-container {
+        padding: 9px 14px;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .book-presentation-3d-rating-section,
+    .book-presentation-3d-viewers-section {
+        justify-content: center;
+    }
+
+    .book-presentation-3d-star {
+        font-size: 1rem;
+    }
+
+    .book-presentation-3d-rating-number,
+    .book-presentation-3d-viewers-count {
+        font-size: 1.15rem;
+    }
+
+    .book-presentation-3d-reviews-count {
+        font-size: 1.1rem;
+    }
+
+    .book-presentation-3d-thumbnail-gallery {
+        padding: 10px;
+    }
+
+    .book-presentation-3d-image-view-container {
+        padding-bottom: 150px;
+        padding-top: 10px;
+    }
+
+    .book-presentation-3d-gallery-title {
+        font-size: 1rem;
+    }
+
+    .book-presentation-3d-thumbnails-container {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        justify-content: center;
+    }
+
+    .book-presentation-3d-thumbnail {
+        width: 100%;
+        height: 70px;
+    }
+
+    .book-presentation-3d-thumbnail-title {
+        font-size: 0.85rem !important;
+        padding: 6px 4px !important;
+    }
+
+    .book-presentation-3d-urgent-label span {
+        font-size: 0.75rem;
+    }
+
+    .book-presentation-3d-order-btn-gallery {
+        padding: 10px 16px;
+        font-size: 0.85rem;
+    }
+
+    .book-presentation-3d-mini-3d-model {
+        width: 95px;
+        height: 72px;
+        bottom: 105px;
+    }
+
+    .book-presentation-3d-large-display-image {
+        max-height: 380px;
+        margin-bottom: 2rem;
+    }
+
+    .book-presentation-3d-cta-section {
+        padding: 25px;
+    }
+
+    .book-presentation-3d-book-quote {
+        font-size: 1.2rem;
+    }
+    .quantity-controls {
+        justify-content: center;
+    }
+    .book-presentation-3d-interaction-hint {
+        font-size: 0.85rem;
+        padding: 8px 14px;
+    }
 }
 
 /* Medium Mobile (480px-599px) */
 @media (min-width: 480px) and (max-width: 599px) {
-  .book-presentation-3d-container {
-    padding: 2rem 25px;
-  }
-  .quantity-controls {
-    justify-content: center;
-  }
-  .book-presentation-3d-section-header {
-    margin-bottom: 40px;
-  }
-  
-  .book-presentation-3d-section-title {
-    font-size: clamp(1.8rem, 4vw, 2.5rem);
-  }
-  
-  .book-presentation-3d-section-subtitle {
-    font-size: clamp(0.95rem, 2vw, 1.2rem);
-  }
-  
-  .book-presentation-3d-presentation-grid {
-    gap: 40px;
-    grid-template-columns: 1fr;
-  }
-  
-  .book-presentation-3d-book-showcase {
-    height: 600px;
-    max-width: 100% ;
-  }
-  
-  .book-presentation-3d-scene {
-    height: 400px;
-  }
-  
-  .book-presentation-3d-info-title {
-    font-size: clamp(1.4rem, 3vw, 1.8rem);
-  }
-  
-  .book-presentation-3d-feature-item {
-    padding: 18px;
-    margin-bottom: 18px;
-    align-items: center;
-   
-  }
-  
-  .book-presentation-3d-feature-icon {
-    width: 65px;
-    height: 65px;
-    font-size: 1.7rem;
-  }
-  
-  .book-presentation-3d-feature-content h4 {
-    font-size: 1.1rem;
-  }
-  
-  .book-presentation-3d-feature-content p {
-    font-size: 0.85rem;
-  }
-  
-  .book-presentation-3d-rating-container {
-    padding: 8px 12px;
-  }
-  
-  .book-presentation-3d-star {
-    font-size: 0.95rem;
-  }
-  
-  .book-presentation-3d-rating-number,
-  .book-presentation-3d-viewers-count {
-    font-size: 0.75rem;
-  }
-  
-  .book-presentation-3d-thumbnail-gallery {
-    padding: 9px;
-  }
-  
-  .book-presentation-3d-gallery-title {
-    font-size: 0.8rem;
-  }
-  
-  .book-presentation-3d-thumbnail {
-    width: 48px;
-    height: 36px;
-  }
-  
-  .book-presentation-3d-model-thumb-icon {
-    font-size: 1.1rem;
-  }
-  
-  .book-presentation-3d-model-thumb-text {
-    font-size: 0.55rem;
-  }
-  
-  .book-presentation-3d-urgent-label span {
-    font-size: 0.7rem;
-  }
-  
-  .book-presentation-3d-order-btn-gallery {
-    padding: 9px 14px;
-    font-size: 0.8rem;
-  }
-  
-  .book-presentation-3d-mini-3d-model {
-    width: 90px;
-    height: 68px;
-    bottom: 100px;
-  }
-  
-  .book-presentation-3d-mini-3d-overlay {
-    font-size: 0.65rem;
-  }
-  
-  .book-presentation-3d-large-display-image {
-    max-height: 250px;
-    margin-bottom: 8rem;
-  }
-  
-  .book-presentation-3d-cta-section {
-    padding: 22px;
-  }
-  
-  .book-presentation-3d-book-quote {
-    font-size: 1.1rem;
-  }
-  
-  .book-presentation-3d-quote-caption {
-    font-size: 0.95rem;
-  }
-  
-  .book-presentation-3d-interaction-hint {
-    font-size: 0.8rem;
-    padding: 7px 12px;
-  }
+    .book-presentation-3d-container {
+        padding: 2rem 25px;
+    }
+    .quantity-controls {
+        justify-content: center;
+    }
+    .book-presentation-3d-section-header {
+        margin-bottom: 40px;
+    }
+
+    .book-presentation-3d-section-title {
+        font-size: clamp(1.8rem, 4vw, 2.5rem);
+    }
+
+    .book-presentation-3d-section-subtitle {
+        font-size: clamp(0.95rem, 2vw, 1.2rem);
+    }
+
+    .book-presentation-3d-presentation-grid {
+        gap: 40px;
+        grid-template-columns: 1fr;
+        text-align: center;
+        justify-items: center;
+    }
+
+    .book-presentation-3d-book-info {
+        height: auto;
+        overflow: visible;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .book-presentation-3d-book-showcase {
+        height: 600px;
+        max-width: 100%;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .book-presentation-3d-scene {
+        height: 480px;
+        padding-top: 10px;
+        margin-top: -100px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .book-presentation-3d-scene canvas {
+        display: block !important;
+        margin: 0 auto !important;
+        width: 100% !important;
+        max-width: 100%;
+    }
+
+    .book-presentation-3d-info-title {
+        font-size: clamp(1.4rem, 3vw, 1.8rem);
+    }
+
+    .book-presentation-3d-feature-item {
+        padding: 18px;
+        margin-bottom: 18px;
+        align-items: center;
+    }
+
+    .book-presentation-3d-feature-icon {
+        width: 65px;
+        height: 65px;
+        font-size: 1.7rem;
+    }
+
+    .book-presentation-3d-feature-content h4 {
+        font-size: 1.1rem;
+    }
+
+    .book-presentation-3d-feature-content p {
+        font-size: 0.85rem;
+    }
+
+    .book-presentation-3d-rating-container {
+        padding: 8px 12px;
+    }
+
+    .book-presentation-3d-star {
+        font-size: 0.95rem;
+    }
+
+    .book-presentation-3d-rating-number,
+    .book-presentation-3d-viewers-count {
+        font-size: 1.1rem;
+    }
+
+    .book-presentation-3d-reviews-count {
+        font-size: 1.05rem;
+    }
+
+    .book-presentation-3d-thumbnail-gallery {
+        padding: 9px;
+    }
+
+    .book-presentation-3d-gallery-title {
+        font-size: 1.05rem;
+    }
+
+    .book-presentation-3d-thumbnail {
+        width: 66px;
+        height: 50px;
+    }
+
+    .book-presentation-3d-model-thumb-icon {
+        font-size: 1.5rem;
+    }
+
+    .book-presentation-3d-model-thumb-text {
+        font-size: 0.8rem;
+    }
+
+    .book-presentation-3d-urgent-label span {
+        font-size: 0.7rem;
+    }
+
+    .book-presentation-3d-order-btn-gallery {
+        padding: 9px 14px;
+        font-size: 0.8rem;
+    }
+
+    .book-presentation-3d-mini-3d-model {
+        width: 90px;
+        height: 68px;
+        bottom: 100px;
+    }
+
+    .book-presentation-3d-mini-3d-overlay {
+        font-size: 0.65rem;
+    }
+
+    .book-presentation-3d-large-display-image {
+        max-height: 320px;
+        margin-bottom: 2rem;
+    }
+
+    .book-presentation-3d-cta-section {
+        padding: 22px;
+    }
+
+    .book-presentation-3d-book-quote {
+        font-size: 1.1rem;
+    }
+
+    .book-presentation-3d-quote-caption {
+        font-size: 0.95rem;
+    }
+
+    .book-presentation-3d-interaction-hint {
+        font-size: 0.8rem;
+        padding: 7px 12px;
+    }
 }
 
 /* Small Mobile (375px-479px) */
 @media (min-width: 375px) and (max-width: 479px) {
-  .book-presentation-3d-container {
-    padding: 1.5rem 20px;
-  }
-  .quantity-controls {
-    justify-content: center;
-  }
-  .book-presentation-3d-section-header {
-    margin-bottom: 35px;
-  }
-  
-  .book-presentation-3d-section-title {
-    font-size: clamp(1.6rem, 3.5vw, 2.2rem);
-  }
-  
-  .book-presentation-3d-section-subtitle {
-    font-size: clamp(0.9rem, 1.8vw, 1.1rem);
-  }
-  
-  .book-presentation-3d-presentation-grid {
-    gap: 35px;
-    text-align: center;
-    grid-template-columns: 1fr;
-  }
-  
-  .book-presentation-3d-book-showcase {
-    height: 620px;
-    max-width: 100%;
-  }
-  
-  .book-presentation-3d-scene {
-    height: 380px;
-    margin-top: 3rem;
-  }
-  
-  .book-presentation-3d-info-title {
-    font-size: clamp(1.3rem, 2.8vw, 1.7rem);
-  }
-  
-  .book-presentation-3d-feature-item {
-    padding: 16px;
-    margin-bottom: 16px;
-    flex-direction: column;
-    align-items: center;
-  }
-  .book-presentation-3d-book-info {
-    padding-left: 0;
-  }
-  
-  .book-presentation-3d-feature-icon {
-    width: 60px;
-    height: 60px;
-    font-size: 1.6rem;
-  }
-  
-  .book-presentation-3d-feature-content h4 {
-    font-size: 1.05rem;
-  }
-  
-  .book-presentation-3d-feature-content p {
-    font-size: 0.8rem;
-  }
-  
-  .book-presentation-3d-rating-container {
-    padding: 7px 10px;
-  }
-  
-  .book-presentation-3d-star {
-    font-size: 0.9rem;
-  }
-  
-  .book-presentation-3d-rating-number,
-  .book-presentation-3d-viewers-count {
-    font-size: 0.7rem;
-  }
-  
-  .book-presentation-3d-thumbnail-gallery {
-    padding: 8px;
-  }
-  
-  .book-presentation-3d-gallery-title {
-    font-size: 0.75rem;
-  }
-  
-  .book-presentation-3d-thumbnail {
-    width: 45px;
-    height: 34px;
-  }
-  
-  .book-presentation-3d-model-thumb-icon {
-    font-size: 1rem;
-  }
-  
-  .book-presentation-3d-model-thumb-text {
-    font-size: 0.5rem;
-  }
-  
-  .book-presentation-3d-thumbnail-title {
-    font-size: 0.45rem;
-  }
-  
-  .book-presentation-3d-urgent-label {
-    padding: 6px 10px;
-  }
-  
-  .book-presentation-3d-urgent-label span {
-    font-size: 0.65rem;
-  }
-  
-  .book-presentation-3d-order-btn-gallery {
-    padding: 8px 12px;
-    font-size: 0.75rem;
-  }
-  
-  .book-presentation-3d-mini-3d-model {
-    width: 85px;
-    height: 64px;
-    bottom: 95px;
-  }
-  
-  .book-presentation-3d-mini-3d-overlay {
-    font-size: 0.6rem;
-  }
-  
-  .book-presentation-3d-large-display-image {
-    max-height: 220px;
-    margin-bottom: 6rem;
-  }
-  
-  .book-presentation-3d-cta-section {
-    padding: 20px;
-  }
-  
-  .book-presentation-3d-book-quote {
-    font-size: 1rem;
-  }
-  
-  .book-presentation-3d-quote-caption {
-    font-size: 0.9rem;
-  }
-  
-  .book-presentation-3d-interaction-hint {
-    font-size: 0.75rem;
-    padding: 6px 10px;
-  }
+    .book-presentation-3d-container {
+        padding: 1.5rem 20px;
+    }
+    .quantity-controls {
+        justify-content: center;
+    }
+    .book-presentation-3d-section-header {
+        margin-bottom: 35px;
+    }
+
+    .book-presentation-3d-section-title {
+        font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+    }
+
+    .book-presentation-3d-section-subtitle {
+        font-size: clamp(0.9rem, 1.8vw, 1.1rem);
+    }
+
+    .book-presentation-3d-presentation-grid {
+        gap: 35px;
+        text-align: center;
+        grid-template-columns: 1fr;
+        justify-items: center;
+    }
+
+    .book-presentation-3d-book-info {
+        height: auto;
+        overflow: visible;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .book-presentation-3d-book-showcase {
+        height: 620px;
+        max-width: 100%;
+        width: 100%;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .book-presentation-3d-scene {
+        height: 460px;
+        padding-top: 10px;
+        margin-top: -150px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+        max-width: 100%;
+        position: relative;
+        left: 0;
+        right: 0;
+    }
+
+    .book-presentation-3d-scene canvas {
+        display: block !important;
+        margin: 0 auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        position: relative !important;
+        left: auto !important;
+        right: auto !important;
+        transform: none !important;
+    }
+
+    .book-presentation-3d-feature-item {
+        padding: 16px;
+        margin-bottom: 16px;
+        flex-direction: column;
+        align-items: center;
+    }
+    .book-presentation-3d-book-info {
+        padding-left: 0;
+    }
+
+    .book-presentation-3d-feature-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.6rem;
+    }
+
+    .book-presentation-3d-feature-content h4 {
+        font-size: 1.05rem;
+    }
+
+    .book-presentation-3d-feature-content p {
+        font-size: 0.8rem;
+    }
+
+    .book-presentation-3d-rating-container {
+        padding: 7px 10px;
+    }
+
+    .book-presentation-3d-star {
+        font-size: 0.9rem;
+    }
+
+    .book-presentation-3d-rating-number,
+    .book-presentation-3d-viewers-count {
+        font-size: 1.05rem;
+    }
+
+    .book-presentation-3d-reviews-count {
+        font-size: 1rem;
+    }
+
+    .book-presentation-3d-thumbnail-gallery {
+        padding: 8px;
+    }
+
+    .book-presentation-3d-gallery-title {
+        font-size: 1.05rem;
+    }
+
+    .book-presentation-3d-thumbnails-container {
+        gap: 6px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .book-presentation-3d-thumbnail {
+        width: 74px;
+        height: 54px;
+    }
+
+    .book-presentation-3d-model-thumb-icon {
+        font-size: 1.7rem;
+    }
+
+    .book-presentation-3d-model-thumb-text {
+        font-size: 0.9rem;
+    }
+
+    .book-presentation-3d-thumbnails-container {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        justify-content: center;
+    }
+
+    .book-presentation-3d-thumbnail {
+        width: 100%;
+        height: 70px;
+    }
+
+    .book-presentation-3d-thumbnail-title {
+        font-size: 0.85rem !important;
+        padding: 6px 4px !important;
+    }
+
+    .book-presentation-3d-model-thumb-icon {
+        font-size: 1.8rem;
+    }
+
+    .book-presentation-3d-model-thumb-text {
+        font-size: 0.85rem;
+    }
+
+    .book-presentation-3d-urgent-label {
+        padding: 6px 10px;
+    }
+
+    .book-presentation-3d-urgent-label span {
+        font-size: 0.65rem;
+    }
+
+    .book-presentation-3d-order-btn-gallery {
+        padding: 8px 12px;
+        font-size: 0.75rem;
+    }
+
+    .book-presentation-3d-mini-3d-model {
+        width: 85px;
+        height: 64px;
+        bottom: 95px;
+    }
+
+    .book-presentation-3d-mini-3d-overlay {
+        font-size: 0.6rem;
+    }
+
+    .book-presentation-3d-large-display-image {
+        max-height: 280px;
+        margin-bottom: 2rem;
+    }
+
+    .book-presentation-3d-cta-section {
+        padding: 20px;
+    }
+
+    .book-presentation-3d-book-quote {
+        font-size: 1rem;
+    }
+
+    .book-presentation-3d-quote-caption {
+        font-size: 0.9rem;
+    }
+
+    .book-presentation-3d-interaction-hint {
+        font-size: 0.75rem;
+        padding: 6px 10px;
+    }
+}
+
+/* Very Small Mobile (max-width: 430px) - Fix centering issue */
+@media (max-width: 430px) {
+    #book-presentation,
+    .book-presentation-3d-main {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+        box-sizing: border-box !important;
+    }
+
+    .book-presentation-3d-container {
+        padding: 1.5rem 10px !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+        overflow-x: hidden !important;
+    }
+
+    .book-presentation-3d-presentation-content {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .book-presentation-3d-presentation-grid {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .book-presentation-3d-book-showcase {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        position: relative;
+        left: 0;
+        right: 0;
+    }
+
+    .book-presentation-3d-scene {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        margin-top: -160px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        position: relative;
+        left: 0 !important;
+        right: 0 !important;
+        transform: none !important;
+    }
+
+    .book-presentation-3d-scene canvas {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+        display: block !important;
+        position: relative !important;
+        left: auto !important;
+        right: auto !important;
+        transform: none !important;
+    }
+
+    .book-presentation-3d-rating-container {
+        left: 10px !important;
+        right: 10px !important;
+        width: auto !important;
+        max-width: calc(100% - 20px) !important;
+    }
+
+    .book-presentation-3d-thumbnail-gallery {
+        left: 10px !important;
+        right: 10px !important;
+        width: auto !important;
+        max-width: calc(100% - 20px) !important;
+    }
+
+    .book-presentation-3d-benefits-grid {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .book-presentation-3d-benefit-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 15px !important;
+    }
+
+    .book-presentation-3d-book-info {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 0 !important;
+    }
+
+    .book-presentation-3d-quote-container,
+    .book-presentation-3d-impact-section,
+    .book-presentation-3d-impact-item {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .book-presentation-3d-section-header {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 0 5px !important;
+    }
+
+    .book-presentation-3d-section-title,
+    .book-presentation-3d-section-subtitle {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+    }
 }
 
 /* Extra Small Mobile (320px-374px) */
 @media (min-width: 320px) and (max-width: 374px) {
-  .book-presentation-3d-cosmic-particles {
-    display: none;
-  }
-  .book-presentation-3d-book-info {
-    padding-left: 0;
-  }
-  .book-presentation-3d-container {
-    padding: 1rem 15px;
-  }
-  .quantity-controls {
-    justify-content: center;
-  }
-  .book-presentation-3d-section-header {
-    margin-bottom: 30px;
-  }
-  
-  .book-presentation-3d-section-title {
-    font-size: clamp(1.4rem, 3.2vw, 1.9rem);
-  }
-  
-  .book-presentation-3d-section-subtitle {
-    font-size: clamp(0.8rem, 1.6vw, 1rem);
-  }
-  
-  .book-presentation-3d-presentation-grid {
-    gap: 30px;
-  }
-  
-  .book-presentation-3d-book-showcase {
-    height: 500px;
-    max-width: 100%;
-  }
-  
-  .book-presentation-3d-scene {
-    height: 320px;
-    margin-top: 2rem;
-  }
-  
-  .book-presentation-3d-info-title {
-    font-size: clamp(1.2rem, 2.5vw, 1.5rem);
-  }
-  
-  .book-presentation-3d-feature-item {
-    padding: 14px;
-    margin-bottom: 14px;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
+    .book-presentation-3d-cosmic-particles {
+        display: none;
+    }
+    .book-presentation-3d-book-info {
+        padding-left: 0;
+    }
+    .book-presentation-3d-container {
+        padding: 1rem 15px;
+    }
+    .quantity-controls {
+        justify-content: center;
+    }
+    .book-presentation-3d-section-header {
+        margin-bottom: 30px;
+    }
 
-  }
-  
-  .book-presentation-3d-feature-icon {
-    width: 55px;
-    height: 55px;
-    font-size: 1.4rem;
-  }
-  
-  .book-presentation-3d-feature-content h4 {
-    font-size: 1rem;
-  }
-  
-  .book-presentation-3d-feature-content p {
-    font-size: 0.75rem;
-  }
-  
-  .book-presentation-3d-rating-container {
-    padding: 6px 8px;
-    flex-direction: column;
-    gap: 6px;
-  }
-  
-  .book-presentation-3d-star {
-    font-size: 0.8rem;
-  }
-  
-  .book-presentation-3d-rating-number,
-  .book-presentation-3d-viewers-count {
-    font-size: 0.65rem;
-  }
-  
-  .book-presentation-3d-thumbnail-gallery {
-    padding: 6px;
-  }
-  
-  .book-presentation-3d-gallery-title {
-    font-size: 0.7rem;
-    margin-bottom: 8px;
-  }
-  
-  .book-presentation-3d-thumbnails-container {
-    gap: 4px;
-    flex-wrap: wrap;
-  }
-  
-  .book-presentation-3d-thumbnail {
-    width: 40px;
-    height: 30px;
-  }
-  
-  .book-presentation-3d-model-thumb-content {
-    padding: 8px 0;
-  }
-  
-  .book-presentation-3d-model-thumb-icon {
-    font-size: 0.9rem;
-  }
-  
-  .book-presentation-3d-model-thumb-text {
-    font-size: 0.45rem;
-  }
-  
-  .book-presentation-3d-thumbnail-title {
-    font-size: 0.4rem;
-    padding: 1px 2px;
-  }
-  
-  .book-presentation-3d-urgent-label {
-    padding: 5px 8px;
-    margin-bottom: 8px;
-  }
-  
-  .book-presentation-3d-urgent-label span {
-    font-size: 0.6rem;
-  }
-  
-  .book-presentation-3d-order-btn-gallery {
-    padding: 6px 10px;
-    font-size: 0.7rem;
-  }
-  
-  .book-presentation-3d-mini-3d-model {
-    width: 75px;
-    height: 56px;
-    bottom: 85px;
-    right: 15px;
-  }
-  
-  .book-presentation-3d-mini-3d-overlay {
-    font-size: 0.55rem;
-    padding: 3px;
-  }
-  
-  .book-presentation-3d-large-display-image {
-    max-height: 180px;
-    margin-bottom: 6rem;
-  }
-  
-  .book-presentation-3d-cta-section {
-    padding: 16px;
-  }
-  
-  .book-presentation-3d-book-quote {
-    font-size: 0.9rem;
-  }
-  
-  .book-presentation-3d-quote-caption {
-    font-size: 0.8rem;
-  }
-  
-  .book-presentation-3d-interaction-hint {
-    font-size: 0.7rem;
-    padding: 5px 8px;
-    bottom: 15px;
-  }
-  .book-presentation-3d-presentation-grid {
-    grid-template-columns: 1fr;
-    gap: 45px;
-    text-align: center;
-  }
+    .book-presentation-3d-section-title {
+        font-size: clamp(1.4rem, 3.2vw, 1.9rem);
+    }
+
+    .book-presentation-3d-section-subtitle {
+        font-size: clamp(0.8rem, 1.6vw, 1rem);
+    }
+
+    .book-presentation-3d-presentation-grid {
+        gap: 30px;
+        text-align: center;
+        justify-items: center;
+    }
+
+    .book-presentation-3d-book-info {
+        height: auto;
+        overflow: visible;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .book-presentation-3d-book-showcase {
+        height: 500px;
+        max-width: 100%;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .book-presentation-3d-scene {
+        height: 400px;
+        padding-top: 10px;
+        margin-top: -130px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+    }
+
+    .book-presentation-3d-info-title {
+        font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+    }
+
+    .book-presentation-3d-feature-item {
+        padding: 14px;
+        margin-bottom: 14px;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .book-presentation-3d-feature-icon {
+        width: 55px;
+        height: 55px;
+        font-size: 1.4rem;
+    }
+
+    .book-presentation-3d-feature-content h4 {
+        font-size: 1rem;
+    }
+
+    .book-presentation-3d-feature-content p {
+        font-size: 0.75rem;
+    }
+
+    .book-presentation-3d-rating-container {
+        padding: 6px 8px;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .book-presentation-3d-star {
+        font-size: 0.8rem;
+    }
+
+    .book-presentation-3d-rating-number,
+    .book-presentation-3d-viewers-count {
+        font-size: 1rem;
+    }
+
+    .book-presentation-3d-reviews-count {
+        font-size: 0.95rem;
+    }
+
+    .book-presentation-3d-thumbnail-gallery {
+        padding: 6px;
+    }
+
+    .book-presentation-3d-image-view-container {
+        padding-bottom: 130px;
+        padding-top: 10px;
+    }
+
+    .book-presentation-3d-gallery-title {
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+    }
+
+    .book-presentation-3d-thumbnails-container {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+        justify-content: center;
+    }
+
+    .book-presentation-3d-thumbnail {
+        width: 100%;
+        height: 65px;
+    }
+
+    .book-presentation-3d-model-thumb-content {
+        padding: 8px 0;
+    }
+
+    .book-presentation-3d-model-thumb-icon {
+        font-size: 1.5rem;
+    }
+
+    .book-presentation-3d-model-thumb-text {
+        font-size: 0.75rem;
+    }
+
+    .book-presentation-3d-thumbnail-title {
+        font-size: 0.75rem !important;
+        padding: 5px 3px !important;
+    }
+
+    .book-presentation-3d-urgent-label {
+        padding: 5px 8px;
+        margin-bottom: 8px;
+    }
+
+    .book-presentation-3d-urgent-label span {
+        font-size: 0.6rem;
+    }
+
+    .book-presentation-3d-order-btn-gallery {
+        padding: 6px 10px;
+        font-size: 0.7rem;
+    }
+
+    .book-presentation-3d-mini-3d-model {
+        width: 75px;
+        height: 56px;
+        bottom: 85px;
+        right: 15px;
+    }
+
+    .book-presentation-3d-mini-3d-overlay {
+        font-size: 0.55rem;
+        padding: 3px;
+    }
+
+    .book-presentation-3d-large-display-image {
+        max-height: 240px;
+        margin-bottom: 2rem;
+    }
+
+    .book-presentation-3d-cta-section {
+        padding: 16px;
+    }
+
+    .book-presentation-3d-book-quote {
+        font-size: 0.9rem;
+    }
+
+    .book-presentation-3d-quote-caption {
+        font-size: 0.8rem;
+    }
+
+    .book-presentation-3d-interaction-hint {
+        font-size: 0.7rem;
+        padding: 5px 8px;
+        bottom: 15px;
+    }
+    .book-presentation-3d-presentation-grid {
+        grid-template-columns: 1fr;
+        gap: 45px;
+        text-align: center;
+    }
 }
 
 /* Very Small Screens (max-width: 319px) */
 @media (max-width: 319px) {
-  .book-presentation-3d-cosmic-particles {
-    display: none;
-  }
-  
-  .book-presentation-3d-container {
-    padding: 0.5rem 10px;
-  }
-  
-  .book-presentation-3d-section-header {
-    margin-bottom: 25px;
-  }
-  
-  .book-presentation-3d-section-title {
-    font-size: 1.3rem;
-  }
-  
-  .book-presentation-3d-section-subtitle {
-    font-size: 0.75rem;
-  }
-  
-  .book-presentation-3d-presentation-grid {
-    gap: 25px;
-  }
-  
-  .book-presentation-3d-book-showcase {
-    height: 400px;
-    max-width: 100%;
-  }
-  
-  .book-presentation-3d-scene {
-    height: 270px;
-  }
-  
-  .book-presentation-3d-info-title {
-    font-size: 1.1rem;
-  }
-  
-  .book-presentation-3d-feature-item {
-    padding: 12px;
-    margin-bottom: 12px;
-    flex-direction: column;
-  }
-  
-  .book-presentation-3d-feature-icon {
-    width: 50px;
-    height: 50px;
-    font-size: 1.2rem;
-  }
-  
-  .book-presentation-3d-feature-content h4 {
-    font-size: 0.95rem;
-  }
-  
-  .book-presentation-3d-feature-content p {
-    font-size: 0.7rem;
-  }
-  
-  .book-presentation-3d-rating-container {
-    padding: 5px 6px;
-  }
-  
-  .book-presentation-3d-star {
-    font-size: 0.75rem;
-  }
-  
-  .book-presentation-3d-rating-number,
-  .book-presentation-3d-viewers-count {
-    font-size: 0.6rem;
-  }
-  
-  .book-presentation-3d-thumbnail-gallery {
-    padding: 5px;
-  }
-  
-  .book-presentation-3d-gallery-title {
-    font-size: 0.65rem;
-  }
-  
-  .book-presentation-3d-thumbnail {
-    width: 35px;
-    height: 26px;
-  }
-  
-  .book-presentation-3d-model-thumb-icon {
-    font-size: 0.8rem;
-  }
-  
-  .book-presentation-3d-model-thumb-text {
-    font-size: 0.4rem;
-  }
-  
-  .book-presentation-3d-urgent-label span {
-    font-size: 0.55rem;
-  }
-  
-  .book-presentation-3d-order-btn-gallery {
-    padding: 5px 8px;
-    font-size: 0.65rem;
-  }
-  
-  .book-presentation-3d-mini-3d-model {
-    width: 70px;
-    height: 52px;
-    bottom: 80px;
-  }
-  
-  .book-presentation-3d-large-display-image {
-    max-height: 150px;
-  }
-  
-  .book-presentation-3d-cta-section {
-    padding: 14px;
-  }
-  
-  .book-presentation-3d-book-quote {
-    font-size: 0.8rem;
-  }
-  
-  .book-presentation-3d-quote-caption {
-    font-size: 0.75rem;
-  }
-  
-  .book-presentation-3d-interaction-hint {
-    font-size: 0.65rem;
-    padding: 4px 6px;
-  }
-  .book-presentation-3d-book-info {
-    padding-left: 0;
-  }
+    .book-presentation-3d-cosmic-particles {
+        display: none;
+    }
+
+    .book-presentation-3d-container {
+        padding: 0.5rem 10px;
+    }
+
+    .book-presentation-3d-section-header {
+        margin-bottom: 25px;
+    }
+
+    .book-presentation-3d-section-title {
+        font-size: 1.3rem;
+    }
+
+    .book-presentation-3d-section-subtitle {
+        font-size: 0.75rem;
+    }
+
+    .book-presentation-3d-presentation-grid {
+        gap: 25px;
+    }
+
+    .book-presentation-3d-book-info {
+        height: auto;
+        overflow: visible;
+    }
+
+    .book-presentation-3d-book-showcase {
+        height: 400px;
+        max-width: 100%;
+    }
+
+    .book-presentation-3d-scene {
+        height: 350px;
+        padding-top: 10px;
+        margin-top: -120px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .book-presentation-3d-scene canvas {
+        display: block !important;
+        margin: 0 auto !important;
+        width: 100% !important;
+        max-width: 100%;
+    }
+
+    .book-presentation-3d-info-title {
+        font-size: 1.1rem;
+    }
+
+    .book-presentation-3d-feature-item {
+        padding: 12px;
+        margin-bottom: 12px;
+        flex-direction: column;
+    }
+
+    .book-presentation-3d-feature-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+
+    .book-presentation-3d-feature-content h4 {
+        font-size: 0.95rem;
+    }
+
+    .book-presentation-3d-feature-content p {
+        font-size: 0.7rem;
+    }
+
+    .book-presentation-3d-rating-container {
+        padding: 5px 6px;
+    }
+
+    .book-presentation-3d-star {
+        font-size: 0.75rem;
+    }
+
+    .book-presentation-3d-rating-number,
+    .book-presentation-3d-viewers-count {
+        font-size: 0.95rem;
+    }
+
+    .book-presentation-3d-reviews-count {
+        font-size: 0.9rem;
+    }
+
+    .book-presentation-3d-thumbnail-gallery {
+        padding: 5px;
+    }
+
+    .book-presentation-3d-image-view-container {
+        padding-bottom: 120px;
+        padding-top: 10px;
+    }
+
+    .book-presentation-3d-gallery-title {
+        font-size: 0.85rem;
+    }
+
+    .book-presentation-3d-thumbnails-container {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+        justify-content: center;
+    }
+
+    .book-presentation-3d-thumbnail {
+        width: 100%;
+        height: 60px;
+    }
+
+    .book-presentation-3d-thumbnail-title {
+        font-size: 0.7rem !important;
+        padding: 4px 2px !important;
+    }
+
+    .book-presentation-3d-model-thumb-icon {
+        font-size: 1.3rem;
+    }
+
+    .book-presentation-3d-model-thumb-text {
+        font-size: 0.7rem;
+    }
+
+    .book-presentation-3d-urgent-label span {
+        font-size: 0.55rem;
+    }
+
+    .book-presentation-3d-order-btn-gallery {
+        padding: 5px 8px;
+        font-size: 0.65rem;
+    }
+
+    .book-presentation-3d-mini-3d-model {
+        width: 70px;
+        height: 52px;
+        bottom: 80px;
+    }
+
+    .book-presentation-3d-large-display-image {
+        max-height: 200px;
+        margin-bottom: 2rem;
+    }
+
+    .book-presentation-3d-cta-section {
+        padding: 14px;
+    }
+
+    .book-presentation-3d-book-quote {
+        font-size: 0.8rem;
+    }
+
+    .book-presentation-3d-quote-caption {
+        font-size: 0.75rem;
+    }
+
+    .book-presentation-3d-interaction-hint {
+        font-size: 0.65rem;
+        padding: 4px 6px;
+    }
+    .book-presentation-3d-book-info {
+        padding-left: 0;
+    }
 }
 
 /* Performance and Accessibility */
 @media (prefers-reduced-motion: reduce) {
-  .book-presentation-3d-cosmic-particles,
-  .book-presentation-3d-cosmic-particle,
-  .book-presentation-3d-interaction-hint,
-  .book-presentation-3d-live-indicator {
-    animation: none;
-  }
-  
-  .book-presentation-3d-feature-item,
-  .book-presentation-3d-thumbnail,
-  .book-presentation-3d-mini-3d-model,
-  .book-presentation-3d-order-btn-gallery {
-    transition: opacity 0.3s ease, transform 0.3s ease;
-  }
-  
-  .book-presentation-3d-presentation-content {
-    transition: opacity 0.5s ease;
-  }
+    .book-presentation-3d-cosmic-particles,
+    .book-presentation-3d-cosmic-particle,
+    .book-presentation-3d-interaction-hint,
+    .book-presentation-3d-live-indicator {
+        animation: none;
+    }
+
+    .book-presentation-3d-feature-item,
+    .book-presentation-3d-thumbnail,
+    .book-presentation-3d-mini-3d-model,
+    .book-presentation-3d-order-btn-gallery {
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .book-presentation-3d-presentation-content {
+        transition: opacity 0.5s ease;
+    }
 }
 
 /* High Contrast Mode */
 @media (prefers-contrast: high) {
-  .book-presentation-3d-section-title {
-    color: #ffffff;
-    text-shadow: 2px 2px 4px #000000;
-  }
-  
-  .book-presentation-3d-feature-item {
-    border: 2px solid #ffffff;
-    background: rgba(0, 0, 0, 0.9);
-  }
-  
-  .book-presentation-3d-thumbnail.book-presentation-3d-active {
-    border-color: #ffffff;
-    box-shadow: 0 0 10px #ffffff;
-  }
+    .book-presentation-3d-section-title {
+        color: #ffffff;
+        text-shadow: 2px 2px 4px #000000;
+    }
+
+    .book-presentation-3d-feature-item {
+        border: 2px solid #ffffff;
+        background: rgba(0, 0, 0, 0.9);
+    }
+
+    .book-presentation-3d-thumbnail.book-presentation-3d-active {
+        border-color: #ffffff;
+        box-shadow: 0 0 10px #ffffff;
+    }
 }
 
 /* Print Styles */
 @media print {
-  .book-presentation-3d-cosmic-particles,
-  .book-presentation-3d-interaction-hint,
-  .book-presentation-3d-thumbnail-gallery,
-  .book-presentation-3d-mini-3d-model,
-  .book-presentation-3d-rating-container {
-    display: none;
-  }
-  
-  .book-presentation-3d-container {
-    padding: 1rem;
-    max-width: 100%;
-  }
-  
-  .book-presentation-3d-presentation-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-  
-  .book-presentation-3d-book-showcase {
-    height: auto;
-    min-height: 300px;
-  }
-  
-  .book-presentation-3d-section-title,
-  .book-presentation-3d-info-title,
-  .book-presentation-3d-feature-content h4 {
-    color: #000000;
-  }
-  
-  .book-presentation-3d-feature-content p,
-  .book-presentation-3d-section-subtitle {
-    color: #333333;
-  }
+    .book-presentation-3d-cosmic-particles,
+    .book-presentation-3d-interaction-hint,
+    .book-presentation-3d-thumbnail-gallery,
+    .book-presentation-3d-mini-3d-model,
+    .book-presentation-3d-rating-container {
+        display: none;
+    }
+
+    .book-presentation-3d-container {
+        padding: 1rem;
+        max-width: 100%;
+    }
+
+    .book-presentation-3d-presentation-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .book-presentation-3d-book-showcase {
+        height: auto;
+        min-height: 300px;
+    }
+
+    .book-presentation-3d-section-title,
+    .book-presentation-3d-info-title,
+    .book-presentation-3d-feature-content h4 {
+        color: #000000;
+    }
+
+    .book-presentation-3d-feature-content p,
+    .book-presentation-3d-section-subtitle {
+        color: #333333;
+    }
 }

@@ -35,6 +35,10 @@ export const userServiceFactory = (token) => {
             return requester.get(`${apiUrl}/books/book-price`);
         },
 
+        updateBookStock: (stock) => {
+            return requester.put(`${apiUrl}/books/book-stock`, { stock });
+        },
+
         // ===== DASHBOARD & STATISTICS =====
         getDashboardStats: (period = '30d') => {
             return requester.get(`${apiUrl}/dashboard/stats?period=${period}`);
@@ -117,6 +121,10 @@ export const userServiceFactory = (token) => {
 
             const queryString = queryParams.toString();
             return requester.get(`${apiUrl}/reviews/approved${queryString ? `?${queryString}` : ''}`);
+        },
+
+        getImageReviews: () => {
+            return requester.get(`${apiUrl}/reviews/images`);
         },
 
         // ===== EMAIL MANAGEMENT =====

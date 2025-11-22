@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { useLocalStorage } from '../Hooks/useLocalStorage';
 import { userServiceFactory } from '../Services/userService';
 import { useNavigate } from 'react-router-dom';
@@ -15,15 +15,17 @@ export const AuthProvider = ({ children }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [publicReviewsCache, setPublicReviewsCache] = useState(null);
     const [publicReviewsCacheTime, setPublicReviewsCacheTime] = useState(null);
+    const publicReviewsCachePromiseRef = useRef(null);
     // Admin specific states
     const [dashboardData, setDashboardData] = useState(null);
     const [orders, setOrders] = useState([]);
     const [visitorsStats, setVisitorsStats] = useState(null);
     const [ratingsData, setRatingsData] = useState(null);
     const [bookPrice, setBookPrice] = useState({
-        bgn: 25.0,
+        bgn: 28.0,
         eur: null,
     });
+    const [bookStock, setBookStock] = useState(234);
     const navigate = useNavigate();
     // Функция за конвертиране
     const convertToEur = (bgnPrice) => {
@@ -313,6 +315,15 @@ export const AuthProvider = ({ children }) => {
             // Update local state
             setOrders((prevOrders) => prevOrders.map((order) => (order.id === orderId ? { ...order, status, updatedAt: new Date().toISOString() } : order)));
 
+            // Refresh book stock since completing/cancelling orders affects stock
+            if (status === 'completed' || status === 'cancelled' || status === 'pending') {
+                try {
+                    await fetchBookPrice();
+                } catch (error) {
+                    console.error('Error refreshing book stock:', error);
+                }
+            }
+
             return response;
         } catch (error) {
             const errorMsg = error.message || 'Грешка при обновяване на поръчката.';
@@ -342,10 +353,23 @@ export const AuthProvider = ({ children }) => {
         setErrorMessage('');
 
         try {
+            // Get order before deleting to check if it was completed
+            const orderToDelete = orders.find((order) => order.id === orderId);
+            const wasCompleted = orderToDelete?.status === 'completed';
+
             await userService.deleteOrder(orderId);
 
             // Update local state
             setOrders((prevOrders) => prevOrders.filter((order) => order.id !== orderId));
+
+            // Refresh book stock if deleted order was completed (stock was restored)
+            if (wasCompleted) {
+                try {
+                    await fetchBookPrice();
+                } catch (error) {
+                    console.error('Error refreshing book stock:', error);
+                }
+            }
 
             return { success: true, message: 'Поръчката е изтрита успешно.' };
         } catch (error) {
@@ -392,50 +416,76 @@ export const AuthProvider = ({ children }) => {
             setIsLoading(false);
         }
     };
-    const fetchPublicReviews = async (filters = {}) => {
-        // Кеш за 5 минути
-        const CACHE_DURATION = 5 * 60 * 1000;
-        const now = Date.now();
+    const fetchPublicReviews = useCallback(
+        async (filters = {}) => {
+            // Кеш за 5 минути
+            const CACHE_DURATION = 5 * 60 * 1000;
+            const now = Date.now();
 
-        // Ако имаме кеширани данни и не са изтекли
-        if (publicReviewsCache && publicReviewsCacheTime && now - publicReviewsCacheTime < CACHE_DURATION) {
-            // Филтрираме от кеша според limit
-            if (filters.limit && publicReviewsCache.reviews) {
-                return {
-                    ...publicReviewsCache,
-                    reviews: publicReviewsCache.reviews.slice(0, filters.limit),
-                };
+            // Ако имаме кеширани данни и не са изтекли
+            if (publicReviewsCache && publicReviewsCacheTime && now - publicReviewsCacheTime < CACHE_DURATION) {
+                // Филтрираме от кеша според limit
+                if (filters.limit && publicReviewsCache.reviews) {
+                    return {
+                        ...publicReviewsCache,
+                        reviews: publicReviewsCache.reviews.slice(0, filters.limit),
+                    };
+                }
+                return publicReviewsCache;
             }
-            return publicReviewsCache;
-        }
 
+            // Проверка дали вече има заявка в ход
+            if (publicReviewsCachePromiseRef.current) {
+                return await publicReviewsCachePromiseRef.current;
+            }
+
+            // Създаваме promise за текущата заявка
+            publicReviewsCachePromiseRef.current = (async () => {
+                try {
+                    // Винаги зареждаме повече данни за кеша
+                    const response = await userService.getPublicReviews({ limit: 1000 });
+
+                    // Кешираме пълните данни
+                    setPublicReviewsCache(response);
+                    setPublicReviewsCacheTime(now);
+
+                    // Връщаме филтрираните данни
+                    if (filters.limit && response.reviews) {
+                        return {
+                            ...response,
+                            reviews: response.reviews.slice(0, filters.limit),
+                        };
+                    }
+
+                    return response;
+                } catch (error) {
+                    console.error('Error fetching public reviews:', error);
+                    return { reviews: [], totalReviews: 0, averageRating: 0 };
+                } finally {
+                    publicReviewsCachePromiseRef.current = null;
+                }
+            })();
+
+            return await publicReviewsCachePromiseRef.current;
+        },
+        [publicReviewsCache, publicReviewsCacheTime]
+    );
+
+    const fetchImageReviews = async () => {
         setIsLoading(true);
         setErrorMessage('');
 
         try {
-            // Винаги зареждаме повече данни за кеша
-            const response = await userService.getPublicReviews({ limit: 1000 });
-
-            // Кешираме пълните данни
-            setPublicReviewsCache(response);
-            setPublicReviewsCacheTime(now);
-
-            // Връщаме филтрираните данни
-            if (filters.limit && response.reviews) {
-                return {
-                    ...response,
-                    reviews: response.reviews.slice(0, filters.limit),
-                };
-            }
-
-            return response;
+            const response = await userService.getImageReviews();
+            return response.imageReviews || [];
         } catch (error) {
-            console.error('Error fetching public reviews:', error);
-            return { reviews: [], totalReviews: 0, averageRating: 0 };
+            console.error('Error fetching image reviews:', error);
+            return [];
         } finally {
             setIsLoading(false);
         }
     };
+
     const updateReviewStatus = async (reviewId, status) => {
         setIsLoading(true);
         setErrorMessage('');
@@ -730,23 +780,41 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await userService.getBookPrice();
             // Обработете отговора правилно според структурата от API
-            const bgnPrice = response.price || response.bookPrice || response || 25.0;
+            const bgnPrice = response.price || response.bookPrice || response || 28.0;
             const priceObj = {
                 bgn: Number(bgnPrice),
                 eur: convertToEur(Number(bgnPrice)),
             };
             setBookPrice(priceObj);
+            // Also update stock if available
+            if (response.stock !== undefined) {
+                setBookStock(response.stock);
+            }
             return priceObj;
         } catch (error) {
             console.error('Error fetching book price:', error);
             const defaultPrice = {
-                bgn: 25.0,
-                eur: convertToEur(25.0),
+                bgn: 28.0,
+                eur: convertToEur(28.0),
             };
             setBookPrice(defaultPrice);
             return defaultPrice;
         }
     }, [userService]);
+
+    const updateBookStock = useCallback(
+        async (stock) => {
+            try {
+                const response = await userService.updateBookStock(stock);
+                setBookStock(response.stock || stock);
+                return response;
+            } catch (error) {
+                console.error('Error updating book stock:', error);
+                throw error;
+            }
+        },
+        [userService]
+    );
 
     const contextValue = {
         // Auth state
@@ -803,12 +871,15 @@ export const AuthProvider = ({ children }) => {
         // Public actions (for regular users)
         submitBookOrder,
         submitReview,
-        bookPrice: bookPrice?.bgn || 25.0,
+        bookPrice: bookPrice?.bgn || 28.0,
+        bookStock,
         updateBookPrice,
+        updateBookStock,
         fetchBookPrice,
         fetchPublicReviews,
         markReviewAsHelpful,
         fetchReviewsStatistics,
+        fetchImageReviews,
         // UI state
         isLoading,
         errorMessage,

@@ -1,10 +1,11 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 // import eslint from 'vite-plugin-eslint'
 
 // import { resolve } from 'path'
 export default defineConfig({
-    plugins: [react(),
+    plugins: [
+        react(),
         // eslint({
         //     cache: false,
         //     include: ['./src/**/*.js', './src/**/*.jsx'],
@@ -14,19 +15,19 @@ export default defineConfig({
     server: {
         port: 3000,
         open: true,
-   
+
         watch: {
             usePolling: true,
             interval: 1000,
-            binaryInterval: 1000
+            binaryInterval: 1000,
         },
         hmr: {
-            overlay: true // 🔧 Показва грешки като overlay
+            overlay: true, // 🔧 Показва грешки като overlay
         },
         fs: {
-            strict: false,  // По-толерантен към файлове
-            allow: ['..']
-        }
+            strict: false, // По-толерантен към файлове
+            allow: ['..'],
+        },
     },
     build: {
         outDir: 'dist',
@@ -45,8 +46,8 @@ export default defineConfig({
     },
     css: {
         modules: {
-            localsConvention: 'camelCase'
-        }
+            localsConvention: 'camelCase',
+        },
     },
     base: '/',
-})
+});

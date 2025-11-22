@@ -2,6 +2,8 @@ const reviewController = require('express').Router();
 const { Review, Notification } = require('../config/modelsConfig');
 const { sendEmail } = require('../utils/emailTemplates');
 const { checkAndSetCookie } = require('../utils/cookieTracker');
+const fs = require('fs');
+const path = require('path');
 
 reviewController.post('/create', async (req, res, next) => {
     try {
@@ -154,13 +156,6 @@ reviewController.put('/helpful/:id', async (req, res, next) => {
     try {
         const { id } = req.params;
 
-        if (!checkAndSetCookie(req, res, `reviewLiked_${id}`)) {
-            return res.status(429).json({
-                message: 'You have already liked this review.',
-                code: 'LIKE_ALREADY_SUBMITTED',
-            });
-        }
-
         const review = await Review.findByPk(id);
 
         if (!review) {
@@ -169,17 +164,53 @@ reviewController.put('/helpful/:id', async (req, res, next) => {
             });
         }
 
+        const cookieName = `reviewLiked_${id}`;
+        if (req.cookies[cookieName]) {
+            return res.status(429).json({
+                message: 'You have already liked this review.',
+                code: 'LIKE_ALREADY_SUBMITTED',
+            });
+        }
+
         await review.incrementHelpful();
         await review.reload();
+
+        checkAndSetCookie(req, res, cookieName);
 
         return res.status(200).json({
             id: review.id,
             displayName: review.displayName,
+            isAnonymous: review.isAnonymous,
             rating: review.rating,
             comment: review.comment,
             status: review.status,
             helpful: review.helpful,
             createdAt: review.createdAt,
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
+reviewController.get('/images', async (req, res, next) => {
+    try {
+        const imagesDir = path.join(__dirname, '../uploads/reviewImages');
+        const files = fs.readdirSync(imagesDir);
+
+        const imageFiles = files
+            .filter((file) => /^review-\d+\.jpeg$/i.test(file))
+            .sort((a, b) => {
+                const numA = parseInt(a.match(/\d+/)[0]);
+                const numB = parseInt(b.match(/\d+/)[0]);
+                return numA - numB;
+            })
+            .map((file) => ({
+                id: parseInt(file.match(/\d+/)[0]),
+                imagePath: `/uploads/images/${file}`,
+            }));
+
+        return res.status(200).json({
+            imageReviews: imageFiles,
         });
     } catch (error) {
         next(error);
@@ -205,6 +236,7 @@ const getReviews = async (status = null, page = 1, limit = 10) => {
         reviews: reviews.map((review) => ({
             id: review.id,
             displayName: review.displayName,
+            isAnonymous: review.isAnonymous,
             rating: review.rating,
             comment: review.comment,
             status: review.status,
