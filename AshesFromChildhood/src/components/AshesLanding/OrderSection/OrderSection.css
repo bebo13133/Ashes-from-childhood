@@ -177,6 +177,16 @@
     margin-top: 15px;
 }
 
+@media (min-width: 769px) {
+    .OrderSection-price-display {
+        margin-right: 20px;
+    }
+
+    .OrderSection-stock-display {
+        margin-top: 0;
+    }
+}
+
 .OrderSection-stock-label {
     color: var(--text-light);
     font-size: 1rem;
