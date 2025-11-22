@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://mejduredovete.com/sitemap.xml
+Sitemap: https://mejduredovete.eu/sitemap.xml
