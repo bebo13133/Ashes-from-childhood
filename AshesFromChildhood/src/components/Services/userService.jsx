@@ -75,7 +75,7 @@ export const userServiceFactory = (token) => {
         },
 
         deleteOrder: (orderId) => {
-            return requester.del(`${apiUrl}/orders/${orderId}`);
+            return requester.del(`${apiUrl}/orders/single/${orderId}`);
         },
 
         // ===== REVIEWS MANAGEMENT =====
