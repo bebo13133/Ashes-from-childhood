@@ -234,6 +234,7 @@
     align-items: center;
     justify-content: center;
     flex: 0 0 auto;
+    gap: 16px;
 }
 
 .header-right {
@@ -642,6 +643,10 @@
         flex: none;
     }
 
+    .header-center {
+        gap: 12px;
+    }
+
     .header-actions {
         gap: 12px;
     }
@@ -716,6 +721,14 @@
     .admin-header {
         padding: 16px;
         gap: 12px;
+        align-items: center;
+    }
+
+    .header-center {
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+        align-items: center;
     }
 
     .page-title {
@@ -726,9 +739,12 @@
         padding: 16px;
     }
 
-    .book-price-manager {
+    .book-price-manager,
+    .book-stock-manager {
         min-width: 160px;
         padding: 10px 12px;
+        width: 100%;
+        max-width: 280px;
     }
 
     .price-value {
