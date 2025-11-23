@@ -61,7 +61,8 @@ const AuthorSection = () => {
                                             alt='Сибел Ибрямова - автор'
                                             className='author-image'
                                             loading='eager'
-                                            decoding='async'
+                                            decoding='sync'
+                                            fetchpriority='high'
                                         />
                                         <div className='image-glow'></div>
                                     </div>
@@ -73,7 +74,8 @@ const AuthorSection = () => {
                                             alt='Сибел Ибрямова - автор'
                                             className='author-image'
                                             loading='eager'
-                                            decoding='async'
+                                            decoding='sync'
+                                            fetchpriority='high'
                                         />
                                         <div className='image-glow'></div>
                                     </div>
@@ -85,7 +87,8 @@ const AuthorSection = () => {
                                             alt='Сибел Ибрямова - автор'
                                             className='author-image'
                                             loading='eager'
-                                            decoding='async'
+                                            decoding='sync'
+                                            fetchpriority='high'
                                         />
                                         <div className='image-glow'></div>
                                     </div>
@@ -97,7 +100,8 @@ const AuthorSection = () => {
                                             alt='Сибел Ибрямова - автор'
                                             className='author-image'
                                             loading='eager'
-                                            decoding='async'
+                                            decoding='sync'
+                                            fetchpriority='high'
                                         />
                                         <div className='image-glow'></div>
                                     </div>
