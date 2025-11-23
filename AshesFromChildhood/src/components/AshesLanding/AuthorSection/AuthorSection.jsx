@@ -92,7 +92,6 @@ const AuthorSection = () => {
                                                 decoding='async'
                                                 fetchpriority='high'
                                             />
-                                            <div className='image-glow'></div>
                                         </div>
                                     </div>
                                 ))}
