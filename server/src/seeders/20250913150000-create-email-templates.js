@@ -3,11 +3,18 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.bulkInsert('EmailTemplates', [
-            {
-                name: 'Промоционален имейл',
-                subject: '"Пепел от детството" - една книга, която трябва да прочетете',
-                content: `Здравейте,
+        // Check if template already exists
+        const existingTemplate = await queryInterface.sequelize.query(`SELECT id FROM "EmailTemplates" WHERE name = 'Промоционален имейл' LIMIT 1`, {
+            type: Sequelize.QueryTypes.SELECT,
+        });
+
+        // Only insert if it doesn't exist
+        if (existingTemplate.length === 0) {
+            await queryInterface.bulkInsert('EmailTemplates', [
+                {
+                    name: 'Промоционален имейл',
+                    subject: '"Пепел от детството" - една книга, която трябва да прочетете',
+                    content: `Здравейте,
 
 Бихте ли се заинтересували от една силна и емоционална история?
 
@@ -23,10 +30,11 @@ module.exports = {
 
 Поздрави,
 Авторът`,
-                created_at: new Date(),
-                updated_at: new Date(),
-            },
-        ]);
+                    created_at: new Date(),
+                    updated_at: new Date(),
+                },
+            ]);
+        }
     },
 
     async down(queryInterface, Sequelize) {
