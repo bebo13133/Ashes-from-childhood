@@ -172,9 +172,9 @@ const OrderSection = () => {
                 <div className={`OrderSection-order-content ${isVisible ? 'OrderSection-fade-in-up' : ''}`}>
                     <div className='OrderSection-order-header'>
                         <h2 className='OrderSection-order-title OrderSection-dramatic-text'>
-                            <span className='OrderSection-title-accent'>Поръчайте</span> Вашето Копие
+                            <span className='OrderSection-title-accent'>Поръчайте</span> Вашата книга сега
                         </h2>
-                        <p className='OrderSection-order-subtitle'>Получете "Пепел от детството" директно до вашия дом</p>
+                        <p className='OrderSection-order-subtitle'>Перфектният коледен подарък</p>
                         <div className='OrderSection-price-stock-container'>
                             <div className='OrderSection-price-display'>
                                 <span className='OrderSection-price-label'>Цена:</span>

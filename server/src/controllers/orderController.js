@@ -37,12 +37,21 @@ orderController.post('/create', async (req, res, next) => {
             related_id: order.id,
         });
 
+        // Send automatic confirmation email to customer
+        const customerName = firstName && lastName ? `${firstName} ${lastName}` : '';
+        const greeting = customerName ? `Здравейте ${customerName},` : 'Здравейте,';
+        const customerEmailContent = `${greeting}
+
+Благодарим ви за поръчката!
+
+Вашата поръчка ще бъде обработена през следващите 24 часа и ще получите книгата на посочения адрес в рамките на 2-3 работни дни.`;
+
         sendEmail('personalTemplate', {
-            to: process.env.admin_email,
-            subject: `Нова поръчка #${order.id}`,
-            content: `Нова поръчка от ${order.customerName} за "${order.bookTitle}" (${order.quantity} бр.) - ${order.totalPrice} лв.`,
+            to: email,
+            subject: 'Потвърждение за поръчка',
+            content: customerEmailContent,
         }).catch((error) => {
-            console.error('Failed to send order notification email:', error);
+            console.error('Failed to send customer confirmation email:', error);
         });
 
         const { bookId, priceAtOrder, ...orderData } = order.toJSON();

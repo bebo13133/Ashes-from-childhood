@@ -51,14 +51,6 @@ reviewController.post('/create', async (req, res, next) => {
             related_id: review.id,
         });
 
-        sendEmail('personalTemplate', {
-            to: process.env.admin_email,
-            subject: `Нов отзив #${review.id}`,
-            content: reviewMessage,
-        }).catch((error) => {
-            console.error('Failed to send review notification email:', error);
-        });
-
         return res.status(201).json({
             id: review.id,
             displayName: review.displayName,
