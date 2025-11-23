@@ -3,6 +3,12 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface, Sequelize) {
+        // Only run in development/test environments, skip in production
+        if (process.env.NODE_ENV === 'production') {
+            console.log('Skipping email templates seeder in production environment');
+            return;
+        }
+
         // Check if template already exists
         const existingTemplate = await queryInterface.sequelize.query(`SELECT id FROM "EmailTemplates" WHERE name = 'Промоционален имейл' LIMIT 1`, {
             type: Sequelize.QueryTypes.SELECT,

@@ -1,286 +1,296 @@
 .notification-dropdown-container {
-  position: relative;
+    position: relative;
 }
 
 /* Notification Button - подобрен за touch */
 .notification-dropdown-btn {
-  background: none;
-  border: 1px solid #e5e7eb;
-  padding: 12px; /* увеличен padding за touch */
-  border-radius: 10px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-  position: relative;
-  width: 44px; /* минимум 44px за touch targets */
-  height: 44px;
-  min-width: 44px; /* гарантира минимален размер */
-  min-height: 44px;
+    background: none;
+    border: 1px solid #e5e7eb;
+    padding: 12px; /* увеличен padding за touch */
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    position: relative;
+    width: 44px; /* минимум 44px за touch targets */
+    height: 44px;
+    min-width: 44px; /* гарантира минимален размер */
+    min-height: 44px;
 }
 
 .notification-dropdown-btn:hover {
-  background: #f9fafb;
-  border-color: #d1d5db;
-  transform: translateY(-1px);
+    background: #f9fafb;
+    border-color: #d1d5db;
+    transform: translateY(-1px);
 }
 
 /* Touch states за мобилни устройства */
 @media (hover: none) and (pointer: coarse) {
-  .notification-dropdown-btn:active {
-    background: #f3f4f6;
-    transform: scale(0.95);
-  }
+    .notification-dropdown-btn:active {
+        background: #f3f4f6;
+        transform: scale(0.95);
+    }
 }
 
 .notification-dropdown-icon {
-  font-size: 1.2rem; /* по-голям за мобилни */
-  color: #6b7280;
+    font-size: 1.2rem; /* по-голям за мобилни */
+    color: #6b7280;
 }
 
 .notification-dropdown-badge {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  background: #ef4444;
-  color: white;
-  font-size: 0.75rem; /* по-голям текст */
-  font-weight: 600;
-  padding: 3px 7px; /* увеличен padding */
-  border-radius: 12px;
-  min-width: 20px;
-  text-align: center;
-  line-height: 1.2;
-  animation: notification-dropdown-pulse 2s infinite;
-  border: 2px solid white; /* бяла граница за по-добра видимост */
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: #ef4444;
+    color: white;
+    font-size: 0.75rem; /* по-голям текст */
+    font-weight: 600;
+    padding: 3px 7px; /* увеличен padding */
+    border-radius: 12px;
+    min-width: 20px;
+    text-align: center;
+    line-height: 1.2;
+    animation: notification-dropdown-pulse 2s infinite;
+    border: 2px solid white; /* бяла граница за по-добра видимост */
 }
 
 /* Dropdown Menu - mobile-first подход */
 .notification-dropdown-menu {
-  position: absolute;
-  max-height: 600px;
-  top: 100%;
-  right: 0;
-  width: 100vw; /* пълна ширина на мобилни */
-  max-width: 350px; /* максимум за desktop */
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 0; /* без border-radius на мобилни */
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
-  margin-top: 8px;
-  overflow: scroll;
-  animation: notification-dropdown-fadeIn 0.2s ease;
-  transform: translateX(0); /* за мобилни */
+    position: absolute;
+    max-height: 600px;
+    top: 100%;
+    right: 0;
+    width: 100vw; /* пълна ширина на мобилни */
+    max-width: 350px; /* максимум за desktop */
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0; /* без border-radius на мобилни */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    margin-top: 8px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    animation: notification-dropdown-fadeIn 0.2s ease;
+    transform: translateX(0); /* за мобилни */
 }
 
 /* Desktop стилизиране */
 @media (min-width: 768px) {
-  .notification-dropdown-menu {
-    width: 350px;
-    border-radius: 12px;
-    right: 0;
-    transform: translateX(0);
-  }
+    .notification-dropdown-menu {
+        width: 350px;
+        border-radius: 12px;
+        right: 0;
+        transform: translateX(0);
+    }
 }
 
 .notification-dropdown-header {
-  padding: 16px 20px;
-  border-bottom: 1px solid #f3f4f6;
-  background: #f9fafb;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  min-height: 60px; /* минимална височина за touch */
+    padding: 16px 20px;
+    border-bottom: 1px solid #f3f4f6;
+    background: #f9fafb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 60px; /* минимална височина за touch */
 }
 
 .notification-dropdown-title h3 {
-  margin: 0;
-  color: #1f2937;
-  font-size: 1.1rem; /* по-голям текст */
-  font-weight: 600;
+    margin: 0;
+    color: #1f2937;
+    font-size: 1.1rem; /* по-голям текст */
+    font-weight: 600;
 }
 
 .notification-dropdown-count {
-  background: #667eea;
-  color: white;
-  font-size: 0.8rem; /* по-голям текст */
-  font-weight: 500;
-  padding: 4px 10px; /* увеличен padding */
-  border-radius: 12px;
+    background: #667eea;
+    color: white;
+    font-size: 0.8rem; /* по-голям текст */
+    font-weight: 500;
+    padding: 4px 10px; /* увеличен padding */
+    border-radius: 12px;
 }
 
 .notification-dropdown-mark-all {
-  background: none;
-  border: none;
-  color: #667eea;
-  font-size: 0.85rem; /* по-голям текст */
-  font-weight: 500;
-  cursor: pointer;
-  padding: 8px 12px; /* увеличен padding за touch */
-  border-radius: 6px;
-  transition: all 0.2s ease;
-  min-height: 40px; /* минимална височина за touch */
+    background: none;
+    border: none;
+    color: #667eea;
+    font-size: 0.85rem; /* по-голям текст */
+    font-weight: 500;
+    cursor: pointer;
+    padding: 8px 12px; /* увеличен padding за touch */
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    min-height: 40px; /* минимална височина за touch */
 }
 
 /* Notification Item - подобрен за touch */
 .notification-dropdown-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 18px 20px; /* увеличен padding */
-  border-bottom: 1px solid #f3f4f6;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  position: relative;
-  min-height: 70px; /* минимална височина за touch */
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 18px 20px; /* увеличен padding */
+    border-bottom: 1px solid #f3f4f6;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    min-height: 70px; /* минимална височина за touch */
 }
 
 .notification-dropdown-item:hover {
-  background: #f9fafb;
+    background: #f9fafb;
 }
 
 /* Touch states */
 @media (hover: none) and (pointer: coarse) {
-  .notification-dropdown-item:active {
-    background: #f3f4f6;
-  }
+    .notification-dropdown-item:active {
+        background: #f3f4f6;
+    }
 }
 
 .notification-dropdown-item-icon {
-  width: 40px; /* по-голям icon */
-  height: 40px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.1rem;
-  color: white;
-  flex-shrink: 0;
+    width: 40px; /* по-голям icon */
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: white;
+    flex-shrink: 0;
 }
 
 .notification-dropdown-item-title {
-  margin: 0;
-  color: #1f2937;
-  font-size: 0.95rem; /* по-голям текст */
-  font-weight: 600;
-  line-height: 1.4;
+    margin: 0;
+    color: #1f2937;
+    font-size: 0.95rem; /* по-голям текст */
+    font-weight: 600;
+    line-height: 1.4;
 }
 
 .notification-dropdown-item-message {
-  margin: 0;
-  color: #6b7280;
-  font-size: 0.9rem; /* по-голям текст */
-  line-height: 1.5;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+    margin: 0;
+    color: #6b7280;
+    font-size: 0.9rem; /* по-голям текст */
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .notification-dropdown-item-time {
-  color: #9ca3af;
-  font-size: 0.8rem; /* по-голям текст */
-  white-space: nowrap;
-  flex-shrink: 0;
+    color: #9ca3af;
+    font-size: 0.8rem; /* по-голям текст */
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
-/* Scrollbar - подобрен за touch */
+/* Hide scrollbar */
+.notification-dropdown-menu::-webkit-scrollbar {
+    display: none;
+}
+
+.notification-dropdown-menu {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
 .notification-dropdown-list::-webkit-scrollbar {
-  width: 8px; /* по-широк за touch */
+    display: none;
 }
 
-.notification-dropdown-list::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
+.notification-dropdown-list {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 /* Responsive подобрения */
 @media (max-width: 480px) {
-  .notification-dropdown-menu {
-    position: fixed; /* fixed позициониране на мобилни */
-    top: auto;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    max-width: none;
-    height: 70vh; /* 70% от viewport height */
-    margin: 0;
-    border-radius: 16px 16px 0 0; /* закръглени само горните ъгли */
-    animation: notification-dropdown-slideUp 0.3s ease;
-  }
-  
-  .notification-dropdown-header {
-    padding: 20px;
-    position: relative;
-  }
-  
-  /* Drag handle за мобилни */
-  .notification-dropdown-header::before {
-    content: '';
-    position: absolute;
-    top: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 40px;
-    height: 4px;
-    background: #d1d5db;
-    border-radius: 2px;
-  }
-  
-  .notification-dropdown-item {
-    padding: 20px;
-    min-height: 80px;
-  }
-  
-  .notification-dropdown-footer {
-    padding: 16px 20px 24px; /* допълнителен bottom padding */
-  }
-  
-  .notification-dropdown-view-all {
-    height: 48px; /* по-висок button */
-    font-size: 0.95rem;
-  }
+    .notification-dropdown-menu {
+        position: fixed; /* fixed позициониране на мобилни */
+        top: auto;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        max-width: none;
+        height: 70vh; /* 70% от viewport height */
+        margin: 0;
+        border-radius: 16px 16px 0 0; /* закръглени само горните ъгли */
+        animation: notification-dropdown-slideUp 0.3s ease;
+    }
+
+    .notification-dropdown-header {
+        padding: 20px;
+        position: relative;
+    }
+
+    /* Drag handle за мобилни */
+    .notification-dropdown-header::before {
+        content: '';
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 4px;
+        background: #d1d5db;
+        border-radius: 2px;
+    }
+
+    .notification-dropdown-item {
+        padding: 20px;
+        min-height: 80px;
+    }
+
+    .notification-dropdown-footer {
+        padding: 16px 20px 24px; /* допълнителен bottom padding */
+    }
+
+    .notification-dropdown-view-all {
+        height: 48px; /* по-висок button */
+        font-size: 0.95rem;
+    }
 }
 
 @media (max-width: 360px) {
-  .notification-dropdown-header {
-    padding: 16px;
-  }
-  
-  .notification-dropdown-item {
-    padding: 16px;
-    gap: 10px;
-  }
-  
-  .notification-dropdown-item-icon {
-    width: 36px;
-    height: 36px;
-  }
+    .notification-dropdown-header {
+        padding: 16px;
+    }
+
+    .notification-dropdown-item {
+        padding: 16px;
+        gap: 10px;
+    }
+
+    .notification-dropdown-item-icon {
+        width: 36px;
+        height: 36px;
+    }
 }
 
 /* Анимация за мобилен slide-up ефект */
 @keyframes notification-dropdown-slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(100%);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+    from {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Подобрена анимация за desktop */
 @keyframes notification-dropdown-fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+    from {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }

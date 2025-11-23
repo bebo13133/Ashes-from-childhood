@@ -682,6 +682,10 @@
         width: 100%;
     }
 
+    .sidebar-toggle {
+        display: none;
+    }
+
     .sidebar-nav {
         padding: 10px 0;
     }
@@ -700,18 +704,19 @@
     }
 
     .nav-link {
-        padding: 12px;
+        padding: 8px 12px;
         flex-direction: column;
-        gap: 8px;
+        gap: 6px;
         text-align: center;
     }
 
     .nav-content {
         align-items: center;
+        gap: 4px;
     }
 
-    .nav-description {
-        display: none;
+    .nav-icon {
+        margin-bottom: 2px;
     }
 
     .sidebar-footer {

@@ -27,6 +27,38 @@ const OrdersManagement = () => {
         loadOrders();
     }, [statusFilter, dateFilter, currentPage, searchTerm]);
 
+    // Auto-refresh orders every 30 seconds (only when page is visible)
+    useEffect(() => {
+        let refreshInterval;
+
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                if (refreshInterval) {
+                    clearInterval(refreshInterval);
+                }
+            } else {
+                refreshInterval = setInterval(() => {
+                    loadOrders();
+                }, 30000);
+            }
+        };
+
+        if (!document.hidden) {
+            refreshInterval = setInterval(() => {
+                loadOrders();
+            }, 30000);
+        }
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+
+        return () => {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+        };
+    }, [statusFilter, dateFilter, currentPage, searchTerm]);
+
     const loadOrders = async () => {
         setLocalLoading(true);
         setError('');
@@ -417,6 +449,7 @@ const OrdersManagement = () => {
                                                 <option value='cancelled'>Отказана</option>
                                             </select>
 
+                                            {/* Email button - commented out, emails are now sent automatically
                                             <button
                                                 className='OrdersManagement-action-btn OrdersManagement-email-btn'
                                                 onClick={() => {
@@ -428,6 +461,7 @@ const OrdersManagement = () => {
                                             >
                                                 📧
                                             </button>
+                                            */}
 
                                             <button
                                                 className='OrdersManagement-action-btn OrdersManagement-delete-btn'
@@ -517,6 +551,7 @@ const OrdersManagement = () => {
                                 <option value='cancelled'>Отказана</option>
                             </select>
 
+                            {/* Email button - commented out, emails are now sent automatically
                             <button
                                 className='OrdersManagement-order-card-action-btn OrdersManagement-email-btn'
                                 onClick={() => {
@@ -528,6 +563,7 @@ const OrdersManagement = () => {
                             >
                                 📧
                             </button>
+                            */}
 
                             <button
                                 className='OrdersManagement-order-card-action-btn OrdersManagement-delete-btn'

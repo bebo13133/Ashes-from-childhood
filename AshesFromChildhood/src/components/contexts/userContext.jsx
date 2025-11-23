@@ -40,6 +40,8 @@ export const AuthProvider = ({ children }) => {
     const [selectedOrder, setSelectedOrder] = useState(null);
 
     const userService = userServiceFactory(isAuth.token);
+    const lastNotificationCountRef = useRef(0);
+
     useEffect(() => {
         if (isAuth.token && isAuth.role === 'admin') {
             setIsAdmin(true);
@@ -47,6 +49,40 @@ export const AuthProvider = ({ children }) => {
             fetchNotifications().catch(console.error);
         }
     }, [isAuth]);
+
+    // Auto-poll for new notifications every 10 seconds
+    useEffect(() => {
+        if (!isAuth.token || isAuth.role !== 'admin') return;
+
+        const pollInterval = setInterval(async () => {
+            try {
+                const previousCount = lastNotificationCountRef.current;
+                const currentUserService = userServiceFactory(isAuth.token);
+                const response = await currentUserService.getNotifications();
+                const fetchedNotifications = response.notifications || response || [];
+                const unreadCount = fetchedNotifications.filter((n) => !n.read).length;
+
+                // If new unread notifications appeared, update state and trigger auto-pop
+                if (unreadCount > previousCount && previousCount > 0) {
+                    setNotifications(fetchedNotifications);
+                    // Dispatch event to auto-open notification dropdown
+                    window.dispatchEvent(
+                        new CustomEvent('newNotifications', {
+                            detail: { count: unreadCount - previousCount },
+                        })
+                    );
+                } else {
+                    setNotifications(fetchedNotifications);
+                }
+
+                lastNotificationCountRef.current = unreadCount;
+            } catch (error) {
+                console.error('Error polling notifications:', error);
+            }
+        }, 10000); // Poll every 10 seconds
+
+        return () => clearInterval(pollInterval);
+    }, [isAuth.token, isAuth.role]);
 
     useEffect(() => {
         if (isAuth.token && isAuth.role === 'admin') {
@@ -81,7 +117,11 @@ export const AuthProvider = ({ children }) => {
         setNotificationsLoading(true);
         try {
             const response = await userService.getNotifications();
-            setNotifications(response.notifications || response || []);
+            const fetchedNotifications = response.notifications || response || [];
+            setNotifications(fetchedNotifications);
+            // Update ref with current unread count
+            const unreadCount = fetchedNotifications.filter((n) => !n.read).length;
+            lastNotificationCountRef.current = unreadCount;
             return response;
         } catch (error) {
             console.error('Error fetching notifications:', error);
