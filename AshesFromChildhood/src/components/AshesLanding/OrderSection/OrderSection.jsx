@@ -175,26 +175,28 @@ const OrderSection = () => {
                             <span className='OrderSection-title-accent'>Поръчайте</span> Вашето Копие
                         </h2>
                         <p className='OrderSection-order-subtitle'>Получете "Пепел от детството" директно до вашия дом</p>
-                        <div className='OrderSection-price-display'>
-                            <span className='OrderSection-price-label'>Цена:</span>
-                            <span className='OrderSection-price-amount'>
-                                {priceLoading ? (
-                                    <span className='OrderSection-price-loading'>Зареждане...</span>
-                                ) : bookPrice ? (
-                                    <span className='OrderSection-dual-price'>
-                                        {priceBgn.toFixed(2)} лв. / {priceEur.toFixed(2)} €
-                                    </span>
-                                ) : (
-                                    <span className='OrderSection-price-error'>Грешка при зареждане</span>
-                                )}
-                            </span>
-                        </div>
-                        {bookStock !== undefined && bookStock !== null && (
-                            <div className='OrderSection-stock-display'>
-                                <span className='OrderSection-stock-label'>Налично количество:</span>
-                                <span className={`OrderSection-stock-amount ${bookStock < 10 ? 'OrderSection-stock-low' : ''}`}>{bookStock} бр.</span>
+                        <div className='OrderSection-price-stock-container'>
+                            <div className='OrderSection-price-display'>
+                                <span className='OrderSection-price-label'>Цена:</span>
+                                <span className='OrderSection-price-amount'>
+                                    {priceLoading ? (
+                                        <span className='OrderSection-price-loading'>Зареждане...</span>
+                                    ) : bookPrice ? (
+                                        <span className='OrderSection-dual-price'>
+                                            {priceBgn.toFixed(2)} лв. / {priceEur.toFixed(2)} €
+                                        </span>
+                                    ) : (
+                                        <span className='OrderSection-price-error'>Грешка при зареждане</span>
+                                    )}
+                                </span>
                             </div>
-                        )}
+                            {bookStock !== undefined && bookStock !== null && (
+                                <div className='OrderSection-stock-display'>
+                                    <span className='OrderSection-stock-label'>Налично количество:</span>
+                                    <span className={`OrderSection-stock-amount ${bookStock < 10 ? 'OrderSection-stock-low' : ''}`}>{bookStock} бр.</span>
+                                </div>
+                            )}
+                        </div>
                     </div>
 
                     {/* Error Message */}
