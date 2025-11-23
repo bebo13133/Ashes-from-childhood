@@ -46,8 +46,8 @@ const CTAScrollButton = () => {
     const shouldShow = isVisible && !isOrderSectionVisible;
 
     return (
-        <button className={`cta-scroll-button ${shouldShow ? 'cta-visible' : ''}`} onClick={handleScrollToOrder} aria-label='Вземете вашето копие сега'>
-            <span className='cta-button-text'>Вземете вашето копие сега</span>
+        <button className={`cta-scroll-button ${shouldShow ? 'cta-visible' : ''}`} onClick={handleScrollToOrder} aria-label='Поръчайте Вашата книга сега'>
+            <span className='cta-button-text'>Поръчайте Вашата книга сега</span>
         </button>
     );
 };
