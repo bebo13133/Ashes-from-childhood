@@ -1,16 +1,43 @@
 import { useState, useEffect } from 'react';
 import './AuthorSection.css';
 
+const authorQuotes = [
+    'Писането е начин да споделя частици от душата си със света.',
+    'Всяка история носи в себе си истина, която чака да бъде разказана.',
+    'Детството е най-честният период от живота - именно затова пиша за него.',
+    'Думите имат сила да лекуват рани, които дори не знаем, че имаме.',
+];
+
+const imagePaths = ['/images/book/ashes1.jpeg', '/images/book/ashes2.jpeg', '/images/book/ashes3.jpeg', '/images/book/ashes4.jpeg'];
+
 const AuthorSection = () => {
     const [isVisible, setIsVisible] = useState(false);
     const [currentQuote, setCurrentQuote] = useState(0);
+    const [imagesLoaded, setImagesLoaded] = useState(false);
 
-    const authorQuotes = [
-        'Писането е начин да споделя частици от душата си с света.',
-        'Всяка история носи в себе си истина, която чака да бъде разказана.',
-        'Детството е най-честният период от живота - именно затова пиша за него.',
-        'Думите имат сила да лекуват рани, които дори не знаем, че имаме.',
-    ];
+    useEffect(() => {
+        const preloadImages = () => {
+            const imagePromises = imagePaths.map((src) => {
+                return new Promise((resolve, reject) => {
+                    const img = new Image();
+                    img.onload = resolve;
+                    img.onerror = reject;
+                    img.src = src;
+                });
+            });
+
+            Promise.all(imagePromises)
+                .then(() => {
+                    setImagesLoaded(true);
+                })
+                .catch((error) => {
+                    console.error('Error preloading images:', error);
+                    setImagesLoaded(true);
+                });
+        };
+
+        preloadImages();
+    }, []);
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -54,58 +81,21 @@ const AuthorSection = () => {
                         {/* Author Image Side */}
                         <div className='author-image-container'>
                             <div className='author-images-grid'>
-                                <div className='author-image-item'>
-                                    <div className='author-image-wrapper'>
-                                        <img
-                                            src='/images/book/ashes1.jpeg'
-                                            alt='Сибел Ибрямова - автор'
-                                            className='author-image'
-                                            loading='eager'
-                                            decoding='sync'
-                                            fetchpriority='high'
-                                        />
-                                        <div className='image-glow'></div>
+                                {imagePaths.map((src, index) => (
+                                    <div key={index} className='author-image-item'>
+                                        <div className='author-image-wrapper'>
+                                            <img
+                                                src={src}
+                                                alt='Сибел Ибрямова - автор'
+                                                className={`author-image ${imagesLoaded ? 'loaded' : ''}`}
+                                                loading='eager'
+                                                decoding='async'
+                                                fetchpriority='high'
+                                            />
+                                            <div className='image-glow'></div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className='author-image-item'>
-                                    <div className='author-image-wrapper'>
-                                        <img
-                                            src='/images/book/ashes2.jpeg'
-                                            alt='Сибел Ибрямова - автор'
-                                            className='author-image'
-                                            loading='eager'
-                                            decoding='sync'
-                                            fetchpriority='high'
-                                        />
-                                        <div className='image-glow'></div>
-                                    </div>
-                                </div>
-                                <div className='author-image-item'>
-                                    <div className='author-image-wrapper'>
-                                        <img
-                                            src='/images/book/ashes3.jpeg'
-                                            alt='Сибел Ибрямова - автор'
-                                            className='author-image'
-                                            loading='eager'
-                                            decoding='sync'
-                                            fetchpriority='high'
-                                        />
-                                        <div className='image-glow'></div>
-                                    </div>
-                                </div>
-                                <div className='author-image-item'>
-                                    <div className='author-image-wrapper'>
-                                        <img
-                                            src='/images/book/ashes4.jpeg'
-                                            alt='Сибел Ибрямова - автор'
-                                            className='author-image'
-                                            loading='eager'
-                                            decoding='sync'
-                                            fetchpriority='high'
-                                        />
-                                        <div className='image-glow'></div>
-                                    </div>
-                                </div>
+                                ))}
                             </div>
 
                             {/* Dynamic Quote Display */}
