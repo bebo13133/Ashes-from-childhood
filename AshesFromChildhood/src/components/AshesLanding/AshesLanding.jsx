@@ -8,6 +8,7 @@ import OrderSection from './OrderSection/OrderSection';
 // import GallerySection from './GallerySection/GallerySection';
 import SocialIcons from './SocialIcons/SocialIcons';
 import BookPresentation3D from './BookPresentation3D/BookPresentation3D';
+import BookSynopsis from './BookSynopsis/BookSynopsis';
 import AuthorSection from './AuthorSection/AuthorSection';
 import ScrollToTop from '../ScrollToTop/ScrollToTop';
 import ReviewsSection from './ReviewsSection/ReviewsSection';
@@ -48,6 +49,9 @@ const AshesLanding = () => {
 
             {/* Book Presentation - 3D модел и описание */}
             <BookPresentation3D />
+
+            {/* Book Synopsis - резюме на книгата */}
+            <BookSynopsis />
 
             {/* Mystery Section - интерактивна мистериозна част - HIDDEN */}
             {/* <MysterySection /> */}

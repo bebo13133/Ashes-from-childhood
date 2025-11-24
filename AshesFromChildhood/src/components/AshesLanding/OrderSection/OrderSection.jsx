@@ -192,8 +192,27 @@ const OrderSection = () => {
                             </div>
                             {bookStock !== undefined && bookStock !== null && (
                                 <div className='OrderSection-stock-display'>
-                                    <span className='OrderSection-stock-label'>Налично количество:</span>
-                                    <span className={`OrderSection-stock-amount ${bookStock < 10 ? 'OrderSection-stock-low' : ''}`}>{bookStock} бр.</span>
+                                    <span
+                                        className={`OrderSection-stock-amount ${bookStock < 10 ? 'OrderSection-stock-low' : ''} ${
+                                            bookStock === 0 ? 'OrderSection-stock-out' : ''
+                                        }`}
+                                    >
+                                        {bookStock === 0 ? (
+                                            'Все още приемаме поръчки! Ще ви уведомим когато книгата е налична отново.'
+                                        ) : bookStock === 1 ? (
+                                            <>
+                                                Побързай!
+                                                <br className='OrderSection-mobile-break' /> Остава само <span className='OrderSection-stock-number'>1</span>{' '}
+                                                бр.
+                                            </>
+                                        ) : (
+                                            <>
+                                                Побързай!
+                                                <br className='OrderSection-mobile-break' /> Остават само{' '}
+                                                <span className='OrderSection-stock-number'>{bookStock}</span> бройки
+                                            </>
+                                        )}
+                                    </span>
                                 </div>
                             )}
                         </div>
