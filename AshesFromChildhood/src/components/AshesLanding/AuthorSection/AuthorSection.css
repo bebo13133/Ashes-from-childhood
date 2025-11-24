@@ -13,21 +13,11 @@
     opacity: 0;
     transform: translateY(60px);
     transition: all 1.2s cubic-bezier(0.23, 1, 0.32, 1);
-    /* Fallback: show content after 3 seconds even if JS doesn't add class */
-    animation: authorContentFallback 0.1s ease 3s forwards;
 }
 
 .author-content.animate-in {
     opacity: 1;
     transform: translateY(0);
-    animation: none; /* Disable fallback if class is added */
-}
-
-@keyframes authorContentFallback {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 /* Section Header */
