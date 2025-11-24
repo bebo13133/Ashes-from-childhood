@@ -184,7 +184,7 @@
     align-items: center;
     gap: 15px;
     background: linear-gradient(135deg, rgba(106, 127, 219, 0.2), rgba(106, 127, 219, 0.4));
-    padding: 12px 25px;
+    padding: 15px 25px;
     border-radius: 50px;
     border: 2px solid rgba(106, 127, 219, 0.5);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3), 0 0 25px rgba(106, 127, 219, 0.2);
@@ -197,6 +197,13 @@
         gap: 15px;
         justify-items: center;
     }
+
+    .OrderSection-price-display,
+    .OrderSection-stock-display {
+        width: 100%;
+        max-width: 100%;
+        justify-content: center;
+    }
 }
 
 .OrderSection-stock-label {
@@ -206,25 +213,43 @@
 }
 
 .OrderSection-stock-amount {
-    color: #8fa3e8;
+    color: #ffffff;
     font-size: 1.2rem;
-    font-weight: bold;
+    font-weight: normal;
     text-shadow: 2px 2px 4px var(--shadow-deep);
 }
 
+.OrderSection-stock-number {
+    color: var(--accent-gold);
+    font-weight: bold;
+}
+
 .OrderSection-stock-amount.OrderSection-stock-low {
-    color: #ff6b6b;
     animation: pulse 2s infinite;
 }
 
+.OrderSection-stock-amount.OrderSection-stock-out {
+    color: #ffffff;
+}
+
+.OrderSection-mobile-break {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .OrderSection-mobile-break {
+        display: block;
+    }
+}
+
 @keyframes pulse {
-    0%, 100% {
+    0%,
+    100% {
         opacity: 1;
     }
     50% {
         opacity: 0.7;
     }
-}
 }
 
 .OrderSection-price-loading {

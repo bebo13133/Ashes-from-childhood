@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './AuthorSection.css';
 
 const authorQuotes = [
@@ -14,6 +14,7 @@ const AuthorSection = () => {
     const [isVisible, setIsVisible] = useState(false);
     const [currentQuote, setCurrentQuote] = useState(0);
     const [imagesLoaded, setImagesLoaded] = useState(false);
+    const sectionRef = useRef(null);
 
     useEffect(() => {
         const preloadImages = () => {
@@ -40,19 +41,69 @@ const AuthorSection = () => {
     }, []);
 
     useEffect(() => {
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) {
-                    setIsVisible(true);
-                }
-            },
-            { threshold: 0.3 }
-        );
+        // Fallback: show content after 2 seconds if observer doesn't fire
+        const fallbackTimer = setTimeout(() => {
+            if (!isVisible) {
+                setIsVisible(true);
+            }
+        }, 2000);
 
-        const element = document.querySelector('.author-section');
-        if (element) observer.observe(element);
-        return () => observer.disconnect();
-    }, []);
+        // Check if element is already in viewport on mount
+        const checkInitialVisibility = () => {
+            if (sectionRef.current) {
+                const rect = sectionRef.current.getBoundingClientRect();
+                const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+                if (isInViewport) {
+                    setIsVisible(true);
+                    clearTimeout(fallbackTimer);
+                }
+            }
+        };
+
+        // Try to create observer
+        let observer = null;
+        try {
+            observer = new IntersectionObserver(
+                ([entry]) => {
+                    if (entry.isIntersecting) {
+                        setIsVisible(true);
+                        clearTimeout(fallbackTimer);
+                    }
+                },
+                {
+                    threshold: 0.1, // Lower threshold for better mobile detection
+                    rootMargin: '50px', // Trigger earlier
+                }
+            );
+
+            // Use ref if available, otherwise fallback to querySelector
+            const element = sectionRef.current || document.querySelector('.author-section');
+            if (element && observer) {
+                observer.observe(element);
+            } else {
+                // If element not found, check again after a delay
+                setTimeout(() => {
+                    const retryElement = sectionRef.current || document.querySelector('.author-section');
+                    if (retryElement && observer) {
+                        observer.observe(retryElement);
+                    }
+                }, 300);
+            }
+        } catch (error) {
+            console.warn('IntersectionObserver not supported:', error);
+            // If IntersectionObserver fails, use fallback
+            setIsVisible(true);
+            clearTimeout(fallbackTimer);
+        }
+
+        // Check initial visibility after a short delay
+        setTimeout(checkInitialVisibility, 100);
+
+        return () => {
+            clearTimeout(fallbackTimer);
+            if (observer) observer.disconnect();
+        };
+    }, [isVisible]);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -62,7 +113,7 @@ const AuthorSection = () => {
     }, []);
 
     return (
-        <section className='author-section'>
+        <section className='author-section' ref={sectionRef}>
             <div className='container-author'>
                 <div className={`author-content ${isVisible ? 'animate-in' : ''}`}>
                     {/* Section Header */}
