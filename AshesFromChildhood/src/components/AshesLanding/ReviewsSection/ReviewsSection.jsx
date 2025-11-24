@@ -1,11 +1,10 @@
 /* eslint-disable no-unused-vars */
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import './ReviewsSection.css';
 import { useAuthContext } from '../../contexts/userContext';
 
 const ReviewsSection = () => {
     const [isVisible, setIsVisible] = useState(false);
-    const sectionRef = useRef(null);
     const [reviews, setReviews] = useState([]);
     const [showForm, setShowForm] = useState(true);
     const [formData, setFormData] = useState({
@@ -31,69 +30,20 @@ const ReviewsSection = () => {
     const { submitReview, fetchPublicReviews, markReviewAsHelpful, fetchImageReviews, isLoading } = useAuthContext();
 
     useEffect(() => {
-        // Fallback: show content after 2 seconds if observer doesn't fire
-        const fallbackTimer = setTimeout(() => {
-            if (!isVisible) {
-                setIsVisible(true);
-            }
-        }, 2000);
-
-        // Check if element is already in viewport on mount
-        const checkInitialVisibility = () => {
-            if (sectionRef.current) {
-                const rect = sectionRef.current.getBoundingClientRect();
-                const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
-                if (isInViewport) {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
                     setIsVisible(true);
-                    clearTimeout(fallbackTimer);
                 }
-            }
-        };
+            },
+            { threshold: 0.2 }
+        );
 
-        // Try to create observer
-        let observer = null;
-        try {
-            observer = new IntersectionObserver(
-                ([entry]) => {
-                    if (entry.isIntersecting) {
-                        setIsVisible(true);
-                        clearTimeout(fallbackTimer);
-                    }
-                },
-                {
-                    threshold: 0.1, // Lower threshold for better mobile detection
-                    rootMargin: '50px', // Trigger earlier
-                }
-            );
+        const element = document.querySelector('.reviews-section');
+        if (element) observer.observe(element);
 
-            // Use ref if available, otherwise fallback to querySelector
-            const element = sectionRef.current || document.querySelector('.reviews-section');
-            if (element && observer) {
-                observer.observe(element);
-            } else {
-                // If element not found, check again after a delay
-                setTimeout(() => {
-                    const retryElement = sectionRef.current || document.querySelector('.reviews-section');
-                    if (retryElement && observer) {
-                        observer.observe(retryElement);
-                    }
-                }, 300);
-            }
-        } catch (error) {
-            console.warn('IntersectionObserver not supported:', error);
-            // If IntersectionObserver fails, use fallback
-            setIsVisible(true);
-            clearTimeout(fallbackTimer);
-        }
-
-        // Check initial visibility after a short delay
-        setTimeout(checkInitialVisibility, 100);
-
-        return () => {
-            clearTimeout(fallbackTimer);
-            if (observer) observer.disconnect();
-        };
-    }, [isVisible]);
+        return () => observer.disconnect();
+    }, []);
 
     // Detect mobile/tablet screen size
     useEffect(() => {
@@ -317,7 +267,7 @@ const ReviewsSection = () => {
     };
 
     return (
-        <section className='reviews-section' ref={sectionRef}>
+        <section className='reviews-section'>
             <div className='container'>
                 <div className={`reviews-content ${isVisible ? 'fade-in-up' : ''}`}>
                     {/* Header */}
